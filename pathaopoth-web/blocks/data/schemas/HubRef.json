@@ -1,0 +1,55 @@
+{
+  "schemaName": "HubRef",
+  "schemaType": 2,
+  "readAccessLevel": 1,
+  "writeAccessLevel": 1,
+  "editAccessLevel": 1,
+  "deleteAccessLevel": 1,
+  "fields": [
+    {
+      "name": "hubId",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false,
+      "description": "ItemId of the Hub record",
+      "requiredOn": "None",
+      "isReferenceField": false,
+      "referenceFieldType": "",
+      "readAccessLevel": 0,
+      "writeAccessLevel": 0,
+      "editAccessLevel": 0,
+      "deleteAccessLevel": 0
+    },
+    {
+      "name": "code",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false,
+      "description": "Hub short code, e.g. MIRPUR10",
+      "requiredOn": "None",
+      "isReferenceField": false,
+      "referenceFieldType": "",
+      "readAccessLevel": 0,
+      "writeAccessLevel": 0,
+      "editAccessLevel": 0,
+      "deleteAccessLevel": 0
+    },
+    {
+      "name": "name",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false,
+      "description": "Hub display name at time of write",
+      "requiredOn": "None",
+      "isReferenceField": false,
+      "referenceFieldType": "",
+      "readAccessLevel": 0,
+      "writeAccessLevel": 0,
+      "editAccessLevel": 0,
+      "deleteAccessLevel": 0
+    }
+  ]
+}

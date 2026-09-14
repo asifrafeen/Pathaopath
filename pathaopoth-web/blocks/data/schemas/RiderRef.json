@@ -1,0 +1,55 @@
+{
+  "schemaName": "RiderRef",
+  "schemaType": 2,
+  "readAccessLevel": 1,
+  "writeAccessLevel": 1,
+  "editAccessLevel": 1,
+  "deleteAccessLevel": 1,
+  "fields": [
+    {
+      "name": "userId",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false,
+      "description": "Blocks IAM user id of the rider",
+      "requiredOn": "None",
+      "isReferenceField": false,
+      "referenceFieldType": "",
+      "readAccessLevel": 0,
+      "writeAccessLevel": 0,
+      "editAccessLevel": 0,
+      "deleteAccessLevel": 0
+    },
+    {
+      "name": "name",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false,
+      "description": "Display name snapshot",
+      "requiredOn": "None",
+      "isReferenceField": false,
+      "referenceFieldType": "",
+      "readAccessLevel": 0,
+      "writeAccessLevel": 0,
+      "editAccessLevel": 0,
+      "deleteAccessLevel": 0
+    },
+    {
+      "name": "phone",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": true,
+      "isUniqueData": false,
+      "description": "Contact number snapshot",
+      "requiredOn": "None",
+      "isReferenceField": false,
+      "referenceFieldType": "",
+      "readAccessLevel": 0,
+      "writeAccessLevel": 0,
+      "editAccessLevel": 0,
+      "deleteAccessLevel": 0
+    }
+  ]
+}

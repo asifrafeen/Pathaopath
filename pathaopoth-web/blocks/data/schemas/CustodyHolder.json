@@ -1,0 +1,40 @@
+{
+  "schemaName": "CustodyHolder",
+  "schemaType": 2,
+  "readAccessLevel": 1,
+  "writeAccessLevel": 1,
+  "editAccessLevel": 1,
+  "deleteAccessLevel": 1,
+  "fields": [
+    {
+      "name": "name",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false,
+      "description": "Display name of whoever physically holds the parcel",
+      "requiredOn": "None",
+      "isReferenceField": false,
+      "referenceFieldType": "",
+      "readAccessLevel": 0,
+      "writeAccessLevel": 0,
+      "editAccessLevel": 0,
+      "deleteAccessLevel": 0
+    },
+    {
+      "name": "code",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false,
+      "description": "Hub code when custody is a hub",
+      "requiredOn": "None",
+      "isReferenceField": false,
+      "referenceFieldType": "",
+      "readAccessLevel": 0,
+      "writeAccessLevel": 0,
+      "editAccessLevel": 0,
+      "deleteAccessLevel": 0
+    }
+  ]
+}

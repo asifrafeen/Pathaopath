@@ -1,0 +1,11 @@
+{
+  "project": {
+    "tenantId": "Df6362bb5e9c04915a0994c87e0751bd5",
+    "apiUrl": "https://api.seliseblocks.com",
+    "appDomain": "https://dbuajn.slsblx.com"
+  },
+  "data": {
+    "schemas": "blocks/data/schemas",
+    "rules": "blocks/data/rules.json"
+  }
+}
