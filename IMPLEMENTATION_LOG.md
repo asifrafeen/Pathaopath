@@ -33,9 +33,9 @@ Statuses: `Not started` · `In progress` · `Blocked` · `Done`
 | 12 | `DailyVolume` — defined, unfed | 2 | Done | — | 2026-09-15 |
 | 13 | Organizations per hub; seed `Hub` records | 3 | Done | — | 2026-09-15 |
 | 14 | Roles: `hub_staff`, `rider`, `care`, `ops_manager` | 3 | Done | — | 2026-09-15 |
-| 15 | Permissions incl. `DataProtection` for `receiverPhone` | 3 | Not started | — | — |
+| 15 | Permissions incl. `DataProtection` for `receiverPhone` | 3 | Done | — | 2026-09-15 |
 | 16 | RLS policies — hub, rider, care/ops scope | 3 | Done | — | 2026-09-15 |
-| 17 | CLS policies — mask `receiverPhone`, `rawText` | 3 | Not started | — | — |
+| 17 | CLS policies — mask `receiverPhone`, `rawText` | 3 | Done | — | 2026-09-15 |
 | 18 | Deploy rules and reload | 3 | Done | — | 2026-09-15 |
 | 19 | One test user per role | 4 | Done | — | 2026-09-15 |
 | 20 | Verify the visibility matrix | 4 | Done | — | 2026-09-15 |
@@ -474,3 +474,49 @@ The rider rule (`assignedRiderId == AUTH.userId`) is untested — there is no ri
 `ParcelMovement` rows, so it returns 0 either way. It gets a real test in Epic 7 when movements
 exist. `Parcel` remains readable in full by any authenticated user, including `receiverPhone`;
 that is issue #17 and is still open.
+
+### #15, #17 — DataProtection permission and column-level masking
+
+**Status:** Done · **Date:** 2026-09-15
+
+**Business logic implemented**
+Receiver contact details are now restricted by role rather than by convention. Hub staff and care —
+the people who actually call customers — read the number; riders do not, and get `null` in its
+place while still seeing the rest of the parcel. Riders work from the movement record and its
+address snapshot, which is what they need to deliver.
+
+**Schemas used or changed**
+None.
+
+**Access policies touched**
+- `Parcel` READ moved from `User` to `Custom`, without which no policy on it is evaluated.
+- `Parcel_read_internal` (RLS, allow): any of `hub_staff`, `rider`, `care`, `ops_manager` may read
+  parcel rows. Parcels are shared operational reference data — a case at one hub routinely concerns
+  a parcel that originated at another — so they are deliberately not hub-scoped.
+- `Parcel_receiverPhone_restricted` (CLS, allow, priority 10): `fieldNames: ["receiverPhone"]`,
+  granted to `hub_staff`, `care`, `ops_manager`.
+
+**Permissions created**
+`Parcel receiver phone (unmasked)` — type 3 DataProtection, resource `parcel.receiverPhone`,
+severity 2. Note the API lowercases `resource`, and `--resource-group` rejects spaces
+(`ResourceGroup must not contain spaces`).
+
+**Decisions and deviations**
+The PDF's masking requirement is written for senders, who in this design never read `Parcel` at all
+— they read the `SenderUpdate` projection, which has no contact field to leak. The requirement is
+therefore already satisfied structurally. This work adds defence in depth and proves the mechanism
+end to end, with the rider as the role that demonstrably cannot see the number.
+
+**Still open:** when senders become authenticated users they will need their own row-level rule on
+`Parcel`, and `Parcel.senderId` currently references the `Sender` collection rather than an IAM
+user id. A `senderUserId` field will be needed before `senderId == AUTH.userId` can work.
+
+**Verification**
+```
+node scripts/verify-masking.mjs
+hub_staff  rows=3  receiverPhone=["+8801822000001","+8801822000002","+8801822000003"]
+rider      rows=3  receiverPhone=[null,null,null]
+care       rows=3  receiverPhone=["+8801822000001","+8801822000002","+8801822000003"]
+```
+A permanent rider test account (`test.pathaopoth.rider@yopmail.com`) was created with the shared
+test password so this stays re-runnable without minting new accounts.
