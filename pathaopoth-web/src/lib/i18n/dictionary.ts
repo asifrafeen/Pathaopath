@@ -1,5 +1,11 @@
 export const defaultDictionary = {
-  "app.name": "Blocks App",
+  "app.name": "PathaoPoth",
+  "nav.queue": "Queue",
+  "nav.scan": "Scan parcel",
+  "nav.cases": "Cases",
+  "nav.movements": "My runs",
+  "nav.care": "Care queue",
+  "nav.reports": "Reports",
   "nav.profile": "Profile",
   "nav.logout": "Log out",
   "auth.welcome": "Welcome back",

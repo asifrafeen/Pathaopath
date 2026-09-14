@@ -1,5 +1,5 @@
 {
-  "app.name": "Blocks App",
+  "app.name": "PathaoPoth",
   "auth.back": "Back to sign in",
   "auth.continue": "Continue with Blocks",
   "auth.failed": "Sign-in failed",
@@ -19,5 +19,11 @@
   "notFound.message": "This page does not exist.",
   "notFound.title": "404",
   "profile.subtitle": "Signed-in user details from Blocks IAM.",
-  "profile.title": "Profile"
+  "profile.title": "Profile",
+  "nav.queue": "Queue",
+  "nav.scan": "Scan parcel",
+  "nav.cases": "Cases",
+  "nav.movements": "My runs",
+  "nav.care": "Care queue",
+  "nav.reports": "Reports"
 }

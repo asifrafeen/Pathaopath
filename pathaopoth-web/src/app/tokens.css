@@ -1,0 +1,216 @@
+/* PathaoPoth design tokens — pathaopoth.design.md v1.0
+ *
+ * Kept separate from styles.css so the token layer can be regenerated from the
+ * design file without touching component CSS. Everything here is referenced
+ * through tailwind.config.ts; never inline a hex value in a component.
+ *
+ * Channel discipline: brand blue does three jobs only — navigation position,
+ * primary action, selection. Operational meaning lives in the six-channel status
+ * ramp (queued, transit, attention, breach, settled, ai) and nothing outside the
+ * ramp may use those hues.
+ */
+
+:root {
+  /* brand — navigation, primary action, selection. Nothing else. */
+  --pp-brand: #124191;
+  --pp-brand-hover: #0e3576;
+  --pp-brand-pressed: #0a2a5c;
+  --pp-brand-soft: #e8eefb;
+  --pp-brand-border: #b9cdf2;
+  --pp-brand-text: #1a4fa8;
+  --pp-on-brand: #ffffff;
+
+  /* surfaces */
+  --pp-canvas: #f4f6f9;
+  --pp-surface: #ffffff;
+  --pp-surface-sunken: #eef1f6;
+  --pp-surface-raised: #ffffff;
+  --pp-surface-hover: #f6f8fb;
+  --pp-surface-selected: #e8eefb;
+  --pp-hairline: #e1e6ee;
+  --pp-hairline-strong: #c9d2e0;
+
+  /* ink */
+  --pp-ink: #0f172a;
+  --pp-ink-secondary: #475569;
+  --pp-ink-muted: #64748b;
+  --pp-ink-disabled: #94a3b8;
+  --pp-ink-inverse: #f8fafc;
+
+  /* status ramp — six channels, each soft / text / solid */
+  --pp-queued-soft: #eef1f6;
+  --pp-queued-text: #475569;
+  --pp-queued-solid: #64748b;
+  --pp-transit-soft: #e0f2fe;
+  --pp-transit-text: #075985;
+  --pp-transit-solid: #0284c7;
+  --pp-attention-soft: #fef3c7;
+  --pp-attention-text: #92400e;
+  --pp-attention-solid: #d97706;
+  --pp-breach-soft: #fee2e2;
+  --pp-breach-text: #991b1b;
+  --pp-breach-solid: #dc2626;
+  --pp-settled-soft: #dcfce7;
+  --pp-settled-text: #14532d;
+  --pp-settled-solid: #16a34a;
+  --pp-ai-soft: #ede9fe;
+  --pp-ai-text: #5b21b6;
+  --pp-ai-solid: #7c3aed;
+  --pp-ai-border: #ddd6fe;
+
+  /* charts */
+  --pp-chart-1: #1f4fa0;
+  --pp-chart-2: #0f8f86;
+  --pp-chart-3: #a8562c;
+  --pp-chart-4: #5c7a1e;
+  --pp-chart-5: #8a3b6b;
+  --pp-chart-6: #546578;
+  --pp-chart-grid: #e1e6ee;
+
+  /* elevation — border first, shadow only for things that float */
+  --pp-e1: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --pp-e2: 0 4px 12px -2px rgba(15, 23, 42, 0.1);
+  --pp-e3: 0 12px 32px -8px rgba(15, 23, 42, 0.18);
+  --pp-e4: 0 24px 56px -12px rgba(15, 23, 42, 0.24);
+
+  /* density — comfortable is the default; compact is a user preference */
+  --pp-row-h: 52px;
+  --pp-cell-py: 14px;
+  --pp-cell-px: 14px;
+  --pp-control-h: 40px;
+  --pp-stack-gap: 12px;
+
+  /* motion */
+  --pp-instant: 80ms;
+  --pp-fast: 140ms;
+  --pp-base: 200ms;
+  --pp-slow: 320ms;
+  --pp-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --pp-ease-entrance: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --pp-ease-exit: cubic-bezier(0.3, 0, 0.8, 0.15);
+}
+
+/* compact — persisted user preference, 40px rows */
+:root[data-density="compact"] {
+  --pp-row-h: 40px;
+  --pp-cell-py: 8px;
+  --pp-cell-px: 12px;
+  --pp-control-h: 32px;
+  --pp-stack-gap: 8px;
+}
+
+/* field — riders, one-handed, outdoors. Selected by role AND viewport, never
+   viewport alone: a care agent on a tablet still gets the desk console. */
+:root[data-density="field"] {
+  --pp-row-h: 64px;
+  --pp-cell-py: 18px;
+  --pp-cell-px: 16px;
+  --pp-control-h: 56px;
+  --pp-stack-gap: 16px;
+}
+
+/* Dark is a first-class second palette with its own elevation ladder, not an
+   inversion. Shadow is replaced by surface lightening at every level. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --pp-brand: #4d84e8;
+    --pp-brand-hover: #6b9bf0;
+    --pp-brand-pressed: #3d6fce;
+    --pp-brand-soft: #152742;
+    --pp-brand-border: #26436f;
+    --pp-brand-text: #8fb4f5;
+    --pp-on-brand: #0b1016;
+
+    --pp-canvas: #0b1016;
+    --pp-surface: #121924;
+    --pp-surface-sunken: #0e141d;
+    --pp-surface-raised: #18212e;
+    --pp-surface-hover: #1b2533;
+    --pp-surface-selected: #152742;
+    --pp-hairline: #232e3d;
+    --pp-hairline-strong: #334154;
+
+    --pp-ink: #e8edf5;
+    --pp-ink-secondary: #a4b0c2;
+    --pp-ink-muted: #7d8a9d;
+    --pp-ink-disabled: #5a6878;
+    --pp-ink-inverse: #0b1016;
+
+    --pp-queued-soft: #1b2533;
+    --pp-queued-text: #a4b0c2;
+    --pp-queued-solid: #64748b;
+    --pp-transit-soft: #0c2a3d;
+    --pp-transit-text: #7dd3fc;
+    --pp-transit-solid: #0ea5e9;
+    --pp-attention-soft: #33250a;
+    --pp-attention-text: #fcd34d;
+    --pp-attention-solid: #f59e0b;
+    --pp-breach-soft: #3a1513;
+    --pp-breach-text: #fca5a5;
+    --pp-breach-solid: #ef4444;
+    --pp-settled-soft: #0d2a19;
+    --pp-settled-text: #86efac;
+    --pp-settled-solid: #22c55e;
+    --pp-ai-soft: #231a3d;
+    --pp-ai-text: #c4b5fd;
+    --pp-ai-solid: #8b5cf6;
+    --pp-ai-border: #3b2d63;
+
+    --pp-chart-grid: #232e3d;
+
+    --pp-e1: 0 0 0 1px rgba(255, 255, 255, 0.04);
+    --pp-e2: 0 4px 12px -2px rgba(0, 0, 0, 0.5);
+    --pp-e3: 0 12px 32px -8px rgba(0, 0, 0, 0.6);
+    --pp-e4: 0 24px 56px -12px rgba(0, 0, 0, 0.7);
+  }
+}
+
+/* 14px body, not 16 — this is a data tool read for eight hours. */
+html {
+  font-size: 14px;
+}
+
+body {
+  background: var(--pp-canvas);
+  color: var(--pp-ink);
+  font-family: Inter, "Noto Sans Bengali", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Identifiers a human transcribes use mono; general numbers do not. */
+.pp-mono {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Any number that stacks vertically, and all money. */
+.pp-num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Focus is always visible: 2px canvas gap, 2px brand. Never suppressed. */
+.pp-focus:focus-visible,
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--pp-canvas), 0 0 0 4px var(--pp-brand);
+  border-radius: 6px;
+}
+
+/* Riders use this in motion. Not optional. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
