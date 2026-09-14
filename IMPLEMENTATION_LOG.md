@@ -20,11 +20,11 @@ Statuses: `Not started` · `In progress` · `Blocked` · `Done`
 | # | Title | Epic | Status | PR | Completed |
 |---|---|---|---|---|---|
 | 1 | Initialise git, `.gitignore`, first commit | 0 | Done | — | 2026-09-15 |
-| 2 | Add remote, push `dev`, set default branch | 0 | In progress | — | — |
+| 2 | Add remote, push `dev`, set default branch | 0 | Done | — | 2026-09-15 |
 | 3 | Create `IMPLEMENTATION_LOG.md` | 0 | Done | — | 2026-09-15 |
-| 4 | Create GitHub issues from the backlog | 0 | Not started | — | — |
-| 5 | Push core spine — 8 entities + 9 Dto types | 1 | Not started | — | — |
-| 6 | Verify live schema list and access-level aggregation | 1 | Not started | — | — |
+| 4 | Create GitHub issues from the backlog | 0 | Done | — | 2026-09-15 |
+| 5 | Push core spine — 8 entities + 9 Dto types | 1 | Done | — | 2026-09-15 |
+| 6 | Verify live schema list and access-level aggregation | 1 | Done | — | 2026-09-15 |
 | 7 | `CaseDecision`, `AiAnalysis` | 2 | Not started | — | — |
 | 8 | `CareTask`, `CaseEvent` | 2 | Not started | — | — |
 | 9 | `MoneyTransaction`, `LossReview` | 2 | Not started | — | — |
@@ -116,3 +116,112 @@ subdirectory, matching how those two files were already being referenced.
 
 **Verification**
 File present and linked from `PROJECT_WORKFLOW.md`.
+
+### #2 — Add remote, push `dev`, set default branch
+
+**Status:** Done · **Date:** 2026-09-15
+
+**Decisions and deviations**
+Added `.gitattributes` with `* text=auto eol=lf`, folded in here rather than given its own ticket.
+Git had warned it would convert LF to CRLF, which would make every diff noisy for anyone on macOS or
+Linux.
+
+**Verification**
+```
+git push -u origin dev        -> [new branch] dev -> dev
+gh repo view --json defaultBranchRef  -> {"defaultBranchRef":{"name":"dev"}}
+```
+The repository is public. Verified before pushing that `.env`, `.cert/`, and all credentials are
+ignored. Public values now visible: tenant id, public OIDC client id, app domain — all transmitted
+by the browser app on every request.
+
+### #4 — Create GitHub issues from the backlog
+
+**Status:** Done · **Date:** 2026-09-15
+
+**Verification**
+```
+13 milestones, 20 labels, 40/40 issues created
+gh issue list --state open  -> 36 open (1-4 closed)
+```
+
+### #5 — Push core spine schemas
+
+**Status:** Done · **Date:** 2026-09-15
+
+**Business logic implemented**
+The storage foundation for exception handling: a parcel, the case tracking its exception, the hub
+receipts that are the only thing which transfers ownership, the immutable rider notes, the ownership
+periods proving the case always had exactly one accountable owner, and the transport legs.
+
+**Schemas used or changed**
+- Entities created (8): `Hub`, `Sender`, `Parcel`, `ExceptionCase`, `HubReceipt`, `CaseNote`,
+  `OwnershipHistory`, `ParcelMovement`
+- Dto types created (9): `HubRef`, `UserRef`, `RiderRef`, `SenderSnapshot`, `ParcelSnapshot`,
+  `DecisionSnapshot`, `CustodyHolder`, `ServiceArea`, `HubConnection`
+- Load-bearing fields: `ExceptionCase.ownerHubOrgId` and `ParcelMovement.toHubOrgId` are the mutable
+  access keys, because the platform's `OrganizationId` records the creating hub permanently and
+  ownership transfers. `HubReceipt.appliedState` and `incomingMovementId` drive the commit-point
+  and idempotency behaviour. `OwnershipHistory.isCurrent` replaces the partial index that the
+  Data Gateway cannot express.
+
+**Access policies touched**
+None. `rules.json` remains empty, so all 17 schemas are currently readable by any authenticated user.
+Closes in Epic 3.
+
+**Decisions and deviations**
+Two platform constraints found during the push, neither anticipated in the design:
+
+1. **`collectionName` is required on Entity schemas.** Dto types are exempt
+   (`SchemaValidatorHelper`: `schemaType == Dto || (Entity && collectionName non-empty)`). The first
+   push failed with `Collection_Name_Is_Required`. Generator now emits `collectionName = schemaName`
+   for entities only.
+2. **Schemas must be pushed in dependency order.** A field referencing a Dto is rejected unless that
+   Dto already exists; `data schema push` sends files alphabetically and aborts on first failure, so
+   `ExceptionCase` failed on the not-yet-created `ParcelSnapshot`. Resolved with a two-phase push —
+   Dto types first, then all 17. Worth knowing for every future schema batch: **push Dto types
+   before the entities that reference them.**
+
+The partial first attempt created three schemas before aborting; the second phase updated them
+rather than duplicating.
+
+**Verification**
+```
+blocks data schema push --yes   -> results: 17 | ok: 17 | failed: 0
+blocks data reload --yes        -> "Schema evicted successfully."
+blocks data schema list --json  -> count: 17
+```
+
+### #6 — Verify live schema list and access levels
+
+**Status:** Done · **Date:** 2026-09-15
+
+**Business logic implemented**
+None — verification only.
+
+**Schemas used or changed**
+None.
+
+**Decisions and deviations**
+`data schema get-by-name` projects only `name`, `type`, and `description`, so field flags are
+invisible through it. `data schema aggregation` exposes the full field record and is the correct
+command for confirming what actually persisted.
+
+**Settles the open question on unique indexes:** the Data Gateway **does** support them. Both
+`isUniqueData` flags survived the push. What it does not support is *partial* unique indexes, which
+is the separate constraint that forced "one open case per parcel" to become a write-path convention.
+No fallback was needed.
+
+**Verification**
+```
+blocks data schema aggregation --json
+  schemas: 17 | total fields: 246 | requiredOn set: 37
+  isUniqueData true: Hub.code, Parcel.trackingNumber
+  isPIIData true   : Parcel.receiverPhone, Sender.phone, RiderRef.phone,
+                     SenderSnapshot.phone, ParcelMovement.phone
+  field-level policies: 0   (expected — Epic 3)
+```
+Nested Dto references resolved correctly: `ExceptionCase` carries `parcel:ParcelSnapshot`,
+`ownerHub:HubRef`, `accountableStaff:UserRef`, `custodyHolder:CustodyHolder`,
+`latestDecision:DecisionSnapshot`. 246 total fields = 136 authored + platform-managed fields added
+to each schema.

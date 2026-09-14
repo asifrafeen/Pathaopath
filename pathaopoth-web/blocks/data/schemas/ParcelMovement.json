@@ -1,5 +1,6 @@
 {
   "schemaName": "ParcelMovement",
+  "collectionName": "ParcelMovement",
   "schemaType": 1,
   "readAccessLevel": 1,
   "writeAccessLevel": 1,

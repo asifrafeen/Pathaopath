@@ -1,5 +1,6 @@
 {
   "schemaName": "CaseNote",
+  "collectionName": "CaseNote",
   "schemaType": 1,
   "readAccessLevel": 1,
   "writeAccessLevel": 1,
