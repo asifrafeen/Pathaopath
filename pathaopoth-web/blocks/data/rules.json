@@ -759,526 +759,6 @@
   ],
   "policies": [
     {
-      "schemaName": "ExceptionCase",
-      "policyName": "ExceptionCase_read_scope",
-      "policyDescription": "Hub staff see records owned by their own hub. Care and ops are cross-hub.",
-      "policyType": 0,
-      "operation": 0,
-      "fieldNames": [],
-      "ruleGroup": {
-        "logicalOperator": 1,
-        "rules": [
-          {
-            "leftSource": 0,
-            "leftOperand": "Roles",
-            "operator": 6,
-            "rightSource": 2,
-            "rightOperand": "",
-            "staticValue": "care",
-            "description": "Signed-in user holds the care role"
-          },
-          {
-            "leftSource": 0,
-            "leftOperand": "Roles",
-            "operator": 6,
-            "rightSource": 2,
-            "rightOperand": "",
-            "staticValue": "ops_manager",
-            "description": "Signed-in user holds the ops_manager role"
-          },
-          {
-            "leftSource": 1,
-            "leftOperand": "ownerHubOrgId",
-            "operator": 0,
-            "rightSource": 0,
-            "rightOperand": "organizationId",
-            "description": "Record is owned by the caller's hub"
-          }
-        ],
-        "nestedGroups": []
-      },
-      "priority": 0,
-      "isAllowPolicy": true
-    },
-    {
-      "schemaName": "HubReceipt",
-      "policyName": "HubReceipt_read_scope",
-      "policyDescription": "Hub staff see records owned by their own hub. Care and ops are cross-hub.",
-      "policyType": 0,
-      "operation": 0,
-      "fieldNames": [],
-      "ruleGroup": {
-        "logicalOperator": 1,
-        "rules": [
-          {
-            "leftSource": 0,
-            "leftOperand": "Roles",
-            "operator": 6,
-            "rightSource": 2,
-            "rightOperand": "",
-            "staticValue": "care",
-            "description": "Signed-in user holds the care role"
-          },
-          {
-            "leftSource": 0,
-            "leftOperand": "Roles",
-            "operator": 6,
-            "rightSource": 2,
-            "rightOperand": "",
-            "staticValue": "ops_manager",
-            "description": "Signed-in user holds the ops_manager role"
-          },
-          {
-            "leftSource": 1,
-            "leftOperand": "ownerHubOrgId",
-            "operator": 0,
-            "rightSource": 0,
-            "rightOperand": "organizationId",
-            "description": "Record is owned by the caller's hub"
-          }
-        ],
-        "nestedGroups": []
-      },
-      "priority": 0,
-      "isAllowPolicy": true
-    },
-    {
-      "schemaName": "CaseNote",
-      "policyName": "CaseNote_read_scope",
-      "policyDescription": "Hub staff see records owned by their own hub. Care and ops are cross-hub.",
-      "policyType": 0,
-      "operation": 0,
-      "fieldNames": [],
-      "ruleGroup": {
-        "logicalOperator": 1,
-        "rules": [
-          {
-            "leftSource": 0,
-            "leftOperand": "Roles",
-            "operator": 6,
-            "rightSource": 2,
-            "rightOperand": "",
-            "staticValue": "care",
-            "description": "Signed-in user holds the care role"
-          },
-          {
-            "leftSource": 0,
-            "leftOperand": "Roles",
-            "operator": 6,
-            "rightSource": 2,
-            "rightOperand": "",
-            "staticValue": "ops_manager",
-            "description": "Signed-in user holds the ops_manager role"
-          },
-          {
-            "leftSource": 1,
-            "leftOperand": "ownerHubOrgId",
-            "operator": 0,
-            "rightSource": 0,
-            "rightOperand": "organizationId",
-            "description": "Record is owned by the caller's hub"
-          }
-        ],
-        "nestedGroups": []
-      },
-      "priority": 0,
-      "isAllowPolicy": true
-    },
-    {
-      "schemaName": "OwnershipHistory",
-      "policyName": "OwnershipHistory_read_scope",
-      "policyDescription": "Hub staff see records owned by their own hub. Care and ops are cross-hub.",
-      "policyType": 0,
-      "operation": 0,
-      "fieldNames": [],
-      "ruleGroup": {
-        "logicalOperator": 1,
-        "rules": [
-          {
-            "leftSource": 0,
-            "leftOperand": "Roles",
-            "operator": 6,
-            "rightSource": 2,
-            "rightOperand": "",
-            "staticValue": "care",
-            "description": "Signed-in user holds the care role"
-          },
-          {
-            "leftSource": 0,
-            "leftOperand": "Roles",
-            "operator": 6,
-            "rightSource": 2,
-            "rightOperand": "",
-            "staticValue": "ops_manager",
-            "description": "Signed-in user holds the ops_manager role"
-          },
-          {
-            "leftSource": 1,
-            "leftOperand": "ownerHubOrgId",
-            "operator": 0,
-            "rightSource": 0,
-            "rightOperand": "organizationId",
-            "description": "Record is owned by the caller's hub"
-          }
-        ],
-        "nestedGroups": []
-      },
-      "priority": 0,
-      "isAllowPolicy": true
-    },
-    {
-      "schemaName": "CaseDecision",
-      "policyName": "CaseDecision_read_scope",
-      "policyDescription": "Hub staff see records owned by their own hub. Care and ops are cross-hub.",
-      "policyType": 0,
-      "operation": 0,
-      "fieldNames": [],
-      "ruleGroup": {
-        "logicalOperator": 1,
-        "rules": [
-          {
-            "leftSource": 0,
-            "leftOperand": "Roles",
-            "operator": 6,
-            "rightSource": 2,
-            "rightOperand": "",
-            "staticValue": "care",
-            "description": "Signed-in user holds the care role"
-          },
-          {
-            "leftSource": 0,
-            "leftOperand": "Roles",
-            "operator": 6,
-            "rightSource": 2,
-            "rightOperand": "",
-            "staticValue": "ops_manager",
-            "description": "Signed-in user holds the ops_manager role"
-          },
-          {
-            "leftSource": 1,
-            "leftOperand": "ownerHubOrgId",
-            "operator": 0,
-            "rightSource": 0,
-            "rightOperand": "organizationId",
-            "description": "Record is owned by the caller's hub"
-          }
-        ],
-        "nestedGroups": []
-      },
-      "priority": 0,
-      "isAllowPolicy": true
-    },
-    {
-      "schemaName": "AiAnalysis",
-      "policyName": "AiAnalysis_read_scope",
-      "policyDescription": "Hub staff see records owned by their own hub. Care and ops are cross-hub.",
-      "policyType": 0,
-      "operation": 0,
-      "fieldNames": [],
-      "ruleGroup": {
-        "logicalOperator": 1,
-        "rules": [
-          {
-            "leftSource": 0,
-            "leftOperand": "Roles",
-            "operator": 6,
-            "rightSource": 2,
-            "rightOperand": "",
-            "staticValue": "care",
-            "description": "Signed-in user holds the care role"
-          },
-          {
-            "leftSource": 0,
-            "leftOperand": "Roles",
-            "operator": 6,
-            "rightSource": 2,
-            "rightOperand": "",
-            "staticValue": "ops_manager",
-            "description": "Signed-in user holds the ops_manager role"
-          },
-          {
-            "leftSource": 1,
-            "leftOperand": "ownerHubOrgId",
-            "operator": 0,
-            "rightSource": 0,
-            "rightOperand": "organizationId",
-            "description": "Record is owned by the caller's hub"
-          }
-        ],
-        "nestedGroups": []
-      },
-      "priority": 0,
-      "isAllowPolicy": true
-    },
-    {
-      "schemaName": "CareTask",
-      "policyName": "CareTask_read_scope",
-      "policyDescription": "Hub staff see records owned by their own hub. Care and ops are cross-hub.",
-      "policyType": 0,
-      "operation": 0,
-      "fieldNames": [],
-      "ruleGroup": {
-        "logicalOperator": 1,
-        "rules": [
-          {
-            "leftSource": 0,
-            "leftOperand": "Roles",
-            "operator": 6,
-            "rightSource": 2,
-            "rightOperand": "",
-            "staticValue": "care",
-            "description": "Signed-in user holds the care role"
-          },
-          {
-            "leftSource": 0,
-            "leftOperand": "Roles",
-            "operator": 6,
-            "rightSource": 2,
-            "rightOperand": "",
-            "staticValue": "ops_manager",
-            "description": "Signed-in user holds the ops_manager role"
-          },
-          {
-            "leftSource": 1,
-            "leftOperand": "ownerHubOrgId",
-            "operator": 0,
-            "rightSource": 0,
-            "rightOperand": "organizationId",
-            "description": "Record is owned by the caller's hub"
-          }
-        ],
-        "nestedGroups": []
-      },
-      "priority": 0,
-      "isAllowPolicy": true
-    },
-    {
-      "schemaName": "CaseEvent",
-      "policyName": "CaseEvent_read_scope",
-      "policyDescription": "Hub staff see records owned by their own hub. Care and ops are cross-hub.",
-      "policyType": 0,
-      "operation": 0,
-      "fieldNames": [],
-      "ruleGroup": {
-        "logicalOperator": 1,
-        "rules": [
-          {
-            "leftSource": 0,
-            "leftOperand": "Roles",
-            "operator": 6,
-            "rightSource": 2,
-            "rightOperand": "",
-            "staticValue": "care",
-            "description": "Signed-in user holds the care role"
-          },
-          {
-            "leftSource": 0,
-            "leftOperand": "Roles",
-            "operator": 6,
-            "rightSource": 2,
-            "rightOperand": "",
-            "staticValue": "ops_manager",
-            "description": "Signed-in user holds the ops_manager role"
-          },
-          {
-            "leftSource": 1,
-            "leftOperand": "ownerHubOrgId",
-            "operator": 0,
-            "rightSource": 0,
-            "rightOperand": "organizationId",
-            "description": "Record is owned by the caller's hub"
-          }
-        ],
-        "nestedGroups": []
-      },
-      "priority": 0,
-      "isAllowPolicy": true
-    },
-    {
-      "schemaName": "MoneyTransaction",
-      "policyName": "MoneyTransaction_read_scope",
-      "policyDescription": "Hub staff see records owned by their own hub. Care and ops are cross-hub.",
-      "policyType": 0,
-      "operation": 0,
-      "fieldNames": [],
-      "ruleGroup": {
-        "logicalOperator": 1,
-        "rules": [
-          {
-            "leftSource": 0,
-            "leftOperand": "Roles",
-            "operator": 6,
-            "rightSource": 2,
-            "rightOperand": "",
-            "staticValue": "care",
-            "description": "Signed-in user holds the care role"
-          },
-          {
-            "leftSource": 0,
-            "leftOperand": "Roles",
-            "operator": 6,
-            "rightSource": 2,
-            "rightOperand": "",
-            "staticValue": "ops_manager",
-            "description": "Signed-in user holds the ops_manager role"
-          },
-          {
-            "leftSource": 1,
-            "leftOperand": "ownerHubOrgId",
-            "operator": 0,
-            "rightSource": 0,
-            "rightOperand": "organizationId",
-            "description": "Record is owned by the caller's hub"
-          }
-        ],
-        "nestedGroups": []
-      },
-      "priority": 0,
-      "isAllowPolicy": true
-    },
-    {
-      "schemaName": "LossReview",
-      "policyName": "LossReview_read_scope",
-      "policyDescription": "Hub staff see records owned by their own hub. Care and ops are cross-hub.",
-      "policyType": 0,
-      "operation": 0,
-      "fieldNames": [],
-      "ruleGroup": {
-        "logicalOperator": 1,
-        "rules": [
-          {
-            "leftSource": 0,
-            "leftOperand": "Roles",
-            "operator": 6,
-            "rightSource": 2,
-            "rightOperand": "",
-            "staticValue": "care",
-            "description": "Signed-in user holds the care role"
-          },
-          {
-            "leftSource": 0,
-            "leftOperand": "Roles",
-            "operator": 6,
-            "rightSource": 2,
-            "rightOperand": "",
-            "staticValue": "ops_manager",
-            "description": "Signed-in user holds the ops_manager role"
-          },
-          {
-            "leftSource": 1,
-            "leftOperand": "ownerHubOrgId",
-            "operator": 0,
-            "rightSource": 0,
-            "rightOperand": "organizationId",
-            "description": "Record is owned by the caller's hub"
-          }
-        ],
-        "nestedGroups": []
-      },
-      "priority": 0,
-      "isAllowPolicy": true
-    },
-    {
-      "schemaName": "Attachment",
-      "policyName": "Attachment_read_scope",
-      "policyDescription": "Hub staff see records owned by their own hub. Care and ops are cross-hub.",
-      "policyType": 0,
-      "operation": 0,
-      "fieldNames": [],
-      "ruleGroup": {
-        "logicalOperator": 1,
-        "rules": [
-          {
-            "leftSource": 0,
-            "leftOperand": "Roles",
-            "operator": 6,
-            "rightSource": 2,
-            "rightOperand": "",
-            "staticValue": "care",
-            "description": "Signed-in user holds the care role"
-          },
-          {
-            "leftSource": 0,
-            "leftOperand": "Roles",
-            "operator": 6,
-            "rightSource": 2,
-            "rightOperand": "",
-            "staticValue": "ops_manager",
-            "description": "Signed-in user holds the ops_manager role"
-          },
-          {
-            "leftSource": 1,
-            "leftOperand": "ownerHubOrgId",
-            "operator": 0,
-            "rightSource": 0,
-            "rightOperand": "organizationId",
-            "description": "Record is owned by the caller's hub"
-          }
-        ],
-        "nestedGroups": []
-      },
-      "priority": 0,
-      "isAllowPolicy": true
-    },
-    {
-      "schemaName": "ParcelMovement",
-      "policyName": "ParcelMovement_read_scope",
-      "policyDescription": "Riders see only movements assigned to them. The sending and receiving hubs both see the leg. Care and ops are cross-hub.",
-      "policyType": 0,
-      "operation": 0,
-      "fieldNames": [],
-      "ruleGroup": {
-        "logicalOperator": 1,
-        "rules": [
-          {
-            "leftSource": 0,
-            "leftOperand": "Roles",
-            "operator": 6,
-            "rightSource": 2,
-            "rightOperand": "",
-            "staticValue": "care",
-            "description": "Signed-in user holds the care role"
-          },
-          {
-            "leftSource": 0,
-            "leftOperand": "Roles",
-            "operator": 6,
-            "rightSource": 2,
-            "rightOperand": "",
-            "staticValue": "ops_manager",
-            "description": "Signed-in user holds the ops_manager role"
-          },
-          {
-            "leftSource": 1,
-            "leftOperand": "assignedRiderId",
-            "operator": 0,
-            "rightSource": 0,
-            "rightOperand": "userId",
-            "description": "Movement is assigned to the caller"
-          },
-          {
-            "leftSource": 1,
-            "leftOperand": "fromHubOrgId",
-            "operator": 0,
-            "rightSource": 0,
-            "rightOperand": "organizationId",
-            "description": "Caller's hub dispatched this leg"
-          },
-          {
-            "leftSource": 1,
-            "leftOperand": "toHubOrgId",
-            "operator": 0,
-            "rightSource": 0,
-            "rightOperand": "organizationId",
-            "description": "Caller's hub is the destination"
-          }
-        ],
-        "nestedGroups": []
-      },
-      "priority": 0,
-      "isAllowPolicy": true
-    },
-    {
       "schemaName": "Parcel",
       "policyName": "Parcel_read_internal",
       "policyDescription": "Any internal role may read parcel records.",
@@ -1373,6 +853,733 @@
         "nestedGroups": []
       },
       "priority": 10,
+      "isAllowPolicy": true
+    },
+    {
+      "schemaName": "ExceptionCase",
+      "policyName": "ExceptionCase_read_scope",
+      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue.",
+      "policyType": 0,
+      "operation": 0,
+      "fieldNames": [],
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "care",
+            "description": "Signed-in user holds the care role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "ops_manager",
+            "description": "Signed-in user holds the ops_manager role"
+          }
+        ],
+        "nestedGroups": [
+          {
+            "logicalOperator": 0,
+            "rules": [
+              {
+                "leftSource": 0,
+                "leftOperand": "Roles",
+                "operator": 6,
+                "rightSource": 2,
+                "rightOperand": "",
+                "staticValue": "hub_staff",
+                "description": "Signed-in user holds the hub_staff role"
+              },
+              {
+                "leftSource": 1,
+                "leftOperand": "ownerHubOrgId",
+                "operator": 0,
+                "rightSource": 0,
+                "rightOperand": "organizationId",
+                "description": "Record is owned by the caller hub"
+              }
+            ],
+            "nestedGroups": []
+          }
+        ]
+      },
+      "priority": 0,
+      "isAllowPolicy": true
+    },
+    {
+      "schemaName": "HubReceipt",
+      "policyName": "HubReceipt_read_scope",
+      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue.",
+      "policyType": 0,
+      "operation": 0,
+      "fieldNames": [],
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "care",
+            "description": "Signed-in user holds the care role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "ops_manager",
+            "description": "Signed-in user holds the ops_manager role"
+          }
+        ],
+        "nestedGroups": [
+          {
+            "logicalOperator": 0,
+            "rules": [
+              {
+                "leftSource": 0,
+                "leftOperand": "Roles",
+                "operator": 6,
+                "rightSource": 2,
+                "rightOperand": "",
+                "staticValue": "hub_staff",
+                "description": "Signed-in user holds the hub_staff role"
+              },
+              {
+                "leftSource": 1,
+                "leftOperand": "ownerHubOrgId",
+                "operator": 0,
+                "rightSource": 0,
+                "rightOperand": "organizationId",
+                "description": "Record is owned by the caller hub"
+              }
+            ],
+            "nestedGroups": []
+          }
+        ]
+      },
+      "priority": 0,
+      "isAllowPolicy": true
+    },
+    {
+      "schemaName": "CaseNote",
+      "policyName": "CaseNote_read_scope",
+      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue.",
+      "policyType": 0,
+      "operation": 0,
+      "fieldNames": [],
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "care",
+            "description": "Signed-in user holds the care role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "ops_manager",
+            "description": "Signed-in user holds the ops_manager role"
+          }
+        ],
+        "nestedGroups": [
+          {
+            "logicalOperator": 0,
+            "rules": [
+              {
+                "leftSource": 0,
+                "leftOperand": "Roles",
+                "operator": 6,
+                "rightSource": 2,
+                "rightOperand": "",
+                "staticValue": "hub_staff",
+                "description": "Signed-in user holds the hub_staff role"
+              },
+              {
+                "leftSource": 1,
+                "leftOperand": "ownerHubOrgId",
+                "operator": 0,
+                "rightSource": 0,
+                "rightOperand": "organizationId",
+                "description": "Record is owned by the caller hub"
+              }
+            ],
+            "nestedGroups": []
+          }
+        ]
+      },
+      "priority": 0,
+      "isAllowPolicy": true
+    },
+    {
+      "schemaName": "OwnershipHistory",
+      "policyName": "OwnershipHistory_read_scope",
+      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue.",
+      "policyType": 0,
+      "operation": 0,
+      "fieldNames": [],
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "care",
+            "description": "Signed-in user holds the care role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "ops_manager",
+            "description": "Signed-in user holds the ops_manager role"
+          }
+        ],
+        "nestedGroups": [
+          {
+            "logicalOperator": 0,
+            "rules": [
+              {
+                "leftSource": 0,
+                "leftOperand": "Roles",
+                "operator": 6,
+                "rightSource": 2,
+                "rightOperand": "",
+                "staticValue": "hub_staff",
+                "description": "Signed-in user holds the hub_staff role"
+              },
+              {
+                "leftSource": 1,
+                "leftOperand": "ownerHubOrgId",
+                "operator": 0,
+                "rightSource": 0,
+                "rightOperand": "organizationId",
+                "description": "Record is owned by the caller hub"
+              }
+            ],
+            "nestedGroups": []
+          }
+        ]
+      },
+      "priority": 0,
+      "isAllowPolicy": true
+    },
+    {
+      "schemaName": "CaseDecision",
+      "policyName": "CaseDecision_read_scope",
+      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue.",
+      "policyType": 0,
+      "operation": 0,
+      "fieldNames": [],
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "care",
+            "description": "Signed-in user holds the care role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "ops_manager",
+            "description": "Signed-in user holds the ops_manager role"
+          }
+        ],
+        "nestedGroups": [
+          {
+            "logicalOperator": 0,
+            "rules": [
+              {
+                "leftSource": 0,
+                "leftOperand": "Roles",
+                "operator": 6,
+                "rightSource": 2,
+                "rightOperand": "",
+                "staticValue": "hub_staff",
+                "description": "Signed-in user holds the hub_staff role"
+              },
+              {
+                "leftSource": 1,
+                "leftOperand": "ownerHubOrgId",
+                "operator": 0,
+                "rightSource": 0,
+                "rightOperand": "organizationId",
+                "description": "Record is owned by the caller hub"
+              }
+            ],
+            "nestedGroups": []
+          }
+        ]
+      },
+      "priority": 0,
+      "isAllowPolicy": true
+    },
+    {
+      "schemaName": "AiAnalysis",
+      "policyName": "AiAnalysis_read_scope",
+      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue.",
+      "policyType": 0,
+      "operation": 0,
+      "fieldNames": [],
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "care",
+            "description": "Signed-in user holds the care role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "ops_manager",
+            "description": "Signed-in user holds the ops_manager role"
+          }
+        ],
+        "nestedGroups": [
+          {
+            "logicalOperator": 0,
+            "rules": [
+              {
+                "leftSource": 0,
+                "leftOperand": "Roles",
+                "operator": 6,
+                "rightSource": 2,
+                "rightOperand": "",
+                "staticValue": "hub_staff",
+                "description": "Signed-in user holds the hub_staff role"
+              },
+              {
+                "leftSource": 1,
+                "leftOperand": "ownerHubOrgId",
+                "operator": 0,
+                "rightSource": 0,
+                "rightOperand": "organizationId",
+                "description": "Record is owned by the caller hub"
+              }
+            ],
+            "nestedGroups": []
+          }
+        ]
+      },
+      "priority": 0,
+      "isAllowPolicy": true
+    },
+    {
+      "schemaName": "CareTask",
+      "policyName": "CareTask_read_scope",
+      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue.",
+      "policyType": 0,
+      "operation": 0,
+      "fieldNames": [],
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "care",
+            "description": "Signed-in user holds the care role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "ops_manager",
+            "description": "Signed-in user holds the ops_manager role"
+          }
+        ],
+        "nestedGroups": [
+          {
+            "logicalOperator": 0,
+            "rules": [
+              {
+                "leftSource": 0,
+                "leftOperand": "Roles",
+                "operator": 6,
+                "rightSource": 2,
+                "rightOperand": "",
+                "staticValue": "hub_staff",
+                "description": "Signed-in user holds the hub_staff role"
+              },
+              {
+                "leftSource": 1,
+                "leftOperand": "ownerHubOrgId",
+                "operator": 0,
+                "rightSource": 0,
+                "rightOperand": "organizationId",
+                "description": "Record is owned by the caller hub"
+              }
+            ],
+            "nestedGroups": []
+          }
+        ]
+      },
+      "priority": 0,
+      "isAllowPolicy": true
+    },
+    {
+      "schemaName": "CaseEvent",
+      "policyName": "CaseEvent_read_scope",
+      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue.",
+      "policyType": 0,
+      "operation": 0,
+      "fieldNames": [],
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "care",
+            "description": "Signed-in user holds the care role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "ops_manager",
+            "description": "Signed-in user holds the ops_manager role"
+          }
+        ],
+        "nestedGroups": [
+          {
+            "logicalOperator": 0,
+            "rules": [
+              {
+                "leftSource": 0,
+                "leftOperand": "Roles",
+                "operator": 6,
+                "rightSource": 2,
+                "rightOperand": "",
+                "staticValue": "hub_staff",
+                "description": "Signed-in user holds the hub_staff role"
+              },
+              {
+                "leftSource": 1,
+                "leftOperand": "ownerHubOrgId",
+                "operator": 0,
+                "rightSource": 0,
+                "rightOperand": "organizationId",
+                "description": "Record is owned by the caller hub"
+              }
+            ],
+            "nestedGroups": []
+          }
+        ]
+      },
+      "priority": 0,
+      "isAllowPolicy": true
+    },
+    {
+      "schemaName": "MoneyTransaction",
+      "policyName": "MoneyTransaction_read_scope",
+      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue.",
+      "policyType": 0,
+      "operation": 0,
+      "fieldNames": [],
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "care",
+            "description": "Signed-in user holds the care role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "ops_manager",
+            "description": "Signed-in user holds the ops_manager role"
+          }
+        ],
+        "nestedGroups": [
+          {
+            "logicalOperator": 0,
+            "rules": [
+              {
+                "leftSource": 0,
+                "leftOperand": "Roles",
+                "operator": 6,
+                "rightSource": 2,
+                "rightOperand": "",
+                "staticValue": "hub_staff",
+                "description": "Signed-in user holds the hub_staff role"
+              },
+              {
+                "leftSource": 1,
+                "leftOperand": "ownerHubOrgId",
+                "operator": 0,
+                "rightSource": 0,
+                "rightOperand": "organizationId",
+                "description": "Record is owned by the caller hub"
+              }
+            ],
+            "nestedGroups": []
+          }
+        ]
+      },
+      "priority": 0,
+      "isAllowPolicy": true
+    },
+    {
+      "schemaName": "LossReview",
+      "policyName": "LossReview_read_scope",
+      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue.",
+      "policyType": 0,
+      "operation": 0,
+      "fieldNames": [],
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "care",
+            "description": "Signed-in user holds the care role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "ops_manager",
+            "description": "Signed-in user holds the ops_manager role"
+          }
+        ],
+        "nestedGroups": [
+          {
+            "logicalOperator": 0,
+            "rules": [
+              {
+                "leftSource": 0,
+                "leftOperand": "Roles",
+                "operator": 6,
+                "rightSource": 2,
+                "rightOperand": "",
+                "staticValue": "hub_staff",
+                "description": "Signed-in user holds the hub_staff role"
+              },
+              {
+                "leftSource": 1,
+                "leftOperand": "ownerHubOrgId",
+                "operator": 0,
+                "rightSource": 0,
+                "rightOperand": "organizationId",
+                "description": "Record is owned by the caller hub"
+              }
+            ],
+            "nestedGroups": []
+          }
+        ]
+      },
+      "priority": 0,
+      "isAllowPolicy": true
+    },
+    {
+      "schemaName": "Attachment",
+      "policyName": "Attachment_read_scope",
+      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue.",
+      "policyType": 0,
+      "operation": 0,
+      "fieldNames": [],
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "care",
+            "description": "Signed-in user holds the care role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "ops_manager",
+            "description": "Signed-in user holds the ops_manager role"
+          }
+        ],
+        "nestedGroups": [
+          {
+            "logicalOperator": 0,
+            "rules": [
+              {
+                "leftSource": 0,
+                "leftOperand": "Roles",
+                "operator": 6,
+                "rightSource": 2,
+                "rightOperand": "",
+                "staticValue": "hub_staff",
+                "description": "Signed-in user holds the hub_staff role"
+              },
+              {
+                "leftSource": 1,
+                "leftOperand": "ownerHubOrgId",
+                "operator": 0,
+                "rightSource": 0,
+                "rightOperand": "organizationId",
+                "description": "Record is owned by the caller hub"
+              }
+            ],
+            "nestedGroups": []
+          }
+        ]
+      },
+      "priority": 0,
+      "isAllowPolicy": true
+    },
+    {
+      "schemaName": "ParcelMovement",
+      "policyName": "ParcelMovement_read_scope",
+      "policyDescription": "Riders see only legs assigned to them. Hub staff see legs their hub sends or receives. Care and ops are cross-hub.",
+      "policyType": 0,
+      "operation": 0,
+      "fieldNames": [],
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "care",
+            "description": "Signed-in user holds the care role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "ops_manager",
+            "description": "Signed-in user holds the ops_manager role"
+          },
+          {
+            "leftSource": 1,
+            "leftOperand": "assignedRiderId",
+            "operator": 0,
+            "rightSource": 0,
+            "rightOperand": "userId",
+            "description": "Leg is assigned to the caller"
+          }
+        ],
+        "nestedGroups": [
+          {
+            "logicalOperator": 0,
+            "rules": [
+              {
+                "leftSource": 0,
+                "leftOperand": "Roles",
+                "operator": 6,
+                "rightSource": 2,
+                "rightOperand": "",
+                "staticValue": "hub_staff",
+                "description": "Signed-in user holds the hub_staff role"
+              },
+              {
+                "leftSource": 1,
+                "leftOperand": "fromHubOrgId",
+                "operator": 0,
+                "rightSource": 0,
+                "rightOperand": "organizationId",
+                "description": "Caller hub dispatched this leg"
+              }
+            ],
+            "nestedGroups": []
+          },
+          {
+            "logicalOperator": 0,
+            "rules": [
+              {
+                "leftSource": 0,
+                "leftOperand": "Roles",
+                "operator": 6,
+                "rightSource": 2,
+                "rightOperand": "",
+                "staticValue": "hub_staff",
+                "description": "Signed-in user holds the hub_staff role"
+              },
+              {
+                "leftSource": 1,
+                "leftOperand": "toHubOrgId",
+                "operator": 0,
+                "rightSource": 0,
+                "rightOperand": "organizationId",
+                "description": "Caller hub is the destination"
+              }
+            ],
+            "nestedGroups": []
+          }
+        ]
+      },
+      "priority": 0,
       "isAllowPolicy": true
     }
   ]

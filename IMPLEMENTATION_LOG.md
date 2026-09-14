@@ -727,3 +727,61 @@ Anonymous sender read, no token supplied:
   link https://dbuajn.slsblx.com:5173/t/BOL9YF0Bg…
   receiverPhone on SenderUpdate -> field does not exist (by design)
 ```
+
+### Policy fix — hub scope was organisation alone, not role and organisation
+
+**Status:** Done · **Date:** 2026-09-15
+
+**The defect**
+The hub-scoped read policies matched on `ownerHubOrgId == AUTH.organizationId` and nothing else. Any
+member of a hub organisation therefore read that hub's entire internal case queue — including
+**riders**, who the design says "see assigned movements and acknowledge pickup; they do not receive
+broad internal case access".
+
+It only surfaced once a rider account existed *inside a hub organisation*. The earlier matrix ran
+its rider column against a Moghbazar hub_staff account that happened to own no cases, so the column
+read 0 and looked correct. It was measuring the wrong thing.
+
+**The fix**
+Hub scope is now role **and** organisation, expressed as a nested AND group inside the allow policy:
+
+```
+OR(
+  Roles CONTAIN care,
+  Roles CONTAIN ops_manager,
+  AND( Roles CONTAIN hub_staff, ownerHubOrgId == AUTH.organizationId )
+)
+```
+
+`ParcelMovement` gets the same treatment, keeping `assignedRiderId == AUTH.userId` at the top level
+so riders still see their own legs and nothing else.
+
+**Verification**
+```
+node scripts/verify-access.mjs
+collection        hubA  hubB  rider   care  ANON
+ExceptionCase     2     1     DENIED  3     DENIED
+HubReceipt        2     1     DENIED  3     DENIED
+CaseNote          2     1     DENIED  3     DENIED
+OwnershipHistory  2     1     DENIED  3     DENIED
+SenderUpdate      1     1     1       1     1
+```
+
+**Worth keeping in mind:** this is the third silent access failure this project has produced, after
+inert policies at access level `User` and policies naming a field three schemas did not have. None
+raised an error. A verification account per role, exercised after every policy change, is the only
+thing that has caught any of them — and a test account that cannot reach the data for an unrelated
+reason produces a false pass.
+
+### #36–#40 — Specifications written, build blocked
+
+**Status:** Blocked · **Date:** 2026-09-15
+
+Node-by-node build specifications for the four scheduled workflows and the AI agent are in
+[WORKFLOWS.md](WORKFLOWS.md). They cannot be built until the Blocks Logic module is provisioned for
+this project and an agent exists in Blocks Agents.
+
+Of the four, **#36 arrival reconciliation is the one the data model depends on**: the app writes a
+hub arrival as seven ordered steps with the `HubReceipt` as commit point, and without the sweep an
+interrupted arrival leaves a case permanently half-applied. The UI already surfaces that state
+through the stale banner, so the condition is visible — it is just not yet repaired automatically.
