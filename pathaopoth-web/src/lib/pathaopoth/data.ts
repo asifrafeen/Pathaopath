@@ -99,6 +99,7 @@ export type ExceptionCase = {
   custodyType?: string; custodyHolder?: { name?: string; code?: string } | null;
   originHubCode?: string; destinationHubCode?: string; routeKey?: string;
   attemptCount?: number; receiptCount?: number;
+  latestDecision?: { decisionId?: string; action?: string; targetHubCode?: string; redeliveryDateLocal?: string; windowStart?: string; windowEnd?: string; timezone?: string; confirmedAt?: string } | null;
   openedAt?: string; slaDueAt?: string; slaBreached?: boolean;
   closedAt?: string | null; resolution?: string | null;
   parcel?: { trackingNumber?: string; codAmount?: number; currency?: string; receiverName?: string; currentDeliveryAddress?: string } | null;
@@ -111,6 +112,47 @@ export type HubReceipt = {
   receivedByStaff?: { name?: string } | null;
 };
 
+export type CaseDecision = {
+  ItemId: string; caseId: string; action: string;
+  targetHubCode?: string | null; confirmedDeliveryAddress?: string | null;
+  redeliveryDateLocal?: string | null; windowStart?: string | null; windowEnd?: string | null;
+  timezone?: string | null; reason?: string | null;
+  confirmedByUserId?: string; confirmedAt?: string; isSuperseded?: boolean;
+  aiAnalysisId?: string | null;
+};
+
+export type AiAnalysis = {
+  ItemId: string; caseId: string; noteId: string; status: string;
+  recommendedAction?: string | null; confidence?: number | null;
+  requiresManualReview?: boolean; structuredOutput?: string | null;
+  proposedRedeliveryDateLocal?: string | null; proposedWindowStart?: string | null;
+  proposedWindowEnd?: string | null; errorMessage?: string | null;
+};
+
+export type CareTask = {
+  ItemId: string; caseId: string; status: string; reason?: string | null;
+  outcome?: string | null; assignedCareUser?: { name?: string } | null;
+  resolvedAt?: string | null; CreatedDate?: string;
+};
+
+export type OwnershipPeriod = {
+  ItemId: string; caseId: string; hubCode?: string; startedAt?: string;
+  endedAt?: string | null; isCurrent?: boolean;
+  accountableStaff?: { name?: string } | null;
+};
+
+export type ParcelMovement = {
+  ItemId: string; caseId: string; parcelId: string; trackingNumber?: string;
+  decisionId?: string; purpose: string;
+  fromHubId?: string; fromHubCode?: string; fromHubOrgId?: string;
+  destinationType: string; toHubId?: string | null; toHubCode?: string | null; toHubOrgId?: string | null;
+  destinationAddressSnapshot?: string | null;
+  assignedRiderId?: string; assignedRider?: { name?: string; phone?: string } | null;
+  status: string;
+  pickupAcknowledgedAt?: string | null; expectedArrivalAt?: string | null; completedAt?: string | null;
+  recipientName?: string | null; deliveryProofReference?: string | null; failureReason?: string | null;
+};
+
 export type CaseNote = {
   ItemId: string; caseId: string; rawText: string; occurredAt?: string; CreatedDate?: string;
 };
@@ -121,10 +163,18 @@ const HUB_FIELDS = "ItemId code name address organizationId isActive";
 const PARCEL_FIELDS =
   "ItemId trackingNumber senderId receiverName receiverPhone currentDeliveryAddress originalDeliveryAddress codAmount currency originHub { code name } destinationHub { code name }";
 const CASE_FIELDS =
-  "ItemId parcelId caseType status ownerHubId ownerHubOrgId ownerHub { code name } accountableStaff { name } custodyType custodyHolder { name code } originHubCode destinationHubCode routeKey attemptCount receiptCount openedAt slaDueAt slaBreached closedAt resolution parcel { trackingNumber codAmount currency receiverName currentDeliveryAddress }";
+  "ItemId parcelId caseType status ownerHubId ownerHubOrgId ownerHub { code name } accountableStaff { name } custodyType custodyHolder { name code } latestDecision { decisionId action targetHubCode redeliveryDateLocal windowStart windowEnd timezone confirmedAt } originHubCode destinationHubCode routeKey attemptCount receiptCount openedAt slaDueAt slaBreached closedAt resolution parcel { trackingNumber codAmount currency receiverName currentDeliveryAddress }";
 const RECEIPT_FIELDS =
   "ItemId caseId parcelId trackingNumber hubCode receivedAt reportedReason parcelCondition appliedState receivedByStaff { name }";
 const NOTE_FIELDS = "ItemId caseId rawText occurredAt CreatedDate";
+const DECISION_FIELDS =
+  "ItemId caseId action targetHubCode confirmedDeliveryAddress redeliveryDateLocal windowStart windowEnd timezone reason confirmedByUserId confirmedAt isSuperseded aiAnalysisId";
+const ANALYSIS_FIELDS =
+  "ItemId caseId noteId status recommendedAction confidence requiresManualReview structuredOutput proposedRedeliveryDateLocal proposedWindowStart proposedWindowEnd errorMessage";
+const CARE_FIELDS = "ItemId caseId status reason outcome assignedCareUser { name } resolvedAt CreatedDate";
+const OWNERSHIP_FIELDS = "ItemId caseId hubCode startedAt endedAt isCurrent accountableStaff { name }";
+const MOVEMENT_FIELDS =
+  "ItemId caseId parcelId trackingNumber decisionId purpose fromHubId fromHubCode fromHubOrgId destinationType toHubId toHubCode toHubOrgId destinationAddressSnapshot assignedRiderId assignedRider { name phone } status pickupAcknowledgedAt expectedArrivalAt completedAt recipientName deliveryProofReference failureReason";
 
 export const data = {
   hubs: () => list<Hub>("Hub", HUB_FIELDS, { pageSize: 200 }),
@@ -164,6 +214,57 @@ export const data = {
 
   notesForCase: (caseId: string) =>
     list<CaseNote>("CaseNote", NOTE_FIELDS, { filter: { caseId }, pageSize: 50 }),
+
+  decisionsForCase: (caseId: string) =>
+    list<CaseDecision>("CaseDecision", DECISION_FIELDS, {
+      filter: { caseId }, sort: JSON.stringify({ confirmedAt: -1 }), pageSize: 50
+    }),
+
+  /**
+   * AI proposals for a case. Deliberately separate from CaseDecision: a proposal is
+   * what a machine suggested, a decision is what a person confirmed, and conflating
+   * the two means a parcel moved because nobody checked.
+   */
+  analysesForCase: (caseId: string) =>
+    list<AiAnalysis>("AiAnalysis", ANALYSIS_FIELDS, { filter: { caseId }, pageSize: 20 }),
+
+  careTasksForCase: (caseId: string) =>
+    list<CareTask>("CareTask", CARE_FIELDS, { filter: { caseId }, pageSize: 20 }),
+
+  openCareTasks: () =>
+    list<CareTask>("CareTask", CARE_FIELDS, {
+      filter: { status: { $in: ["open", "in_progress"] } }, pageSize: 100
+    }),
+
+  /** The ownership trail. Exactly one period is current while the case is open. */
+  ownershipForCase: (caseId: string) =>
+    list<OwnershipPeriod>("OwnershipHistory", OWNERSHIP_FIELDS, {
+      filter: { caseId }, sort: JSON.stringify({ startedAt: -1 }), pageSize: 50
+    }),
+
+  movementsForCase: (caseId: string) =>
+    list<ParcelMovement>("ParcelMovement", MOVEMENT_FIELDS, { filter: { caseId }, pageSize: 50 }),
+
+  /** A rider's own runs. The gateway scopes this to them; the filter is belt and braces. */
+  movementsForRider: (riderId: string) =>
+    list<ParcelMovement>("ParcelMovement", MOVEMENT_FIELDS, {
+      filter: { assignedRiderId: riderId, status: { $in: ["planned", "picked_up"] } },
+      pageSize: 100
+    }),
+
+  /** Legs heading to a hub that have not yet been acknowledged there. */
+  incomingMovements: () =>
+    list<ParcelMovement>("ParcelMovement", MOVEMENT_FIELDS, {
+      filter: { status: "picked_up", destinationType: "hub" }, pageSize: 100
+    }),
+
+  /** The one active leg per case, if any. Planning a second is what this prevents. */
+  activeMovementForCase: async (caseId: string): Promise<ParcelMovement | null> => {
+    const page = await list<ParcelMovement>("ParcelMovement", MOVEMENT_FIELDS, {
+      filter: { caseId, status: { $in: ["planned", "picked_up"] } }, pageSize: 1
+    });
+    return page.items[0] ?? null;
+  },
 
   insert,
   update

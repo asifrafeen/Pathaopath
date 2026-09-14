@@ -9,6 +9,8 @@ import { ProfilePage } from "../../features/profile/ProfilePage";
 import { QueuePage } from "../../features/cases/QueuePage";
 import { CaseDetailPage } from "../../features/cases/CaseDetailPage";
 import { ScanPage } from "../../features/scan/ScanPage";
+import { MovementsPage } from "../../features/movements/MovementsPage";
+import { CareQueuePage } from "../../features/care/CareQueuePage";
 
 type Navigate = (path: string) => void;
 
@@ -17,6 +19,8 @@ const staticRoutes: Record<string, (nav: Navigate) => JSX.Element> = {
   "/": (nav) => <QueuePage onNavigate={nav} />,
   "/scan": (nav) => <ScanPage onNavigate={nav} />,
   "/cases": (nav) => <QueuePage onNavigate={nav} />,
+  "/movements": () => <MovementsPage />,
+  "/care": (nav) => <CareQueuePage onNavigate={nav} />,
   "/profile": () => <ProfilePage />,
   "/error": () => <ErrorPage />
 };
