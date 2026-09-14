@@ -31,12 +31,12 @@ Statuses: `Not started` · `In progress` · `Blocked` · `Done`
 | 10 | `Attachment` + storage provider check | 2 | Done | — | 2026-09-15 |
 | 11 | `SenderUpdate` — public read | 2 | Done | — | 2026-09-15 |
 | 12 | `DailyVolume` — defined, unfed | 2 | Done | — | 2026-09-15 |
-| 13 | Organizations per hub; seed `Hub` records | 3 | Not started | — | — |
-| 14 | Roles: `hub_staff`, `rider`, `care`, `ops_manager` | 3 | Not started | — | — |
+| 13 | Organizations per hub; seed `Hub` records | 3 | In progress | — | — |
+| 14 | Roles: `hub_staff`, `rider`, `care`, `ops_manager` | 3 | Done | — | 2026-09-15 |
 | 15 | Permissions incl. `DataProtection` for `receiverPhone` | 3 | Not started | — | — |
-| 16 | RLS policies — hub, rider, care/ops scope | 3 | Not started | — | — |
+| 16 | RLS policies — hub, rider, care/ops scope | 3 | Done | — | 2026-09-15 |
 | 17 | CLS policies — mask `receiverPhone`, `rawText` | 3 | Not started | — | — |
-| 18 | Deploy rules and reload | 3 | Not started | — | — |
+| 18 | Deploy rules and reload | 3 | Done | — | 2026-09-15 |
 | 19 | One test user per role | 4 | Not started | — | — |
 | 20 | Verify the visibility matrix | 4 | Not started | — | — |
 | 21 | App shell, auth guard, role-aware navigation | 5 | Not started | — | — |
@@ -288,3 +288,69 @@ blocks data schema aggregation  -> 27 schemas live
   unique: Hub.code, Parcel.trackingNumber, SenderUpdate.publicToken
   access: all 27 schemas read/write/edit/delete = Public (2)   <-- to be corrected in Epic 3
 ```
+
+### #13, #14, #16, #18 — Epic 3 part one: organizations, roles, access levels, row-level policies
+
+**Status:** #14, #16, #18 Done · #13 In progress · **Date:** 2026-09-15
+
+**Business logic implemented**
+A hub is now an access boundary, not just a record. Hub staff see the cases their own hub owns and
+nothing else; riders see only the legs assigned to them; care and ops reach across every hub. The
+unauthenticated write hole left by schema creation is closed.
+
+**Schemas used or changed**
+- `ParcelMovement` gained `fromHubOrgId`. Without it the *sending* hub could not see a leg it had
+  dispatched — only the destination hub could. Found while authoring the movement policy.
+
+**Access policies touched**
+- `rules.json` now carries **108 security entries** (27 schemas x 4 operations) and **12 row-level
+  policies**.
+- Every operation set to `User` (1) except `SenderUpdate` READ, deliberately left `Public` (2) so the
+  sender link works without a token.
+- Hub-scoped read policies on `ExceptionCase`, `HubReceipt`, `CaseNote`, `OwnershipHistory`,
+  `CaseDecision`, `AiAnalysis`, `CareTask`, `CaseEvent`, `MoneyTransaction`, `LossReview`,
+  `Attachment` — each allowing `AUTH.Roles CONTAIN care`, `CONTAIN ops_manager`, or
+  `ownerHubOrgId == AUTH.organizationId`.
+- `ParcelMovement` read policy additionally allows `assignedRiderId == AUTH.userId`,
+  `fromHubOrgId == AUTH.organizationId`, and `toHubOrgId == AUTH.organizationId`.
+
+**Identity created**
+- Organizations: Mirpur 10 `7c182c85…`, Moghbazar `eeb8dacc…`, Chattogram GEC `a0f218a1…`,
+  Shankar `026fc8e8…`
+- Roles: `hub_staff`, `rider`, `care`, `ops_manager`
+
+**Decisions and deviations**
+
+1. **Care and ops are cross-hub by not being narrowed.** Since nothing is filtered by default, the
+   policies restrict hub staff and riders downward rather than elevating care upward. Same outcome,
+   opposite mechanism, and it matters: deleting a policy widens access rather than removing it.
+
+2. **`blocks iam organizations list` returns an empty array unless `--page` and `--page-size` are
+   passed explicitly**, while still reporting a correct `totalCount`. Easy to read as "no
+   organizations exist".
+
+3. **`data schema aggregation` counts only *field-level* policies in `totalReadPolicies`.**
+   Schema-level policies do not appear there and read as zero. `data rules policy get <schema>` is
+   the command that shows them.
+
+4. **#13 is only half done.** The four organizations exist, but the `Hub` records themselves are not
+   seeded. Writing records needs the Data Gateway CRUD path, which is SDK-only — there is no CLI
+   command for record writes — and now that write access is `User`, seeding needs an authenticated
+   user, which is issue #19. Sequencing changed accordingly: #19 now precedes the rest of #13.
+
+5. **#15 and #17 are deliberately not started.** Column-level masking of `receiverPhone` and
+   `rawText` is the part of the access model that fails silently if the allow/deny semantics are
+   read wrong, and it cannot be verified without a real user per role. Authoring it blind and
+   deploying it unverified is the exact failure Epic 4 exists to catch, so both now follow #19.
+
+**Verification**
+```
+blocks data sync --yes          -> schemas pushed, policies saved, gateway reloaded
+blocks data schema aggregation  -> operations at User(1): 107
+                                   operations still Public(2): SenderUpdate.read
+blocks data rules policy get ExceptionCase --json
+  -> ExceptionCase_read_scope, policyType 0 (RLS), operation 0 (READ),
+     OR group with 3 rules, isAllowPolicy true
+```
+Before this change all 27 schemas were Public on read, write, edit and delete — anyone could write
+to the tenant without authenticating. That is now closed.
