@@ -31,7 +31,7 @@ Statuses: `Not started` · `In progress` · `Blocked` · `Done`
 | 10 | `Attachment` + storage provider check | 2 | Done | — | 2026-09-15 |
 | 11 | `SenderUpdate` — public read | 2 | Done | — | 2026-09-15 |
 | 12 | `DailyVolume` — defined, unfed | 2 | Done | — | 2026-09-15 |
-| 13 | Organizations per hub; seed `Hub` records | 3 | In progress | — | — |
+| 13 | Organizations per hub; seed `Hub` records | 3 | Done | — | 2026-09-15 |
 | 14 | Roles: `hub_staff`, `rider`, `care`, `ops_manager` | 3 | Done | — | 2026-09-15 |
 | 15 | Permissions incl. `DataProtection` for `receiverPhone` | 3 | Not started | — | — |
 | 16 | RLS policies — hub, rider, care/ops scope | 3 | Done | — | 2026-09-15 |
@@ -354,3 +354,61 @@ blocks data rules policy get ExceptionCase --json
 ```
 Before this change all 27 schemas were Public on read, write, edit and delete — anyone could write
 to the tenant without authenticating. That is now closed.
+
+### Demo data seed (advances #13, partially #19)
+
+**Status:** Done · **Date:** 2026-09-15
+
+**Business logic implemented**
+A working slice of the scripted demo: four hubs with service areas and directed connections, two
+senders, three parcels, and three exception cases at different stages — a refused COD delivery of
+৳2,300 sitting at Shankar awaiting review, a cancelled delivery already past SLA and awaiting care,
+and a refused delivery ready for dispatch. Each case carries its hub receipt, a verbatim Banglish
+rider note, and an open ownership period, so every seeded case has exactly one accountable owner.
+
+**Schemas used or changed**
+No schema changes. Records written to `Hub` (4), `Sender` (2), `Parcel` (3), `ExceptionCase` (3),
+`HubReceipt` (3), `CaseNote` (3), `OwnershipHistory` (3), `SenderUpdate` (1) — 22 records.
+
+**Access policies touched**
+None.
+
+**Decisions and deviations**
+
+1. **There is no CLI path for writing records.** All 28 non-file `data` commands operate on schemas,
+   rules, validations and config. Record CRUD is SDK-only, so seeding runs through
+   `blocks.data.graphql()` with `insert<Entity>(input: {...})` mutations.
+
+2. **Seeding needs an authenticated user now that write is `User`.** A short-lived account was
+   created, used once, and deactivated. Its password was generated at runtime inside the script and
+   never printed or stored.
+
+3. **An admin-set password does not activate an account.** `iam users create --password` leaves the
+   user `active: false` / `isVerified: false`, and `auth.login` returns `invalid_username_password`
+   until `iam users activate` runs. The order is create → activate → login. This cost one orphaned
+   account (`9dc2b02a…`, since deactivated) because the first attempt tried to log in directly.
+
+4. **`iam users update` has no `--password` flag**, so a password cannot be reset through the CLI
+   once an account exists — hence the second account rather than reusing the first.
+
+5. **`allowedGrantTypes` cannot be restored.** `auth config save` accepts the field, reports success,
+   and silently discards it — it remains `[]`. This is not the problem it first appeared to be:
+   grants are enforced per OIDC client and identity provider (the IdP record carries
+   `authorization_code` and `refresh_token`), which is why both `blocks login` and SDK login work.
+   The auth-config field appears vestigial once OIDC is enabled. Closing the concern raised earlier.
+
+6. **Unauthenticated read of the public `SenderUpdate` collection is unverified.** A GraphQL query
+   with no token returns `400 Bad Request` for every collection, including the public one, which
+   looks like rejection at the API layer before the query is parsed rather than an access decision.
+   Whether `Public` read genuinely serves anonymous callers therefore remains open and is a
+   prerequisite for issue #33, since the whole sender-link design rests on it.
+
+**Verification**
+```
+node scripts/seed-demo.mjs
+  hubs 4/4, senders 2/2, parcels 3/3, cases 3/3,
+  receipts 3/3, notes 3/3, ownership 3/3, sender update 1/1   (22 inserts, 0 failures)
+  seed account deactivated
+```
+Each insert returned an `itemId`, which is the write confirmation. Reading the records back per role
+is issue #20 and needs one user per role.
