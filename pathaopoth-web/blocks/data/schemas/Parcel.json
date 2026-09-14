@@ -1,5 +1,6 @@
 {
   "schemaName": "Parcel",
+  "collectionName": "Parcel",
   "schemaType": 1,
   "readAccessLevel": 1,
   "writeAccessLevel": 1,

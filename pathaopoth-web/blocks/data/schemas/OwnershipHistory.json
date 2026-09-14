@@ -1,5 +1,6 @@
 {
   "schemaName": "OwnershipHistory",
+  "collectionName": "OwnershipHistory",
   "schemaType": 1,
   "readAccessLevel": 1,
   "writeAccessLevel": 1,

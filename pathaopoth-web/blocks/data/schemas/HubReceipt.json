@@ -1,5 +1,6 @@
 {
   "schemaName": "HubReceipt",
+  "collectionName": "HubReceipt",
   "schemaType": 1,
   "readAccessLevel": 1,
   "writeAccessLevel": 1,
