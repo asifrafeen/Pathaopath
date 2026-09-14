@@ -25,12 +25,12 @@ Statuses: `Not started` · `In progress` · `Blocked` · `Done`
 | 4 | Create GitHub issues from the backlog | 0 | Done | — | 2026-09-15 |
 | 5 | Push core spine — 8 entities + 9 Dto types | 1 | Done | — | 2026-09-15 |
 | 6 | Verify live schema list and access-level aggregation | 1 | Done | — | 2026-09-15 |
-| 7 | `CaseDecision`, `AiAnalysis` | 2 | Not started | — | — |
-| 8 | `CareTask`, `CaseEvent` | 2 | Not started | — | — |
-| 9 | `MoneyTransaction`, `LossReview` | 2 | Not started | — | — |
-| 10 | `Attachment` + storage provider check | 2 | Not started | — | — |
-| 11 | `SenderUpdate` — public read | 2 | Not started | — | — |
-| 12 | `DailyVolume` — defined, unfed | 2 | Not started | — | — |
+| 7 | `CaseDecision`, `AiAnalysis` | 2 | Done | — | 2026-09-15 |
+| 8 | `CareTask`, `CaseEvent` | 2 | Done | — | 2026-09-15 |
+| 9 | `MoneyTransaction`, `LossReview` | 2 | Done | — | 2026-09-15 |
+| 10 | `Attachment` + storage provider check | 2 | Done | — | 2026-09-15 |
+| 11 | `SenderUpdate` — public read | 2 | Done | — | 2026-09-15 |
+| 12 | `DailyVolume` — defined, unfed | 2 | Done | — | 2026-09-15 |
 | 13 | Organizations per hub; seed `Hub` records | 3 | Not started | — | — |
 | 14 | Roles: `hub_staff`, `rider`, `care`, `ops_manager` | 3 | Not started | — | — |
 | 15 | Permissions incl. `DataProtection` for `receiverPhone` | 3 | Not started | — | — |
@@ -225,3 +225,66 @@ Nested Dto references resolved correctly: `ExceptionCase` carries `parcel:Parcel
 `ownerHub:HubRef`, `accountableStaff:UserRef`, `custodyHolder:CustodyHolder`,
 `latestDecision:DecisionSnapshot`. 246 total fields = 136 authored + platform-managed fields added
 to each schema.
+
+### #7–#12 — Epic 2 supporting collections
+
+**Status:** Done · **Date:** 2026-09-15
+
+**Business logic implemented**
+The records that carry a case beyond intake: the human-confirmed decision that authorises every
+movement, the AI proposal kept separate from it, care work that investigates without taking custody,
+the append-only timeline, the operational money log, authorised loss write-off, evidence, and the
+sanitised sender-facing projection.
+
+**Schemas used or changed**
+- Entities created (9): `CaseDecision`, `AiAnalysis`, `CareTask`, `CaseEvent`, `MoneyTransaction`,
+  `LossReview`, `Attachment`, `SenderUpdate`, `DailyVolume`
+- Dto created (1): `MoneyParty`
+- Project total: **27 schemas**
+- `SenderUpdate.publicToken` carries `isUniqueData`, joining `Hub.code` and `Parcel.trackingNumber`.
+- Every Epic 2 entity carries `ownerHubOrgId` so hub-scoped policies can reach it in Epic 3.
+- `CaseDecision.isSuperseded` and `AiAnalysis.requiresManualReview` keep "current decision" and
+  "needs a human" as single-field filters rather than derived queries.
+
+**Access policies touched**
+None authored. See the deviation below — the access levels are not what was intended, and Epic 3 now
+has to correct them rather than merely add to them.
+
+**Decisions and deviations**
+
+1. **The CLI forces every new schema to Public on all four operations.** `makeSchemaPublic` in
+   `blocks-cli/src/lib/data-gateway.ts` POSTs `accessLevel: 2` for READ, WRITE, EDIT and DELETE
+   immediately after each schema is created, because the schema-create endpoint accepts no access
+   level and the stored default (`User`) would make a schema unreadable to anonymous callers. The
+   `readAccessLevel`/`writeAccessLevel` values authored in the local JSON are therefore **ignored on
+   create**. All 27 schemas are currently `Public` on read, write, edit and delete.
+
+   This corrects an earlier statement in this log (entries #1 and #5) that the collections were
+   "readable by any authenticated user". They are in fact readable *and writable* by anyone,
+   without authentication.
+
+   The same CLI comment records the way out: update paths never touch access levels, so a level set
+   after creation survives later pushes. `rules.json` supports a `security` array whose entries are
+   POSTed to `/data/v4/data-access/security/change` with `{ accessLevel, fieldNames, operation,
+   policyType, schemaId }`. Operations are READ 0, WRITE 1, EDIT 2, DELETE 3. Epic 3 must use this
+   to set every schema to `User` (1), leaving only `SenderUpdate` READ at `Public` (2).
+
+2. **`data schema aggregation` flattens nested Dto fields into the parent's field list.**
+   `ExceptionCase` reports 53 fields there versus 32 from `get-by-name`, and `name`/`code` appear
+   more than once because they arrive from `HubRef`, `UserRef` and `CustodyHolder`. This is a
+   reporting shape, not duplication — `get-by-name` shows the true structure. Worth knowing before
+   someone reads a flattened list as schema corruption.
+
+3. Dependency order held without a two-phase push this time: the only new Dto, `MoneyParty`, sorts
+   before `MoneyTransaction` alphabetically. That is luck, not design — the rule from #5 still
+   applies to any future batch.
+
+**Verification**
+```
+blocks data validate --json     -> ok: true, schemaCount: 27
+blocks data schema push --yes   -> results: 27 | ok: 27 | failed: 0
+blocks data reload --yes        -> "Schema evicted successfully."
+blocks data schema aggregation  -> 27 schemas live
+  unique: Hub.code, Parcel.trackingNumber, SenderUpdate.publicToken
+  access: all 27 schemas read/write/edit/delete = Public (2)   <-- to be corrected in Epic 3
+```
