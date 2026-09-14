@@ -31,10 +31,9 @@ Pathaopoth/                       <- repository root
 ├── .claude/                      ignored
 ├── AGENTS.md                     ignored
 ├── CLAUDE.md                     ignored
-├── docs/                         TRACKED  (see 1.4)
-│   ├── DESIGN.md
-│   ├── WORKFLOW.md               (this document, moved here)
-│   └── IMPLEMENTATION_LOG.md
+├── PROJECT_WORKFLOW.md           TRACKED  (this document)
+├── PATHAOPOTH_BLOCKS_DESIGN.md   TRACKED
+├── IMPLEMENTATION_LOG.md         TRACKED
 └── pathaopoth-web/               TRACKED  (the application)
     ├── blocks/data/schemas/      TRACKED  (the data model is source)
     ├── blocks/data/rules.json    TRACKED  (access policies are source)
@@ -69,26 +68,20 @@ Thumbs.db
 .DS_Store
 ```
 
-### 1.4 The one deviation from your instruction — please confirm
+### 1.4 Which markdown is ignored — resolved
 
-You asked for **md files** to be gitignored. Taken literally (`*.md`), that would also ignore the
-implementation log you asked me to maintain, the design record, and this document — so the tracking
-artefact would never appear on GitHub, where the team reads it.
-
-**Proposed instead:** ignore the agent-scaffolding markdown specifically (`AGENTS.md`, `CLAUDE.md`)
-and keep project documentation tracked under `docs/`. That satisfies the intent — no agent noise in
-the repo — without hiding the record the workflow exists to produce.
-
-If you did mean all markdown, say so and I will ignore `*.md` with a `!docs/` exception, or drop the
-tracked docs entirely and keep the log outside the repo.
+Only agent-scaffolding markdown is ignored: `AGENTS.md` and `CLAUDE.md`. The project documents —
+`PROJECT_WORKFLOW.md`, `PATHAOPOTH_BLOCKS_DESIGN.md`, and `IMPLEMENTATION_LOG.md` — are **tracked at
+the repository root**, so the delivery record is visible on GitHub where the team reads it.
 
 ### 1.5 Branch and commit conventions
 
-- `main` is the integration branch. No direct commits once the first issues are open.
+- `dev` is the integration branch and the repository's default branch. No direct commits once the
+  first issues are open.
 - One branch per issue: `feat/12-rls-policies`, `fix/29-arrival-idempotency`, `chore/3-docs`.
 - Commit subject references the issue: `feat: author RLS policies for hub scoping (#12)`.
-- Squash-merge to `main` so one issue is one commit, keeping the log readable.
-- Every merge to `main` must update `docs/IMPLEMENTATION_LOG.md` in the same PR. A ticket is not
+- Squash-merge to `dev` so one issue is one commit, keeping the log readable.
+- Every merge to `dev` must update `IMPLEMENTATION_LOG.md` in the same PR. A ticket is not
   done until the log records it.
 
 ---
@@ -363,23 +356,46 @@ added and the same records keep working.
 
 ## Part 5 — Open questions
 
+### Answered
+
+| # | Question | Decision |
+|---|---|---|
+| 1 | Which markdown is ignored | Only `AGENTS.md` and `CLAUDE.md`. Project docs tracked at root (§1.4) |
+| 2 | `SenderUpdate.readAccessLevel` | **Public**, guarded by a long random `publicToken` |
+| 4 | Unique indexes | Keep `Hub.code` and `Parcel.trackingNumber` as `isUniqueData`. If the Data Gateway rejects them on push, drop both and proceed — uniqueness falls back to a write-path check |
+| — | Integration branch | `dev` |
+
+### Still open
+
 | # | Question | Blocks | Default if unanswered |
 |---|---|---|---|
-| 1 | Is `*.md` really to be ignored, or just agent scaffolding? (§1.4) | Epic 0 | Track `docs/`, ignore agent markdown |
-| 2 | Should `SenderUpdate.readAccessLevel` be `Public`? | Issue 11, 33 | Public, guarded by a long random token |
 | 3 | Will `DailyVolume` be fed? | Issue 35 | Not fed — manager view shows counts and trend, not rates |
-| 4 | Keep the two plain unique indexes (`Hub.code`, `Parcel.trackingNumber`)? | Issue 5 | Keep — they are business rules, not the partial-index workaround that was dropped |
 | 5 | Reconciliation interval | Issue 36 | 5 minutes, bounding how stale a case snapshot can be |
 | 6 | Refusal reason list, SLA thresholds, escalation behaviour | Issues 23, 37 | — carried from the original design |
 | 7 | Who approves address changes, write-offs, monetary adjustments | Issues 8, 30 | — carried from the original design |
 
 ---
 
-## Part 6 — Execution order once approved
+## Part 6 — Execution order
 
-1. Confirm §1.4 and the Part 5 defaults.
-2. `git init`, `.gitignore`, first commit, add remote, push `main`.
-3. Move `PATHAOPOTH_BLOCKS_DESIGN.md` → `docs/DESIGN.md`, this file → `docs/WORKFLOW.md`, create
-   `docs/IMPLEMENTATION_LOG.md`.
-4. Create the 40 issues with labels and milestones via `gh`.
-5. Begin Epic 1 — push the core spine, which is already authored and waiting.
+| Step | State |
+|---|---|
+| 1. `git init -b dev`, `.gitignore`, first commit | **Done** — 78 files, no secrets staged |
+| 2. Add remote, push `dev`, set as default branch | Pending — see the note below |
+| 3. Create `IMPLEMENTATION_LOG.md` | Pending |
+| 4. Create the 40 issues with labels and milestones via `gh` | Pending |
+| 5. Begin Epic 1 — push the core spine, already authored and waiting | Pending |
+
+### Note on the remote being public
+
+`asifrafeen/Pathaopath` is a **public** repository. Pushing publishes the source, the data model, and
+the design documents to anyone, and is effectively irreversible — forks, clones, and search indexing
+survive a later deletion.
+
+Nothing secret is staged: the real `.env`, the `.cert/` directory, and all credentials are ignored
+and were verified absent from the commit. What does become public is the tenant id
+(`Df6362…`), the public OIDC client id, and the app domain. None of these are secrets — a browser
+app transmits all three on every request and they are readable in its JavaScript bundle — but on a
+public repository they also become discoverable without visiting the app.
+
+If that is not wanted, switch the repository to private before the first push.
