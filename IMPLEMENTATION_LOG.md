@@ -40,9 +40,9 @@ Statuses: `Not started` · `In progress` · `Blocked` · `Done`
 | 19 | One test user per role | 4 | Done | — | 2026-09-15 |
 | 20 | Verify the visibility matrix | 4 | Done | — | 2026-09-15 |
 | 21 | App shell, auth guard, role-aware navigation | 5 | Done | — | 2026-09-15 |
-| 22 | Parcel scan and lookup; reuse open case | 5 | Not started | — | — |
-| 23 | Open exception case in four fields | 5 | Not started | — | — |
-| 24 | Record hub receipt and raw rider note | 5 | Not started | — | — |
+| 22 | Parcel scan and lookup; reuse open case | 5 | Done | — | 2026-09-15 |
+| 23 | Open exception case in four fields | 5 | Done | — | 2026-09-15 |
+| 24 | Record hub receipt and raw rider note | 5 | Done | — | 2026-09-15 |
 | 25 | Decision confirmation UI, AI panel stubbed | 6 | Not started | — | — |
 | 26 | Raise and resolve care tasks | 6 | Not started | — | — |
 | 27 | Plan movement, assign rider | 7 | Not started | — | — |
@@ -567,3 +567,56 @@ npm run build  -> 2024 modules, 27.46 kB CSS, 338.31 kB JS, built in 6.21s
 ```
 Not yet verified in a browser: the local HTTPS cert is generated but not trusted, so the app cannot
 be opened on its real domain yet.
+
+### #22, #23, #24 — Scan, lookup, case intake, receipt and note
+
+**Status:** Done · **Date:** 2026-09-15
+
+**Business logic implemented**
+Hub staff scan a tracking number and get one of three outcomes: no such parcel (refuse to open a
+case against something that does not exist), a parcel that already has an open case (offered for
+reuse, never duplicated), or a parcel with no open case (four-field intake). Opening a case writes
+the case, its first hub receipt, its opening ownership period and the rider's verbatim note, and
+sets the 72-hour SLA deadline the case study's cost model is built on.
+
+The intake form asks four things — what happened, reported reason, parcel condition, and the
+rider's own words. Owner hub, accountable staff, route key and SLA are derived, because hub staff
+have minutes per parcel.
+
+**Schemas used or changed**
+No schema changes. Reads `Parcel`, `ExceptionCase`, `HubReceipt`, `CaseNote`, `Hub`. Writes
+`ExceptionCase`, `HubReceipt`, `OwnershipHistory`, `CaseNote`.
+
+**Access policies touched**
+None. The queue runs one query for every role and the gateway returns different row counts —
+verified during smoke testing, where a Mirpur account reading a Shankar-owned case got zero rows
+rather than an error.
+
+**Decisions and deviations**
+- `src/lib/pathaopoth/data.ts` centralises the gateway conventions so no page re-derives them:
+  `get<Schema>s` query naming, `input: {filter, sort, pageNo, pageSize}` where **filter is a JSON
+  string holding a Mongo-style query**, `<Schema>Result { items, totalCount, … }`, PascalCase
+  platform fields against camelCase authored fields, and `insert/update<Schema>` mutations.
+- Case creation writes four records without a transaction. The receipt carries
+  `appliedState: "applied"` because the whole sequence completes inside one user action here; the
+  interrupted-arrival path that needs reconciliation is the hub transfer in Epic 7, not intake.
+- Reuse-before-create is enforced in the write path only. The Data Gateway has no partial unique
+  index, so "one open case per parcel" holds because lookup precedes intake — which is why the scan
+  page checks for an open case before it ever renders the intake form.
+- The receiver phone renders as a mask, not an empty field, when the role lacks the DataProtection
+  permission, so the reader knows the data exists and they lack access rather than thinking it is
+  absent.
+
+**Verification**
+```
+npm run lint   -> clean
+npm run build  -> 2030 modules, 30.25 kB CSS, 369.11 kB JS
+curl https://dbuajn.slsblx.com:5173/  -> HTTP 200, ssl_verify=0 (cert trusted)
+```
+Gateway query shapes smoke-tested against live data as a Mirpur hub_staff account: hubs 4, parcel by
+tracking 1, open-case `$ne` filter 2, sorted cases 2, `_id` filter 1, nested snapshot reads,
+receipts and notes by caseId all returning correctly. A Shankar-owned case returned zero rows for
+the Mirpur account, confirming row-level scoping reaches the app layer.
+
+**Not yet verified:** nobody has clicked through the UI in a browser. Typecheck, build and the
+underlying queries pass; visual and interaction review is outstanding.

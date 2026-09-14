@@ -6,10 +6,19 @@ import { ErrorPage } from "../../features/auth/ErrorPage";
 import { LoginPage } from "../../features/auth/LoginPage";
 import { NotFoundPage } from "../../features/auth/NotFoundPage";
 import { ProfilePage } from "../../features/profile/ProfilePage";
+import { QueuePage } from "../../features/cases/QueuePage";
+import { CaseDetailPage } from "../../features/cases/CaseDetailPage";
+import { ScanPage } from "../../features/scan/ScanPage";
 
-const protectedRoutes = {
-  "/": ProfilePage,
-  "/error": ErrorPage
+type Navigate = (path: string) => void;
+
+// Static routes render directly; anything parameterised is matched below.
+const staticRoutes: Record<string, (nav: Navigate) => JSX.Element> = {
+  "/": (nav) => <QueuePage onNavigate={nav} />,
+  "/scan": (nav) => <ScanPage onNavigate={nav} />,
+  "/cases": (nav) => <QueuePage onNavigate={nav} />,
+  "/profile": () => <ProfilePage />,
+  "/error": () => <ErrorPage />
 };
 
 export function AppRouter() {
@@ -45,15 +54,17 @@ export function AppRouter() {
     );
   }
 
-  const Page = protectedRoutes[path as keyof typeof protectedRoutes];
-  if (!Page) {
+  const caseMatch = /^\/cases\/([^/]+)$/.exec(path);
+  const render = staticRoutes[path];
+
+  if (!render && !caseMatch) {
     return <NotFoundPage onNavigate={navigate} />;
   }
 
   return (
     <RequireAuth currentPath={path} onNavigate={navigate}>
-      <AppShell activePath={path} onNavigate={navigate}>
-        <Page />
+      <AppShell activePath={caseMatch ? "/cases" : path} onNavigate={navigate}>
+        {caseMatch ? <CaseDetailPage caseId={caseMatch[1]!} onNavigate={navigate} /> : render!(navigate)}
       </AppShell>
     </RequireAuth>
   );
