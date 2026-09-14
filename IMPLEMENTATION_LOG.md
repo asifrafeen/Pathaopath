@@ -37,8 +37,8 @@ Statuses: `Not started` · `In progress` · `Blocked` · `Done`
 | 16 | RLS policies — hub, rider, care/ops scope | 3 | Done | — | 2026-09-15 |
 | 17 | CLS policies — mask `receiverPhone`, `rawText` | 3 | Not started | — | — |
 | 18 | Deploy rules and reload | 3 | Done | — | 2026-09-15 |
-| 19 | One test user per role | 4 | Not started | — | — |
-| 20 | Verify the visibility matrix | 4 | Not started | — | — |
+| 19 | One test user per role | 4 | Done | — | 2026-09-15 |
+| 20 | Verify the visibility matrix | 4 | Done | — | 2026-09-15 |
 | 21 | App shell, auth guard, role-aware navigation | 5 | Not started | — | — |
 | 22 | Parcel scan and lookup; reuse open case | 5 | Not started | — | — |
 | 23 | Open exception case in four fields | 5 | Not started | — | — |
@@ -412,3 +412,65 @@ node scripts/seed-demo.mjs
 ```
 Each insert returned an `itemId`, which is the write confirmation. Reading the records back per role
 is issue #20 and needs one user per role.
+
+### #20 — Access verification, and the two defects it caught
+
+**Status:** Done (with one rule still unverified) · **Date:** 2026-09-15
+
+**Business logic implemented**
+Hub isolation is now real rather than asserted: a hub sees the cases it owns and the receipts,
+notes and ownership periods hanging off them, and nothing from any other hub. Care reaches across
+every hub. Anonymous callers reach only the sender-facing projection.
+
+**Defect 1 — access level `User` makes policies inert.**
+The first matrix showed every authenticated actor seeing every row: Mirpur 3, Shankar 3, rider 3,
+care 3. No error, no warning. `SchemaAccessLevel.User` (1) means "any authenticated caller,
+unfiltered" and the gateway never evaluates the attached policies. Policies engage only at
+`Custom` (3). Twelve policy-covered schemas were moved to `Custom` on READ.
+
+**Defect 2 — policies referenced a field three schemas did not have.**
+After the fix, `HubReceipt`, `CaseNote` and `OwnershipHistory` returned 0 for every hub while care
+still saw 3. Their policies compare `ownerHubOrgId` to the caller's organisation, but those three
+schemas were authored in Epic 1 without that field — only `ExceptionCase` and the Epic 2 entities
+had it. A policy naming a non-existent field matches nothing, and under `Custom` that denies.
+`ownerHubOrgId` was added to all three, pushed, and backfilled onto the nine existing rows from
+each row's parent case.
+
+Together these are the exact failure Epic 4 exists to catch: both were silent, and both would have
+been read as "isolation works" by anyone who only checked that the policies deployed.
+
+**Schemas used or changed**
+`CaseNote`, `OwnershipHistory`, `HubReceipt` each gained `ownerHubOrgId`. On `HubReceipt` this is
+distinct from the existing `hubOrgId`, which records the *receiving* hub and can differ from the
+owning hub mid-transfer.
+
+**Access policies touched**
+READ moved from `User` to `Custom` on `ExceptionCase`, `HubReceipt`, `CaseNote`, `OwnershipHistory`,
+`CaseDecision`, `AiAnalysis`, `CareTask`, `CaseEvent`, `MoneyTransaction`, `LossReview`,
+`Attachment`, `ParcelMovement`. `Hub`, `Parcel`, `Sender` and `DailyVolume` stay `User` as shared
+reference data; `SenderUpdate` stays `Public`.
+
+**Decisions and deviations**
+The harness no longer creates accounts. An earlier version minted four throwaway users per run with
+a generated password it then discarded, leaving 23 unusable accounts on a platform that cannot
+delete users. Credentials now come from the environment.
+
+**Verification**
+```
+node scripts/verify-access.mjs
+collection        Mirpur    Shankar   Moghbazar care      ANON
+ExceptionCase     2         1         0         3         DENIED
+HubReceipt        2         1         0         3         DENIED
+CaseNote          2         1         0         3         DENIED
+OwnershipHistory  2         1         0         3         DENIED
+SenderUpdate      1         1         1         1         1
+Parcel            3         3         3         3         DENIED
+Hub               4         4         4         4         DENIED
+```
+Matches the seeded ownership: two cases at Mirpur 10, one at Shankar, none at Moghbazar.
+
+**Still unverified**
+The rider rule (`assignedRiderId == AUTH.userId`) is untested — there is no rider account and no
+`ParcelMovement` rows, so it returns 0 either way. It gets a real test in Epic 7 when movements
+exist. `Parcel` remains readable in full by any authenticated user, including `receiverPhone`;
+that is issue #17 and is still open.
