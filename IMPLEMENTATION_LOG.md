@@ -39,7 +39,7 @@ Statuses: `Not started` · `In progress` · `Blocked` · `Done`
 | 18 | Deploy rules and reload | 3 | Done | — | 2026-09-15 |
 | 19 | One test user per role | 4 | Done | — | 2026-09-15 |
 | 20 | Verify the visibility matrix | 4 | Done | — | 2026-09-15 |
-| 21 | App shell, auth guard, role-aware navigation | 5 | Not started | — | — |
+| 21 | App shell, auth guard, role-aware navigation | 5 | Done | — | 2026-09-15 |
 | 22 | Parcel scan and lookup; reuse open case | 5 | Not started | — | — |
 | 23 | Open exception case in four fields | 5 | Not started | — | — |
 | 24 | Record hub receipt and raw rider note | 5 | Not started | — | — |
@@ -520,3 +520,50 @@ care       rows=3  receiverPhone=["+8801822000001","+8801822000002","+8801822000
 ```
 A permanent rider test account (`test.pathaopoth.rider@yopmail.com`) was created with the shared
 test password so this stays re-runnable without minting new accounts.
+
+### #21 — Design tokens, role-aware shell, domain primitives
+
+**Status:** Done · **Date:** 2026-09-15
+
+**Business logic implemented**
+Which hat an operator wears now determines what they see. A hub staff member gets the queue, scan
+and cases; a rider gets only their runs; care and ops get the cross-hub queues and reports. The
+sidebar states the signed-in role rather than leaving it to be inferred from which items appear.
+
+**Schemas used or changed**
+None. `iam.me()` supplies the role map, which IAM returns as organizationId → role slugs because a
+person can hold different roles in different hubs.
+
+**Access policies touched**
+None. Navigation filtering is presentation only — the Data Gateway remains the boundary, and a user
+who defeats the UI still cannot read a row the gateway will not serve. `src/lib/pathaopoth/roles.ts`
+says so at the top so nobody mistakes it for security.
+
+**Decisions and deviations**
+- Tokens live in `src/app/tokens.css`, separate from component CSS, so the token layer can be
+  regenerated from `pathaopoth.design.md` without touching components. Tailwind resolves every colour
+  through a CSS variable, so light and dark need only one palette in config.
+- The scaffold's shell already implemented the guide's three-way active nav indicator (soft
+  background, brand text, 3px right bar) and its brand HSL `218 78% 32%` is exactly `#124191`, so the
+  shell was extended rather than rewritten.
+- Base font size set to 14px per the guide — this is a data tool read for eight hours, not a page
+  scrolled once. Three densities are wired as `data-density` on the root element.
+- Field mode is selected by role **and** viewport together: only a rider-only user on a narrow
+  viewport gets it, so a care agent on a tablet keeps the desk console.
+- Nav label keys are typed as `TranslationKey`, which forced registering the six new keys in both
+  the dictionary and `blocks/localization/common.en.json` rather than casting past the type.
+
+**Domain components built** (`src/shared/ui/domain.tsx`)
+`StatusPill` (eight case statuses mapped onto the six-channel ramp — no seventh hue), `SlaChip`
+(carries a number, not just a hue, because colour alone fails in bad light), `TrackingNumber` (mono,
+Latin in every locale), `CodAmount` (tabular, ৳), `HubTag`, `CustodyBadge`, `RiderChip`,
+`StaleBanner` (surfaces the commit-point lag rather than silently showing stale data), and
+`AiProposalCard` (violet provenance, explicit accept/reject, never auto-applied).
+
+**Verification**
+```
+npm run lint   -> tsc --noEmit, clean
+npm run build  -> 2024 modules, 27.46 kB CSS, 338.31 kB JS, built in 6.21s
+```
+Not yet verified in a browser: the local HTTPS cert is generated but not trusted, so the app cannot
+be opened on its real domain yet.
