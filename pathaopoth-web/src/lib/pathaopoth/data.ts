@@ -135,6 +135,25 @@ export type CareTask = {
   resolvedAt?: string | null; CreatedDate?: string;
 };
 
+export type MoneyTransaction = {
+  ItemId: string; caseId: string; type: string; amount?: number; currency?: string;
+  reference?: string | null; reversesTransactionId?: string | null; occurredAt?: string;
+  fromParty?: { type?: string; displayName?: string } | null;
+  toParty?: { type?: string; displayName?: string } | null;
+};
+
+export type LossReview = {
+  ItemId: string; caseId: string; status: string; reason?: string;
+  claimedAmount?: number; approvedAmount?: number | null; currency?: string;
+  approvedByUserId?: string | null; decidedAt?: string | null;
+};
+
+export type SenderUpdate = {
+  ItemId: string; caseId: string; parcelId: string; trackingNumber?: string;
+  publicToken?: string; publicMessage?: string; statusLabel?: string;
+  expectedResolutionAt?: string | null; publishedAt?: string;
+};
+
 export type OwnershipPeriod = {
   ItemId: string; caseId: string; hubCode?: string; startedAt?: string;
   endedAt?: string | null; isCurrent?: boolean;
@@ -172,6 +191,11 @@ const DECISION_FIELDS =
 const ANALYSIS_FIELDS =
   "ItemId caseId noteId status recommendedAction confidence requiresManualReview structuredOutput proposedRedeliveryDateLocal proposedWindowStart proposedWindowEnd errorMessage";
 const CARE_FIELDS = "ItemId caseId status reason outcome assignedCareUser { name } resolvedAt CreatedDate";
+const MONEY_FIELDS =
+  "ItemId caseId type amount currency reference reversesTransactionId occurredAt fromParty { type displayName } toParty { type displayName }";
+const LOSS_FIELDS = "ItemId caseId status reason claimedAmount approvedAmount currency approvedByUserId decidedAt";
+const SENDER_UPDATE_FIELDS =
+  "ItemId caseId parcelId trackingNumber publicToken publicMessage statusLabel expectedResolutionAt publishedAt";
 const OWNERSHIP_FIELDS = "ItemId caseId hubCode startedAt endedAt isCurrent accountableStaff { name }";
 const MOVEMENT_FIELDS =
   "ItemId caseId parcelId trackingNumber decisionId purpose fromHubId fromHubCode fromHubOrgId destinationType toHubId toHubCode toHubOrgId destinationAddressSnapshot assignedRiderId assignedRider { name phone } status pickupAcknowledgedAt expectedArrivalAt completedAt recipientName deliveryProofReference failureReason";
@@ -237,6 +261,31 @@ export const data = {
     }),
 
   /** The ownership trail. Exactly one period is current while the case is open. */
+  moneyForCase: (caseId: string) =>
+    list<MoneyTransaction>("MoneyTransaction", MONEY_FIELDS, {
+      filter: { caseId }, sort: JSON.stringify({ occurredAt: -1 }), pageSize: 100
+    }),
+
+  lossReviewsForCase: (caseId: string) =>
+    list<LossReview>("LossReview", LOSS_FIELDS, { filter: { caseId }, pageSize: 20 }),
+
+  senderUpdatesForCase: (caseId: string) =>
+    list<SenderUpdate>("SenderUpdate", SENDER_UPDATE_FIELDS, {
+      filter: { caseId }, sort: JSON.stringify({ publishedAt: -1 }), pageSize: 20
+    }),
+
+  /** Public read — served without a token, matched on the unguessable link token. */
+  senderUpdateByToken: async (publicToken: string): Promise<SenderUpdate | null> => {
+    const page = await list<SenderUpdate>("SenderUpdate", SENDER_UPDATE_FIELDS, {
+      filter: { publicToken }, pageSize: 1
+    });
+    return page.items[0] ?? null;
+  },
+
+  /** Every open case, for reporting. Counts, not rates — see DailyVolume. */
+  allCases: () =>
+    list<ExceptionCase>("ExceptionCase", CASE_FIELDS, { pageSize: 500 }),
+
   ownershipForCase: (caseId: string) =>
     list<OwnershipPeriod>("OwnershipHistory", OWNERSHIP_FIELDS, {
       filter: { caseId }, sort: JSON.stringify({ startedAt: -1 }), pageSize: 50
