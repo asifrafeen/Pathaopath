@@ -1,7 +1,7 @@
 {
   "security": [
     {
-      "accessLevel": 1,
+      "accessLevel": 3,
       "fieldNames": [],
       "operation": 0,
       "policyType": 0,
@@ -281,7 +281,7 @@
       "schemaId": "0d3c8669-3ea1-4165-b4c5-1d4ee4449513"
     },
     {
-      "accessLevel": 1,
+      "accessLevel": 3,
       "fieldNames": [],
       "operation": 0,
       "policyType": 0,
@@ -337,7 +337,7 @@
       "schemaId": "0779538a-e8ec-4ca9-b693-675fc935d218"
     },
     {
-      "accessLevel": 1,
+      "accessLevel": 3,
       "fieldNames": [],
       "operation": 0,
       "policyType": 0,
@@ -365,7 +365,7 @@
       "schemaId": "07d0f546-1125-4a53-a609-4f785513e8a1"
     },
     {
-      "accessLevel": 1,
+      "accessLevel": 3,
       "fieldNames": [],
       "operation": 0,
       "policyType": 0,
@@ -421,7 +421,7 @@
       "schemaId": "ee5988dd-f215-40b3-a600-55db19bd4226"
     },
     {
-      "accessLevel": 1,
+      "accessLevel": 3,
       "fieldNames": [],
       "operation": 0,
       "policyType": 0,
@@ -477,7 +477,7 @@
       "schemaId": "29a52721-fe0c-47f4-9704-900802d69a45"
     },
     {
-      "accessLevel": 1,
+      "accessLevel": 3,
       "fieldNames": [],
       "operation": 0,
       "policyType": 0,
@@ -505,7 +505,7 @@
       "schemaId": "4a66d272-40cf-4c8e-b7c8-788513206c7f"
     },
     {
-      "accessLevel": 1,
+      "accessLevel": 3,
       "fieldNames": [],
       "operation": 0,
       "policyType": 0,
@@ -533,7 +533,7 @@
       "schemaId": "f3d7322f-2ce9-4ada-8f45-9703c041bb25"
     },
     {
-      "accessLevel": 1,
+      "accessLevel": 3,
       "fieldNames": [],
       "operation": 0,
       "policyType": 0,
@@ -561,7 +561,7 @@
       "schemaId": "ccc14598-fbc9-4121-95ce-eaa00636d6af"
     },
     {
-      "accessLevel": 1,
+      "accessLevel": 3,
       "fieldNames": [],
       "operation": 0,
       "policyType": 0,
@@ -589,7 +589,7 @@
       "schemaId": "d7f433f7-0345-4469-a046-2efceee27cd1"
     },
     {
-      "accessLevel": 1,
+      "accessLevel": 3,
       "fieldNames": [],
       "operation": 0,
       "policyType": 0,
@@ -645,7 +645,7 @@
       "schemaId": "e28ef3f7-3b3d-4d7f-8947-014b939c8737"
     },
     {
-      "accessLevel": 1,
+      "accessLevel": 3,
       "fieldNames": [],
       "operation": 0,
       "policyType": 0,
@@ -701,7 +701,7 @@
       "schemaId": "31b34e0d-4b03-42b5-b0fa-9258dd8e07d2"
     },
     {
-      "accessLevel": 1,
+      "accessLevel": 3,
       "fieldNames": [],
       "operation": 0,
       "policyType": 0,
