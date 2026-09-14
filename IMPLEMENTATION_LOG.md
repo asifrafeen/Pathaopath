@@ -43,11 +43,11 @@ Statuses: `Not started` · `In progress` · `Blocked` · `Done`
 | 22 | Parcel scan and lookup; reuse open case | 5 | Done | — | 2026-09-15 |
 | 23 | Open exception case in four fields | 5 | Done | — | 2026-09-15 |
 | 24 | Record hub receipt and raw rider note | 5 | Done | — | 2026-09-15 |
-| 25 | Decision confirmation UI, AI panel stubbed | 6 | Not started | — | — |
-| 26 | Raise and resolve care tasks | 6 | Not started | — | — |
-| 27 | Plan movement, assign rider | 7 | Not started | — | — |
-| 28 | Rider pickup acknowledgement | 7 | Not started | — | — |
-| 29 | Hub arrival — commit-point sequence | 7 | Not started | — | — |
+| 25 | Decision confirmation UI, AI panel stubbed | 6 | Done | — | 2026-09-15 |
+| 26 | Raise and resolve care tasks | 6 | Done | — | 2026-09-15 |
+| 27 | Plan movement, assign rider | 7 | Done | — | 2026-09-15 |
+| 28 | Rider pickup acknowledgement | 7 | Done | — | 2026-09-15 |
+| 29 | Hub arrival — commit-point sequence | 7 | Done | — | 2026-09-15 |
 | 30 | Outcomes: delivered, returned, loss write-off | 8 | Not started | — | — |
 | 31 | Money transactions and reversing entries | 8 | Not started | — | — |
 | 32 | Publish `SenderUpdate` with human review | 9 | Not started | — | — |
@@ -620,3 +620,59 @@ the Mirpur account, confirming row-level scoping reaches the app layer.
 
 **Not yet verified:** nobody has clicked through the UI in a browser. Typecheck, build and the
 underlying queries pass; visual and interaction review is outstanding.
+
+### #25–#29 — Decisions, care, and the transport lifecycle
+
+**Status:** Done · **Date:** 2026-09-15
+
+**Business logic implemented**
+A hub confirms what happens next, care investigates without taking the parcel, and transport moves
+in legs with ownership and custody tracked separately.
+
+*Decisions* are append-only. Confirming a replacement marks the standing decision superseded rather
+than overwriting it, so the history of what was decided and when survives. The case carries a
+snapshot of the current decision so queues render without a join, but `CaseDecision` stays
+authoritative.
+
+*Care* investigates and contacts customers. Resolving a task records an outcome and returns the case
+to the owning hub for review — care never moves the parcel and never takes hub ownership.
+
+*Transport* is the part the whole accountability model rests on:
+- Planning a leg does **not** change custody or ownership.
+- Pickup moves **custody** to the rider. Ownership stays with the sending hub.
+- Only a `HubReceipt` transfers **ownership**, and only the receiving hub can record one — a rider
+  cannot close their own leg.
+- Between dispatch and arrival the sending hub remains accountable, so there is no interval where
+  the case is owned by nobody. The invariant holds by construction, which is what makes it safe
+  without atomic writes.
+- A failed leg does not imply the parcel returned. Custody stays with whoever actually holds it.
+
+**Schemas used or changed**
+No schema changes. Adds reads for `CaseDecision`, `AiAnalysis`, `CareTask`, `ParcelMovement`,
+`OwnershipHistory`; writes `CaseDecision`, `CareTask`, `CaseEvent`, `ParcelMovement`, `HubReceipt`,
+`OwnershipHistory` and updates `ExceptionCase`.
+
+**Decisions and deviations**
+- **The commit-point sequence is implemented in `movementActions.ts`**, documented step by step. The
+  `HubReceipt` is written first with `appliedState: "pending"` and flipped to `"applied"` only after
+  the movement, both ownership periods, the case snapshot and the timeline event have landed. If the
+  process dies in between, the receipt stays `pending` and the reconciliation workflow can replay
+  steps 2–6 — every one is a set-to-target, never an increment, so replay is safe.
+  `incomingMovementId` identifies a duplicate arrival for the same leg without a unique index.
+- **One active movement per case** is checked immediately before the insert. The gateway cannot
+  express a partial unique index, so this read-then-write is the only thing holding the rule; it
+  narrows the window rather than closing it, and the integrity workflow (#39) is what would catch a
+  violation.
+- **The AI panel renders an honest empty state.** No agent is configured, so rather than a fake
+  proposal the panel says so and hands the decision entirely to the operator. When `AiAnalysis` rows
+  start arriving the violet `AiProposalCard` takes over with no further change.
+- Riders are resolved through `iam.users.list` filtered by role, since rider identity lives in IAM
+  rather than a project collection.
+
+**Verification**
+```
+npm run lint   -> clean
+npm run build  -> clean
+```
+Not yet exercised end to end against live data: the plan → pickup → arrival sequence needs a rider
+account signed in on one device and hub staff on another, which is a manual run-through.

@@ -4,6 +4,9 @@ import { data } from "../../lib/pathaopoth/data";
 import {
   CodAmount, CustodyBadge, HubTag, SlaChip, StaleBanner, StatusPill, TrackingNumber
 } from "../../shared/ui/domain";
+import { DecisionPanel } from "./DecisionPanel";
+import { CarePanel } from "../care/CarePanel";
+import { MovementPanel } from "../movements/MovementPanel";
 
 export function CaseDetailPage({ caseId, onNavigate }: { caseId: string; onNavigate: (p: string) => void }) {
   const caseQuery = useQuery({
@@ -70,6 +73,16 @@ export function CaseDetailPage({ caseId, onNavigate }: { caseId: string; onNavig
 
       <div className="grid gap-base md:grid-cols-[2fr_1fr]">
         <div className="grid gap-base">
+          {c.status !== "closed" ? (
+            <DecisionPanel kase={c} onChanged={() => { caseQuery.refetch(); receipts.refetch(); }} />
+          ) : null}
+
+          <CarePanel caseId={c.ItemId} parcelId={c.parcelId} ownerHubOrgId={c.ownerHubOrgId} />
+
+          {c.status !== "closed" ? (
+            <MovementPanel kase={c} onChanged={() => { caseQuery.refetch(); receipts.refetch(); }} />
+          ) : null}
+
           <Panel title="Hub receipts" icon={<PackageCheck size={14} aria-hidden />}>
             {(receipts.data?.items ?? []).length === 0 ? (
               <p className="text-body-sm text-ink-muted">No receipts recorded.</p>
