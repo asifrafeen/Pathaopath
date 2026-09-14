@@ -38,6 +38,21 @@
       "deleteAccessLevel": 0
     },
     {
+      "name": "ownerHubOrgId",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false,
+      "description": "Access key mirroring the owning case hub, so hub staff can read their own notes",
+      "requiredOn": "None",
+      "isReferenceField": false,
+      "referenceFieldType": "",
+      "readAccessLevel": 0,
+      "writeAccessLevel": 0,
+      "editAccessLevel": 0,
+      "deleteAccessLevel": 0
+    },
+    {
       "name": "receiptId",
       "type": "String",
       "isArray": false,
