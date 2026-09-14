@@ -11,6 +11,8 @@ import { CaseDetailPage } from "../../features/cases/CaseDetailPage";
 import { ScanPage } from "../../features/scan/ScanPage";
 import { MovementsPage } from "../../features/movements/MovementsPage";
 import { CareQueuePage } from "../../features/care/CareQueuePage";
+import { ReportsPage } from "../../features/reports/ReportsPage";
+import { SenderTrackPage } from "../../features/sender/SenderTrackPage";
 
 type Navigate = (path: string) => void;
 
@@ -21,6 +23,7 @@ const staticRoutes: Record<string, (nav: Navigate) => JSX.Element> = {
   "/cases": (nav) => <QueuePage onNavigate={nav} />,
   "/movements": () => <MovementsPage />,
   "/care": (nav) => <CareQueuePage onNavigate={nav} />,
+  "/reports": () => <ReportsPage />,
   "/profile": () => <ProfilePage />,
   "/error": () => <ErrorPage />
 };
@@ -43,6 +46,13 @@ export function AppRouter() {
     window.history.pushState({}, "", nextPath);
     setPath(nextPathname);
     setSearch(queryString ? `?${queryString}` : "");
+  }
+
+  // The sender link is the one unauthenticated surface in the product, so it is
+  // matched before the auth guards and renders outside the app shell.
+  const trackMatch = /^\/t\/([^/]+)$/.exec(path);
+  if (trackMatch) {
+    return <SenderTrackPage token={trackMatch[1]!} />;
   }
 
   if (path === "/login/callback") {

@@ -7,6 +7,8 @@ import {
 import { DecisionPanel } from "./DecisionPanel";
 import { CarePanel } from "../care/CarePanel";
 import { MovementPanel } from "../movements/MovementPanel";
+import { ClosurePanel } from "../closure/ClosurePanel";
+import { SenderUpdatePanel } from "../sender/SenderUpdatePanel";
 
 export function CaseDetailPage({ caseId, onNavigate }: { caseId: string; onNavigate: (p: string) => void }) {
   const caseQuery = useQuery({
@@ -82,6 +84,10 @@ export function CaseDetailPage({ caseId, onNavigate }: { caseId: string; onNavig
           {c.status !== "closed" ? (
             <MovementPanel kase={c} onChanged={() => { caseQuery.refetch(); receipts.refetch(); }} />
           ) : null}
+
+          <ClosurePanel kase={c} onChanged={() => { caseQuery.refetch(); receipts.refetch(); }} />
+
+          <SenderUpdatePanel kase={c} />
 
           <Panel title="Hub receipts" icon={<PackageCheck size={14} aria-hidden />}>
             {(receipts.data?.items ?? []).length === 0 ? (

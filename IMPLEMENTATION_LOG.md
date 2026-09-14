@@ -48,12 +48,12 @@ Statuses: `Not started` · `In progress` · `Blocked` · `Done`
 | 27 | Plan movement, assign rider | 7 | Done | — | 2026-09-15 |
 | 28 | Rider pickup acknowledgement | 7 | Done | — | 2026-09-15 |
 | 29 | Hub arrival — commit-point sequence | 7 | Done | — | 2026-09-15 |
-| 30 | Outcomes: delivered, returned, loss write-off | 8 | Not started | — | — |
-| 31 | Money transactions and reversing entries | 8 | Not started | — | — |
-| 32 | Publish `SenderUpdate` with human review | 9 | Not started | — | — |
-| 33 | Public token link page | 9 | Not started | — | — |
-| 34 | Exception counts by hub, route, rider | 10 | Not started | — | — |
-| 35 | Week-over-week trend | 10 | Not started | — | — |
+| 30 | Outcomes: delivered, returned, loss write-off | 8 | Done | — | 2026-09-15 |
+| 31 | Money transactions and reversing entries | 8 | Done | — | 2026-09-15 |
+| 32 | Publish `SenderUpdate` with human review | 9 | Done | — | 2026-09-15 |
+| 33 | Public token link page | 9 | Done | — | 2026-09-15 |
+| 34 | Exception counts by hub, route, rider | 10 | Done | — | 2026-09-15 |
+| 35 | Week-over-week trend | 10 | Done | — | 2026-09-15 |
 | 36 | Arrival reconciliation workflow | 11 | Not started | — | — |
 | 37 | SLA sweep and notification | 11 | Not started | — | — |
 | 38 | Handoff escalation | 11 | Not started | — | — |
@@ -676,3 +676,54 @@ npm run build  -> clean
 ```
 Not yet exercised end to end against live data: the plan → pickup → arrival sequence needs a rider
 account signed in on one device and hub staff on another, which is a manual run-through.
+
+### #30–#35 — Closure, money, sender view, reporting
+
+**Status:** Done · **Date:** 2026-09-15
+
+**Business logic implemented**
+*Closure* records one of three resolutions — delivered, returned to sender, or loss write-off — ends
+the active ownership period, and keeps the last owner on the case for reporting. A write-off is
+refused without an approved `LossReview`, because cancellation alone is never loss.
+
+*Money* is an operational payment log, not a ledger. COD is expected money and never proof of
+receipt, so collection is recorded only when it actually happened; a zero collection writes no row
+at all. Corrections post a reversing entry that swaps the counterparties — a posted amount is never
+edited, and both rows survive.
+
+*The sender view* is the only unauthenticated surface in the product. It reads `SenderUpdate` and
+nothing else, matched on a long random token, and renders outside the app shell. A wrong token
+reveals nothing, not even whether it ever existed. Publishing reuses the case's existing token so a
+sender keeps the URL they were first given.
+
+*Reporting* gives counts and week-over-week change by hub and route, with SLA breaches broken out.
+
+**Schemas used or changed**
+No schema changes. Adds reads for `MoneyTransaction`, `LossReview`, `SenderUpdate`; writes
+`MoneyTransaction`, `SenderUpdate`, `CaseEvent`, and updates `ExceptionCase` and `OwnershipHistory`.
+
+**Decisions and deviations**
+- **Reporting shows counts, not rates, and says so above the numbers rather than in a footnote.** A
+  rate needs total parcel volume per hub and route as a denominator, which exception-only intake
+  cannot supply. `DailyVolume` exists to carry it and is unfed, so the view can switch to true rates
+  without a migration. Labelling counts as rates would make the case study's "refused deliveries up
+  41%" a number nobody can act on.
+- **Sender safety is structural.** `SenderUpdate` has no field for a receiver phone, an internal note
+  or AI evidence, so there is nothing for a mistaken policy to leak. Verified: an anonymous query for
+  `receiverPhone` on that collection fails with "field does not exist" rather than returning data or
+  being refused by a rule.
+- Destructive actions — case close and money reversal — use `ConfirmDialog`, which names the specific
+  record and whose confirming button carries the verb ("Close as delivered", "Post the reversal"),
+  never "OK". Focus is trapped and restored to the trigger.
+
+**Verification**
+```
+npm run lint   -> clean
+npm run build  -> 2042 modules, 31.97 kB CSS, 423.40 kB JS
+
+Anonymous sender read, no token supplied:
+  getSenderUpdates -> OK 1 row
+  tracking PP2026090001 · "Being reviewed"
+  link https://dbuajn.slsblx.com:5173/t/BOL9YF0Bg…
+  receiverPhone on SenderUpdate -> field does not exist (by design)
+```
