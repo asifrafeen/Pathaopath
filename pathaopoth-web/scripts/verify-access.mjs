@@ -1,123 +1,111 @@
 // Access verification harness (issue #20).
 //
-// Creates one short-lived user per role, queries every collection as each plus anonymously,
-// prints a row-count matrix, then deactivates the accounts. Re-run after any policy change.
+// Proves each role sees exactly what it should. Nothing is filtered by default and a
+// missing or inert policy fails OPEN, silently — so this is the only thing standing
+// between "the policies are deployed" and "hub isolation actually works".
 //
-// Change the email prefix before re-running: accounts cannot be deleted, only deactivated,
-// and an existing address fails creation.
+// THIS SCRIPT CREATES NO ACCOUNTS. It reuses existing ones, supplied through the
+// environment, because accounts on this platform cannot be deleted — only deactivated —
+// and an earlier version that minted a throwaway set per run left 23 dead users behind.
 //
-// Gateway query facts learned the hard way:
-//   - list queries are named get<SchemaName>s, e.g. getExceptionCases
+// Usage (PowerShell):
+//   $env:PP_HUB_A="email:password"      # hub_staff in one hub
+//   $env:PP_HUB_B="email:password"      # hub_staff in a different hub
+//   $env:PP_RIDER="email:password"      # rider
+//   $env:PP_CARE="email:password"       # care or ops_manager (cross-hub)
+//   node scripts/verify-access.mjs
+//
+// Any actor left unset is skipped, so a single credential still gives a useful read.
+//
+// Gateway query facts, learned the hard way:
+//   - list queries are get<SchemaName>s, e.g. getExceptionCases — not <Schema>s
 //   - args are (input, where, order, paging); input is {filter, sort, pageNo, pageSize}
-//   - the result type is <Schema>Result { items, totalCount, pageNo, pageSize, totalPages,
-//     hasNextPage, hasPreviousPage }
-//   - platform fields are PascalCase (ItemId), authored fields keep their authored casing
-// Nothing is filtered by default, so a missing policy fails OPEN and silently.
-import { execFileSync } from "node:child_process";
-import { randomBytes } from "node:crypto";
+//   - the result type is <Schema>Result { items, totalCount, pageNo, pageSize,
+//     totalPages, hasNextPage, hasPreviousPage }
+//   - platform fields are PascalCase (ItemId); authored fields keep their authored casing
+//   - policies only engage at access level Custom(3). User(1) means "any authenticated
+//     caller, unfiltered" and silently ignores every policy attached to the schema.
 import { createBlocksClient } from "@seliseblocks/client";
 
-const TENANT = "Df6362bb5e9c04915a0994c87e0751bd5";
-const API = "https://blocksapi.slsblx.com";
-const ORG_MIRPUR = "7c182c85-dbc9-484a-bfab-6162603aefd1";
-const ORG_SHANKAR = "026fc8e8-f8f2-431b-bbb4-0c5742fc742a";
+const TENANT = process.env.PP_TENANT ?? "Df6362bb5e9c04915a0994c87e0751bd5";
+const API = process.env.PP_API ?? "https://blocksapi.slsblx.com";
 
-const gh = (a) => execFileSync(process.platform === "win32" ? "blocks.cmd" : "blocks", a,
-  { encoding: "utf8", maxBuffer: 1 << 24, shell: process.platform === "win32" });
-const pw = () => `Ab1${randomBytes(12).toString("base64url").replace(/[^A-Za-z0-9]/g, "x")}`;
+const split = (v) => {
+  if (!v) return null;
+  const i = v.indexOf(":");
+  return i < 0 ? null : { email: v.slice(0, i), password: v.slice(i + 1) };
+};
 
 const ACTORS = [
-  { key: "hub@Mirpur", email: "pathaopoth.mx5.hub@yopmail.com", role: "hub_staff", org: ORG_MIRPUR },
-  { key: "hub@Shankar", email: "pathaopoth.mx5.hub2@yopmail.com", role: "hub_staff", org: ORG_SHANKAR },
-  { key: "rider@Mirpur", email: "pathaopoth.mx5.rider@yopmail.com", role: "rider", org: ORG_MIRPUR },
-  { key: "care", email: "pathaopoth.mx5.care@yopmail.com", role: "care", org: "default" },
-];
+  { key: "hubA", env: "PP_HUB_A", expect: "only its own hub's rows" },
+  { key: "hubB", env: "PP_HUB_B", expect: "only its own hub's rows, a different set from hubA" },
+  { key: "rider", env: "PP_RIDER", expect: "only movements assigned to it; no cases" },
+  { key: "care", env: "PP_CARE", expect: "every row, across all hubs" },
+].map((a) => ({ ...a, cred: split(process.env[a.env]) })).filter((a) => a.cred);
 
-const made = [];
-for (const a of ACTORS) {
-  a.password = pw();
-  try {
-    a.id = JSON.parse(gh(["iam", "users", "create", "--email", a.email, "--password", a.password,
-      "--first-name", "Matrix", "--last-name", a.role, "--organization-id", a.org,
-      "--roles", a.role, "--yes", "--json"])).itemId;
-    made.push(a.id);
-    gh(["iam", "users", "activate", a.id, "--reason", "Short-lived access-verification account", "--yes", "--json"]);
-    console.log(`created+activated ${a.key}`);
-  } catch (e) {
-    console.log(`setup failed ${a.key}:`, (e.stderr || e.stdout || String(e)).slice(0, 200));
-  }
-}
-
-for (const a of ACTORS) {
-  if (!a.id) continue;
-  try {
-    const r = await createBlocksClient({ apiUrl: API, xBlocksKey: TENANT })
-      .auth.login({ username: a.email, password: a.password, rememberMe: false });
-    a.token = r?.access_token ?? r?.accessToken ?? r?.data?.access_token;
-  } catch { /* reported below */ }
-  console.log(`login ${a.key}: ${a.token ? "ok" : "FAILED"}`);
+if (!ACTORS.length) {
+  console.log("No credentials supplied. Set at least one of PP_HUB_A, PP_HUB_B, PP_RIDER, PP_CARE");
+  console.log('as "email:password". Anonymous checks still run below.\n');
 }
 
 const clientFor = (token) => createBlocksClient({
   apiUrl: API, xBlocksKey: TENANT, ...(token ? { accessToken: () => token } : {}),
 });
 
-const probe = ACTORS.find((a) => a.token);
+for (const a of ACTORS) {
+  try {
+    const r = await clientFor().auth.login({ username: a.cred.email, password: a.cred.password, rememberMe: false });
+    a.token = r?.access_token ?? r?.accessToken ?? r?.data?.access_token;
+  } catch { /* reported below */ }
+  console.log(`login ${a.key} (${a.cred.email}): ${a.token ? "ok" : "FAILED"}`);
+}
+
 const FIELD = {};
+const probe = ACTORS.find((a) => a.token);
 if (probe) {
-  const r = await clientFor(probe.token).data.graphql({
-    query: "{ __schema { queryType { fields { name args { name } } } } }",
-  });
-  const fields = r?.data?.__schema?.queryType?.fields ?? [];
-  console.log("\n== query fields exposed by the gateway ==");
-  for (const f of fields) {
-    console.log("  " + f.name + "(" + f.args.map((x) => x.name).join(", ") + ")");
+  const r = await clientFor(probe.token).data.graphql({ query: "{ __schema { queryType { fields { name args { name } } } } }" });
+  for (const f of r?.data?.__schema?.queryType?.fields ?? []) {
     FIELD[f.name.toLowerCase()] = { name: f.name, args: f.args.map((x) => x.name) };
   }
 }
-
-// The gateway exposes list queries as get<SchemaName>s — e.g. getExceptionCases, getHubs.
-const resolve = (schema) =>
-  FIELD[("get" + schema + "s").toLowerCase()] || FIELD[("get" + schema).toLowerCase()] ||
-  FIELD[(schema + "s").toLowerCase()] || null;
+// Introspection needs a token, so fall back to the documented convention when running
+// anonymously: get<SchemaName>s taking (input, where, order, paging).
+const resolve = (s) =>
+  FIELD[("get" + s + "s").toLowerCase()] ??
+  FIELD[("get" + s).toLowerCase()] ??
+  { name: "get" + s + "s", args: ["input", "where", "order", "paging"] };
 
 const COLLECTIONS = [
-  ["ExceptionCase", "itemId ownerHubOrgId status"],
-  ["ParcelMovement", "itemId assignedRiderId"],
-  ["Parcel", "itemId trackingNumber"],
-  ["CaseNote", "itemId caseId"],
-  ["SenderUpdate", "itemId trackingNumber statusLabel"],
-  ["Hub", "itemId code"],
+  "ExceptionCase", "ParcelMovement", "HubReceipt", "CaseNote",
+  "OwnershipHistory", "SenderUpdate", "Parcel", "Hub",
 ];
 
-async function count(token, schema, fields) {
+async function count(token, schema) {
   const f = resolve(schema);
-  if (!f) return "no-field";
-  const args = f.args.includes("input") ? "(input: {pageNo: 1, pageSize: 100})" : "";
+  if (!f) return "?";
+  const args = f.args.includes("input") ? "(input: {pageNo: 1, pageSize: 200})" : "";
   try {
     const r = await clientFor(token).data.graphql({ query: `{ ${f.name}${args} { totalCount } }` });
     if (r?.errors) return "ERR";
-    const node = r?.data?.[f.name];
-    return node ? String(node.totalCount ?? (node.items || []).length) : "null";
+    return String(r?.data?.[f.name]?.totalCount ?? "null");
   } catch (e) {
-    const b = JSON.stringify(e?.body || "");
-    if (/not authorized|AUTH_NOT_AUTHENTICATED|unauthor/i.test(b)) return "DENIED";
-    return (e?.status ?? "ERR") + "";
+    const b = JSON.stringify(e?.body ?? "");
+    return /not authorized|AUTH_NOT_AUTHENTICATED|unauthor/i.test(b) ? "DENIED" : String(e?.status ?? "ERR");
   }
 }
 
-console.log("\n== visibility matrix (cell = rows returned) ==");
 const live = ACTORS.filter((a) => a.token);
-console.log("collection".padEnd(16) + live.map((a) => a.key.padEnd(14)).join("") + "ANON");
-for (const [schema, fields] of COLLECTIONS) {
+console.log("\n== visibility matrix (cell = rows returned) ==");
+console.log("collection".padEnd(18) + live.map((a) => a.key.padEnd(10)).join("") + "ANON");
+for (const schema of COLLECTIONS) {
   const cells = [];
-  for (const a of live) cells.push(await count(a.token, schema, fields));
-  cells.push(await count(undefined, schema, fields));
-  console.log(schema.padEnd(16) + cells.map((c) => String(c).padEnd(14)).join(""));
+  for (const a of live) cells.push(await count(a.token, schema));
+  cells.push(await count(undefined, schema));
+  console.log(schema.padEnd(18) + cells.map((c) => c.padEnd(10)).join(""));
 }
 
-console.log("\n== cleanup ==");
-for (const id of made) {
-  try { gh(["iam", "users", "deactivate", id, "--yes", "--json"]); console.log("  deactivated", id); }
-  catch { console.log("  deactivate FAILED", id); }
-}
+console.log("\nExpected once policies engage:");
+for (const a of live) console.log(`  ${a.key.padEnd(6)} ${a.expect}`);
+console.log("  ANON   DENIED everywhere except SenderUpdate");
+console.log("\nIf every column is identical, the policies are inert — check that the schema's");
+console.log("read access level is Custom(3) via: blocks data schema aggregation --json");
