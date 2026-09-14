@@ -113,6 +113,21 @@
       "deleteAccessLevel": 0
     },
     {
+      "name": "fromHubOrgId",
+      "type": "String",
+      "isArray": false,
+      "isPIIData": false,
+      "isUniqueData": false,
+      "description": "Access key so the sending hub can see movements it dispatched",
+      "requiredOn": "None",
+      "isReferenceField": false,
+      "referenceFieldType": "",
+      "readAccessLevel": 0,
+      "writeAccessLevel": 0,
+      "editAccessLevel": 0,
+      "deleteAccessLevel": 0
+    },
+    {
       "name": "destinationType",
       "type": "String",
       "isArray": false,

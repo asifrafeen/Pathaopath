@@ -1,3 +1,1282 @@
 {
-  "policies": []
+  "security": [
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 0,
+      "policyType": 0,
+      "schemaId": "a6b8b896-11e0-4a52-82ee-98ca0ed873c1"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 1,
+      "policyType": 0,
+      "schemaId": "a6b8b896-11e0-4a52-82ee-98ca0ed873c1"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 2,
+      "policyType": 0,
+      "schemaId": "a6b8b896-11e0-4a52-82ee-98ca0ed873c1"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 3,
+      "policyType": 0,
+      "schemaId": "a6b8b896-11e0-4a52-82ee-98ca0ed873c1"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 0,
+      "policyType": 0,
+      "schemaId": "9f68011d-5732-4661-a4de-defd020ffe23"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 1,
+      "policyType": 0,
+      "schemaId": "9f68011d-5732-4661-a4de-defd020ffe23"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 2,
+      "policyType": 0,
+      "schemaId": "9f68011d-5732-4661-a4de-defd020ffe23"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 3,
+      "policyType": 0,
+      "schemaId": "9f68011d-5732-4661-a4de-defd020ffe23"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 0,
+      "policyType": 0,
+      "schemaId": "cb6b4caf-6c74-4530-bc4f-e070f4761400"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 1,
+      "policyType": 0,
+      "schemaId": "cb6b4caf-6c74-4530-bc4f-e070f4761400"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 2,
+      "policyType": 0,
+      "schemaId": "cb6b4caf-6c74-4530-bc4f-e070f4761400"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 3,
+      "policyType": 0,
+      "schemaId": "cb6b4caf-6c74-4530-bc4f-e070f4761400"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 0,
+      "policyType": 0,
+      "schemaId": "d7ad65bd-3577-4b93-9b6b-55d2f8e78201"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 1,
+      "policyType": 0,
+      "schemaId": "d7ad65bd-3577-4b93-9b6b-55d2f8e78201"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 2,
+      "policyType": 0,
+      "schemaId": "d7ad65bd-3577-4b93-9b6b-55d2f8e78201"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 3,
+      "policyType": 0,
+      "schemaId": "d7ad65bd-3577-4b93-9b6b-55d2f8e78201"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 0,
+      "policyType": 0,
+      "schemaId": "f62fe9b6-a6b0-428c-96b6-bd112f220d40"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 1,
+      "policyType": 0,
+      "schemaId": "f62fe9b6-a6b0-428c-96b6-bd112f220d40"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 2,
+      "policyType": 0,
+      "schemaId": "f62fe9b6-a6b0-428c-96b6-bd112f220d40"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 3,
+      "policyType": 0,
+      "schemaId": "f62fe9b6-a6b0-428c-96b6-bd112f220d40"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 0,
+      "policyType": 0,
+      "schemaId": "82e83f8f-10c5-460b-8c7e-6160bd633334"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 1,
+      "policyType": 0,
+      "schemaId": "82e83f8f-10c5-460b-8c7e-6160bd633334"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 2,
+      "policyType": 0,
+      "schemaId": "82e83f8f-10c5-460b-8c7e-6160bd633334"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 3,
+      "policyType": 0,
+      "schemaId": "82e83f8f-10c5-460b-8c7e-6160bd633334"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 0,
+      "policyType": 0,
+      "schemaId": "ecb4f49a-f359-48dc-8151-2ec061e8c3f9"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 1,
+      "policyType": 0,
+      "schemaId": "ecb4f49a-f359-48dc-8151-2ec061e8c3f9"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 2,
+      "policyType": 0,
+      "schemaId": "ecb4f49a-f359-48dc-8151-2ec061e8c3f9"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 3,
+      "policyType": 0,
+      "schemaId": "ecb4f49a-f359-48dc-8151-2ec061e8c3f9"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 0,
+      "policyType": 0,
+      "schemaId": "444f05f0-bfd6-47b7-8cfd-822ccc6fb234"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 1,
+      "policyType": 0,
+      "schemaId": "444f05f0-bfd6-47b7-8cfd-822ccc6fb234"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 2,
+      "policyType": 0,
+      "schemaId": "444f05f0-bfd6-47b7-8cfd-822ccc6fb234"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 3,
+      "policyType": 0,
+      "schemaId": "444f05f0-bfd6-47b7-8cfd-822ccc6fb234"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 0,
+      "policyType": 0,
+      "schemaId": "eacf7ccc-698d-4b8e-8823-bea333397b71"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 1,
+      "policyType": 0,
+      "schemaId": "eacf7ccc-698d-4b8e-8823-bea333397b71"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 2,
+      "policyType": 0,
+      "schemaId": "eacf7ccc-698d-4b8e-8823-bea333397b71"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 3,
+      "policyType": 0,
+      "schemaId": "eacf7ccc-698d-4b8e-8823-bea333397b71"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 0,
+      "policyType": 0,
+      "schemaId": "0d3c8669-3ea1-4165-b4c5-1d4ee4449513"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 1,
+      "policyType": 0,
+      "schemaId": "0d3c8669-3ea1-4165-b4c5-1d4ee4449513"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 2,
+      "policyType": 0,
+      "schemaId": "0d3c8669-3ea1-4165-b4c5-1d4ee4449513"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 3,
+      "policyType": 0,
+      "schemaId": "0d3c8669-3ea1-4165-b4c5-1d4ee4449513"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 0,
+      "policyType": 0,
+      "schemaId": "fabfde28-f4e9-4389-9d7e-e50d1912d2bd"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 1,
+      "policyType": 0,
+      "schemaId": "fabfde28-f4e9-4389-9d7e-e50d1912d2bd"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 2,
+      "policyType": 0,
+      "schemaId": "fabfde28-f4e9-4389-9d7e-e50d1912d2bd"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 3,
+      "policyType": 0,
+      "schemaId": "fabfde28-f4e9-4389-9d7e-e50d1912d2bd"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 0,
+      "policyType": 0,
+      "schemaId": "0779538a-e8ec-4ca9-b693-675fc935d218"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 1,
+      "policyType": 0,
+      "schemaId": "0779538a-e8ec-4ca9-b693-675fc935d218"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 2,
+      "policyType": 0,
+      "schemaId": "0779538a-e8ec-4ca9-b693-675fc935d218"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 3,
+      "policyType": 0,
+      "schemaId": "0779538a-e8ec-4ca9-b693-675fc935d218"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 0,
+      "policyType": 0,
+      "schemaId": "07d0f546-1125-4a53-a609-4f785513e8a1"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 1,
+      "policyType": 0,
+      "schemaId": "07d0f546-1125-4a53-a609-4f785513e8a1"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 2,
+      "policyType": 0,
+      "schemaId": "07d0f546-1125-4a53-a609-4f785513e8a1"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 3,
+      "policyType": 0,
+      "schemaId": "07d0f546-1125-4a53-a609-4f785513e8a1"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 0,
+      "policyType": 0,
+      "schemaId": "5db155f2-9cfd-4eb6-9e75-2b02cdd809ed"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 1,
+      "policyType": 0,
+      "schemaId": "5db155f2-9cfd-4eb6-9e75-2b02cdd809ed"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 2,
+      "policyType": 0,
+      "schemaId": "5db155f2-9cfd-4eb6-9e75-2b02cdd809ed"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 3,
+      "policyType": 0,
+      "schemaId": "5db155f2-9cfd-4eb6-9e75-2b02cdd809ed"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 0,
+      "policyType": 0,
+      "schemaId": "ee5988dd-f215-40b3-a600-55db19bd4226"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 1,
+      "policyType": 0,
+      "schemaId": "ee5988dd-f215-40b3-a600-55db19bd4226"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 2,
+      "policyType": 0,
+      "schemaId": "ee5988dd-f215-40b3-a600-55db19bd4226"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 3,
+      "policyType": 0,
+      "schemaId": "ee5988dd-f215-40b3-a600-55db19bd4226"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 0,
+      "policyType": 0,
+      "schemaId": "8212ab9b-a717-438a-aec8-f65fccdb8dd8"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 1,
+      "policyType": 0,
+      "schemaId": "8212ab9b-a717-438a-aec8-f65fccdb8dd8"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 2,
+      "policyType": 0,
+      "schemaId": "8212ab9b-a717-438a-aec8-f65fccdb8dd8"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 3,
+      "policyType": 0,
+      "schemaId": "8212ab9b-a717-438a-aec8-f65fccdb8dd8"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 0,
+      "policyType": 0,
+      "schemaId": "29a52721-fe0c-47f4-9704-900802d69a45"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 1,
+      "policyType": 0,
+      "schemaId": "29a52721-fe0c-47f4-9704-900802d69a45"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 2,
+      "policyType": 0,
+      "schemaId": "29a52721-fe0c-47f4-9704-900802d69a45"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 3,
+      "policyType": 0,
+      "schemaId": "29a52721-fe0c-47f4-9704-900802d69a45"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 0,
+      "policyType": 0,
+      "schemaId": "4a66d272-40cf-4c8e-b7c8-788513206c7f"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 1,
+      "policyType": 0,
+      "schemaId": "4a66d272-40cf-4c8e-b7c8-788513206c7f"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 2,
+      "policyType": 0,
+      "schemaId": "4a66d272-40cf-4c8e-b7c8-788513206c7f"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 3,
+      "policyType": 0,
+      "schemaId": "4a66d272-40cf-4c8e-b7c8-788513206c7f"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 0,
+      "policyType": 0,
+      "schemaId": "f3d7322f-2ce9-4ada-8f45-9703c041bb25"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 1,
+      "policyType": 0,
+      "schemaId": "f3d7322f-2ce9-4ada-8f45-9703c041bb25"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 2,
+      "policyType": 0,
+      "schemaId": "f3d7322f-2ce9-4ada-8f45-9703c041bb25"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 3,
+      "policyType": 0,
+      "schemaId": "f3d7322f-2ce9-4ada-8f45-9703c041bb25"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 0,
+      "policyType": 0,
+      "schemaId": "ccc14598-fbc9-4121-95ce-eaa00636d6af"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 1,
+      "policyType": 0,
+      "schemaId": "ccc14598-fbc9-4121-95ce-eaa00636d6af"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 2,
+      "policyType": 0,
+      "schemaId": "ccc14598-fbc9-4121-95ce-eaa00636d6af"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 3,
+      "policyType": 0,
+      "schemaId": "ccc14598-fbc9-4121-95ce-eaa00636d6af"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 0,
+      "policyType": 0,
+      "schemaId": "d7f433f7-0345-4469-a046-2efceee27cd1"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 1,
+      "policyType": 0,
+      "schemaId": "d7f433f7-0345-4469-a046-2efceee27cd1"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 2,
+      "policyType": 0,
+      "schemaId": "d7f433f7-0345-4469-a046-2efceee27cd1"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 3,
+      "policyType": 0,
+      "schemaId": "d7f433f7-0345-4469-a046-2efceee27cd1"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 0,
+      "policyType": 0,
+      "schemaId": "d6491f03-c71b-4444-aa01-760e4c5aa976"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 1,
+      "policyType": 0,
+      "schemaId": "d6491f03-c71b-4444-aa01-760e4c5aa976"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 2,
+      "policyType": 0,
+      "schemaId": "d6491f03-c71b-4444-aa01-760e4c5aa976"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 3,
+      "policyType": 0,
+      "schemaId": "d6491f03-c71b-4444-aa01-760e4c5aa976"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 0,
+      "policyType": 0,
+      "schemaId": "e28ef3f7-3b3d-4d7f-8947-014b939c8737"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 1,
+      "policyType": 0,
+      "schemaId": "e28ef3f7-3b3d-4d7f-8947-014b939c8737"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 2,
+      "policyType": 0,
+      "schemaId": "e28ef3f7-3b3d-4d7f-8947-014b939c8737"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 3,
+      "policyType": 0,
+      "schemaId": "e28ef3f7-3b3d-4d7f-8947-014b939c8737"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 0,
+      "policyType": 0,
+      "schemaId": "0d6433a8-77ef-4f9d-a1a2-ea46b91a171c"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 1,
+      "policyType": 0,
+      "schemaId": "0d6433a8-77ef-4f9d-a1a2-ea46b91a171c"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 2,
+      "policyType": 0,
+      "schemaId": "0d6433a8-77ef-4f9d-a1a2-ea46b91a171c"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 3,
+      "policyType": 0,
+      "schemaId": "0d6433a8-77ef-4f9d-a1a2-ea46b91a171c"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 0,
+      "policyType": 0,
+      "schemaId": "31b34e0d-4b03-42b5-b0fa-9258dd8e07d2"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 1,
+      "policyType": 0,
+      "schemaId": "31b34e0d-4b03-42b5-b0fa-9258dd8e07d2"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 2,
+      "policyType": 0,
+      "schemaId": "31b34e0d-4b03-42b5-b0fa-9258dd8e07d2"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 3,
+      "policyType": 0,
+      "schemaId": "31b34e0d-4b03-42b5-b0fa-9258dd8e07d2"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 0,
+      "policyType": 0,
+      "schemaId": "5b7fd221-a76f-49e6-a1ad-84711f8714a7"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 1,
+      "policyType": 0,
+      "schemaId": "5b7fd221-a76f-49e6-a1ad-84711f8714a7"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 2,
+      "policyType": 0,
+      "schemaId": "5b7fd221-a76f-49e6-a1ad-84711f8714a7"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 3,
+      "policyType": 0,
+      "schemaId": "5b7fd221-a76f-49e6-a1ad-84711f8714a7"
+    },
+    {
+      "accessLevel": 2,
+      "fieldNames": [],
+      "operation": 0,
+      "policyType": 0,
+      "schemaId": "ee1fb01e-545c-4e79-b9c6-23a726572c5a"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 1,
+      "policyType": 0,
+      "schemaId": "ee1fb01e-545c-4e79-b9c6-23a726572c5a"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 2,
+      "policyType": 0,
+      "schemaId": "ee1fb01e-545c-4e79-b9c6-23a726572c5a"
+    },
+    {
+      "accessLevel": 1,
+      "fieldNames": [],
+      "operation": 3,
+      "policyType": 0,
+      "schemaId": "ee1fb01e-545c-4e79-b9c6-23a726572c5a"
+    }
+  ],
+  "policies": [
+    {
+      "schemaName": "ExceptionCase",
+      "policyName": "ExceptionCase_read_scope",
+      "policyDescription": "Hub staff see records owned by their own hub. Care and ops are cross-hub.",
+      "policyType": 0,
+      "operation": 0,
+      "fieldNames": [],
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "care",
+            "description": "Signed-in user holds the care role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "ops_manager",
+            "description": "Signed-in user holds the ops_manager role"
+          },
+          {
+            "leftSource": 1,
+            "leftOperand": "ownerHubOrgId",
+            "operator": 0,
+            "rightSource": 0,
+            "rightOperand": "organizationId",
+            "description": "Record is owned by the caller's hub"
+          }
+        ],
+        "nestedGroups": []
+      },
+      "priority": 0,
+      "isAllowPolicy": true
+    },
+    {
+      "schemaName": "HubReceipt",
+      "policyName": "HubReceipt_read_scope",
+      "policyDescription": "Hub staff see records owned by their own hub. Care and ops are cross-hub.",
+      "policyType": 0,
+      "operation": 0,
+      "fieldNames": [],
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "care",
+            "description": "Signed-in user holds the care role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "ops_manager",
+            "description": "Signed-in user holds the ops_manager role"
+          },
+          {
+            "leftSource": 1,
+            "leftOperand": "ownerHubOrgId",
+            "operator": 0,
+            "rightSource": 0,
+            "rightOperand": "organizationId",
+            "description": "Record is owned by the caller's hub"
+          }
+        ],
+        "nestedGroups": []
+      },
+      "priority": 0,
+      "isAllowPolicy": true
+    },
+    {
+      "schemaName": "CaseNote",
+      "policyName": "CaseNote_read_scope",
+      "policyDescription": "Hub staff see records owned by their own hub. Care and ops are cross-hub.",
+      "policyType": 0,
+      "operation": 0,
+      "fieldNames": [],
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "care",
+            "description": "Signed-in user holds the care role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "ops_manager",
+            "description": "Signed-in user holds the ops_manager role"
+          },
+          {
+            "leftSource": 1,
+            "leftOperand": "ownerHubOrgId",
+            "operator": 0,
+            "rightSource": 0,
+            "rightOperand": "organizationId",
+            "description": "Record is owned by the caller's hub"
+          }
+        ],
+        "nestedGroups": []
+      },
+      "priority": 0,
+      "isAllowPolicy": true
+    },
+    {
+      "schemaName": "OwnershipHistory",
+      "policyName": "OwnershipHistory_read_scope",
+      "policyDescription": "Hub staff see records owned by their own hub. Care and ops are cross-hub.",
+      "policyType": 0,
+      "operation": 0,
+      "fieldNames": [],
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "care",
+            "description": "Signed-in user holds the care role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "ops_manager",
+            "description": "Signed-in user holds the ops_manager role"
+          },
+          {
+            "leftSource": 1,
+            "leftOperand": "ownerHubOrgId",
+            "operator": 0,
+            "rightSource": 0,
+            "rightOperand": "organizationId",
+            "description": "Record is owned by the caller's hub"
+          }
+        ],
+        "nestedGroups": []
+      },
+      "priority": 0,
+      "isAllowPolicy": true
+    },
+    {
+      "schemaName": "CaseDecision",
+      "policyName": "CaseDecision_read_scope",
+      "policyDescription": "Hub staff see records owned by their own hub. Care and ops are cross-hub.",
+      "policyType": 0,
+      "operation": 0,
+      "fieldNames": [],
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "care",
+            "description": "Signed-in user holds the care role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "ops_manager",
+            "description": "Signed-in user holds the ops_manager role"
+          },
+          {
+            "leftSource": 1,
+            "leftOperand": "ownerHubOrgId",
+            "operator": 0,
+            "rightSource": 0,
+            "rightOperand": "organizationId",
+            "description": "Record is owned by the caller's hub"
+          }
+        ],
+        "nestedGroups": []
+      },
+      "priority": 0,
+      "isAllowPolicy": true
+    },
+    {
+      "schemaName": "AiAnalysis",
+      "policyName": "AiAnalysis_read_scope",
+      "policyDescription": "Hub staff see records owned by their own hub. Care and ops are cross-hub.",
+      "policyType": 0,
+      "operation": 0,
+      "fieldNames": [],
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "care",
+            "description": "Signed-in user holds the care role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "ops_manager",
+            "description": "Signed-in user holds the ops_manager role"
+          },
+          {
+            "leftSource": 1,
+            "leftOperand": "ownerHubOrgId",
+            "operator": 0,
+            "rightSource": 0,
+            "rightOperand": "organizationId",
+            "description": "Record is owned by the caller's hub"
+          }
+        ],
+        "nestedGroups": []
+      },
+      "priority": 0,
+      "isAllowPolicy": true
+    },
+    {
+      "schemaName": "CareTask",
+      "policyName": "CareTask_read_scope",
+      "policyDescription": "Hub staff see records owned by their own hub. Care and ops are cross-hub.",
+      "policyType": 0,
+      "operation": 0,
+      "fieldNames": [],
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "care",
+            "description": "Signed-in user holds the care role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "ops_manager",
+            "description": "Signed-in user holds the ops_manager role"
+          },
+          {
+            "leftSource": 1,
+            "leftOperand": "ownerHubOrgId",
+            "operator": 0,
+            "rightSource": 0,
+            "rightOperand": "organizationId",
+            "description": "Record is owned by the caller's hub"
+          }
+        ],
+        "nestedGroups": []
+      },
+      "priority": 0,
+      "isAllowPolicy": true
+    },
+    {
+      "schemaName": "CaseEvent",
+      "policyName": "CaseEvent_read_scope",
+      "policyDescription": "Hub staff see records owned by their own hub. Care and ops are cross-hub.",
+      "policyType": 0,
+      "operation": 0,
+      "fieldNames": [],
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "care",
+            "description": "Signed-in user holds the care role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "ops_manager",
+            "description": "Signed-in user holds the ops_manager role"
+          },
+          {
+            "leftSource": 1,
+            "leftOperand": "ownerHubOrgId",
+            "operator": 0,
+            "rightSource": 0,
+            "rightOperand": "organizationId",
+            "description": "Record is owned by the caller's hub"
+          }
+        ],
+        "nestedGroups": []
+      },
+      "priority": 0,
+      "isAllowPolicy": true
+    },
+    {
+      "schemaName": "MoneyTransaction",
+      "policyName": "MoneyTransaction_read_scope",
+      "policyDescription": "Hub staff see records owned by their own hub. Care and ops are cross-hub.",
+      "policyType": 0,
+      "operation": 0,
+      "fieldNames": [],
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "care",
+            "description": "Signed-in user holds the care role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "ops_manager",
+            "description": "Signed-in user holds the ops_manager role"
+          },
+          {
+            "leftSource": 1,
+            "leftOperand": "ownerHubOrgId",
+            "operator": 0,
+            "rightSource": 0,
+            "rightOperand": "organizationId",
+            "description": "Record is owned by the caller's hub"
+          }
+        ],
+        "nestedGroups": []
+      },
+      "priority": 0,
+      "isAllowPolicy": true
+    },
+    {
+      "schemaName": "LossReview",
+      "policyName": "LossReview_read_scope",
+      "policyDescription": "Hub staff see records owned by their own hub. Care and ops are cross-hub.",
+      "policyType": 0,
+      "operation": 0,
+      "fieldNames": [],
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "care",
+            "description": "Signed-in user holds the care role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "ops_manager",
+            "description": "Signed-in user holds the ops_manager role"
+          },
+          {
+            "leftSource": 1,
+            "leftOperand": "ownerHubOrgId",
+            "operator": 0,
+            "rightSource": 0,
+            "rightOperand": "organizationId",
+            "description": "Record is owned by the caller's hub"
+          }
+        ],
+        "nestedGroups": []
+      },
+      "priority": 0,
+      "isAllowPolicy": true
+    },
+    {
+      "schemaName": "Attachment",
+      "policyName": "Attachment_read_scope",
+      "policyDescription": "Hub staff see records owned by their own hub. Care and ops are cross-hub.",
+      "policyType": 0,
+      "operation": 0,
+      "fieldNames": [],
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "care",
+            "description": "Signed-in user holds the care role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "ops_manager",
+            "description": "Signed-in user holds the ops_manager role"
+          },
+          {
+            "leftSource": 1,
+            "leftOperand": "ownerHubOrgId",
+            "operator": 0,
+            "rightSource": 0,
+            "rightOperand": "organizationId",
+            "description": "Record is owned by the caller's hub"
+          }
+        ],
+        "nestedGroups": []
+      },
+      "priority": 0,
+      "isAllowPolicy": true
+    },
+    {
+      "schemaName": "ParcelMovement",
+      "policyName": "ParcelMovement_read_scope",
+      "policyDescription": "Riders see only movements assigned to them. The sending and receiving hubs both see the leg. Care and ops are cross-hub.",
+      "policyType": 0,
+      "operation": 0,
+      "fieldNames": [],
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "care",
+            "description": "Signed-in user holds the care role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "ops_manager",
+            "description": "Signed-in user holds the ops_manager role"
+          },
+          {
+            "leftSource": 1,
+            "leftOperand": "assignedRiderId",
+            "operator": 0,
+            "rightSource": 0,
+            "rightOperand": "userId",
+            "description": "Movement is assigned to the caller"
+          },
+          {
+            "leftSource": 1,
+            "leftOperand": "fromHubOrgId",
+            "operator": 0,
+            "rightSource": 0,
+            "rightOperand": "organizationId",
+            "description": "Caller's hub dispatched this leg"
+          },
+          {
+            "leftSource": 1,
+            "leftOperand": "toHubOrgId",
+            "operator": 0,
+            "rightSource": 0,
+            "rightOperand": "organizationId",
+            "description": "Caller's hub is the destination"
+          }
+        ],
+        "nestedGroups": []
+      },
+      "priority": 0,
+      "isAllowPolicy": true
+    }
+  ]
 }
