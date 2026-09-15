@@ -54,11 +54,11 @@ Statuses: `Not started` · `In progress` · `Blocked` · `Done`
 | 33 | Public token link page | 9 | Done | — | 2026-09-15 |
 | 34 | Exception counts by hub, route, rider | 10 | Done | — | 2026-09-15 |
 | 35 | Week-over-week trend | 10 | Done | — | 2026-09-15 |
-| 36 | Arrival reconciliation workflow | 11 | Not started | — | — |
-| 37 | SLA sweep and notification | 11 | Not started | — | — |
-| 38 | Handoff escalation | 11 | Not started | — | — |
-| 39 | Integrity check workflow | 11 | Not started | — | — |
-| 40 | AI agent wiring and manual-review path | 12 | Not started | — | — |
+| 36 | Arrival reconciliation workflow | 11 | Done | — | 2026-09-15 |
+| 37 | SLA sweep and notification | 11 | Done | — | 2026-09-15 |
+| 38 | Handoff escalation | 11 | Done | — | 2026-09-15 |
+| 39 | Integrity check workflow | 11 | Done | — | 2026-09-15 |
+| 40 | AI agent wiring and manual-review path | 12 | Blocked | — | — |
 
 ---
 
@@ -785,3 +785,53 @@ Of the four, **#36 arrival reconciliation is the one the data model depends on**
 hub arrival as seven ordered steps with the `HubReceipt` as commit point, and without the sweep an
 interrupted arrival leaves a case permanently half-applied. The UI already surfaces that state
 through the stale banner, so the condition is visible — it is just not yet repaired automatically.
+
+### #36–#39 — Workflows imported and published
+
+**Status:** Done · **Date:** 2026-09-15
+
+**Business logic implemented**
+Four scheduled workflows now run against the tenant: arrival reconciliation every 5 minutes, SLA
+sweep every 15, handoff escalation hourly, integrity check daily at 02:00. Importable definitions
+are under [workflows/](workflows/) and were imported through the Logic builder.
+
+**Schemas used or changed**
+None. The workflows read and write existing collections through the Data Gateway.
+
+**Access policies touched**
+None in this step, but the workflows depend on one made earlier: a scheduled workflow authenticates
+as a client credential with no user, organisation or hub, and therefore matched no row policy. The
+`PathaoPoth` credential carries the `service_automation` role and every row policy has an explicit
+branch for it. Without that, every read returns empty **with no error**, which is indistinguishable
+from "nothing to do".
+
+**Decisions and deviations**
+- **The node filter compiles to `key: { eq: value }` and supports equality only.** No `$ne`, `$lt`,
+  `$in`. Raw Query mode has the full gateway query but emits one item holding the whole response
+  rather than one item per row. Anything needing both a real filter and per-row writes therefore
+  uses `rawQuery → code node returning an array → per-item dataAction`, because a code node in
+  "Run Once for All Items" mode turns each array element into its own output item.
+- **No mail node.** The mail configuration id and templates are unknown here and a guessed
+  `sendMail` fails at run time. The sweeps write durable events instead; a mail node can be appended
+  when the push is wanted.
+- **The integrity check reports and never repairs.** Every repair is a judgement about which record
+  is real.
+
+**Verification**
+Every raw query was executed against live project data before import:
+```
+handoff-escalation  Find legs in flight        getParcelMovements=0
+integrity-check     Read three collections     cases=2 movements=0 ownership=2
+sla-sweep           Find open unflagged cases  getExceptionCases=1
+```
+
+**Published but not yet proven.** After publishing, no workflow had produced an event:
+```
+sla.breached 0 · integrity.violation 0 · movement.escalated 0 · movement.received.reconciled 0
+receipts still pending 0 · cases flagged slaBreached 1 (seeded)
+```
+That is consistent with every workflow having nothing to act on — zero pending receipts, zero legs in
+flight, zero violations — but it is **not** evidence they work. A case
+(`PP2026090003`) has been deliberately back-dated two hours past its SLA while unflagged so the
+sweep has something real to catch. Until an `sla.breached` event appears for it, treat all four as
+unproven.
