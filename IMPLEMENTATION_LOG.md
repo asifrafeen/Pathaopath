@@ -835,3 +835,64 @@ flight, zero violations — but it is **not** evidence they work. A case
 (`PP2026090003`) has been deliberately back-dated two hours past its SLA while unflagged so the
 sweep has something real to catch. Until an `sla.breached` event appears for it, treat all four as
 unproven.
+
+### Parcel administration, hub directory, and a profile-shape bug
+
+**Status:** Done · **Date:** 2026-09-15
+
+**Business logic implemented**
+A `parcel_admin` role can create parcel records for parcels that physically exist but are not yet on
+file, browse the parcel list, see the cancelled-parcel receiving queue, and read the hub directory.
+No other role can create a parcel.
+
+**Two bugs found and fixed — both mine, both silent**
+
+1. **`useCurrentUser()` returned the response envelope, not the user.** `iam.me()` answers
+   `{ data, errors }`; every caller treated the result as the user itself. Reading `roles` off the
+   envelope gives `undefined`, so **every role check was false and the sidebar showed only "Profile"
+   to everyone**. The hook now unwraps, and `UserMenu` — the one place that unwrapped correctly —
+   stopped double-unwrapping.
+
+2. **The role model assumed the wrong shape.** `iam.me()` returns `roles` as a **flat array** of
+   slugs and the hub as a single **`organizationId`** string. `iam.users.list()` returns `roles` as a
+   **map of organizationId → slugs**. The helpers were written for the map, so they read nothing from
+   the profile the app actually uses. `rolesOf` now accepts either shape; `orgIdsOf` became
+   `orgIdOf`, and hub resolution matches on that single id.
+
+**Access policies touched**
+`Parcel` write, edit and delete moved from `User` to `Custom`, with three policies granting them to
+`parcel_admin` and `service_automation` only.
+
+This closes a real hole. Writes had been left at `User` across every collection while reads were
+locked down, and it was verified exploitable: **a rider could insert and delete parcels.** After the
+change, rider and hub staff both get "No policy grants access to this resource" and only
+`parcel_admin` succeeds. The same gap still exists on the other collections — see below.
+
+**Decisions and deviations**
+- Parcel creation is gated **at the gateway, not in the UI**. The nav entry and the form are hidden
+  for other roles, but hiding is convenience; the policy is what stops an API call.
+- `parcel_admin` is a new role rather than a reuse of `ops_manager`, because the request was for
+  exclusivity. It was granted to `asif.rafeen@yopmail.com` alongside care and ops so it is testable
+  immediately.
+- **Profile moved out of the sidebar** into the top-right account panel, which now carries identity,
+  roles, a Profile button and sign-out. The sidebar is for the operator's work.
+- The parcel form records everything as supplied and infers nothing. Origin hub is required because a
+  parcel with no origin cannot be routed; destination is optional because it is frequently unknown at
+  intake.
+
+**Still open:** `ExceptionCase`, `HubReceipt`, `CaseNote`, `OwnershipHistory`, `ParcelMovement` and
+the rest still have write/edit/delete at `User`, so any authenticated user can insert rows into them.
+Row-level read policies limit which rows an *update* can reach — a rider's `updateExceptionCase`
+reported `impacted=0` — but inserts are unconstrained. Worth closing with the same treatment.
+
+**Verification**
+```
+insertParcel attempted by each role, after the policy change:
+  rider        DENIED  "No policy grants access to this resource."
+  hub_staff    DENIED  "No policy grants access to this resource."
+  parcel_admin ALLOWED (probe row created and deleted)
+
+node scripts/verify-access.mjs   -> unchanged: hub 2/1, rider DENIED, care 3, ANON denied
+node scripts/verify-masking.mjs  -> unchanged: rider sees receiverPhone as null
+npm run lint / build             -> clean, 2045 modules
+```

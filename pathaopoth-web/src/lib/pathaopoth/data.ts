@@ -203,6 +203,25 @@ const MOVEMENT_FIELDS =
 export const data = {
   hubs: () => list<Hub>("Hub", HUB_FIELDS, { pageSize: 200 }),
 
+  parcels: (opts: { search?: string; pageSize?: number } = {}) =>
+    list<Parcel>("Parcel", PARCEL_FIELDS, {
+      filter: opts.search ? { trackingNumber: opts.search } : undefined,
+      sort: JSON.stringify({ CreatedDate: -1 }),
+      pageSize: opts.pageSize ?? 200
+    }),
+
+  senders: () => list<{ ItemId: string; name: string; phone?: string; returnAddress?: string }>(
+    "Sender", "ItemId name phone returnAddress", { pageSize: 200 }
+  ),
+
+  /** Cases whose parcel was cancelled — the receiving queue for returns. */
+  cancelledCases: () =>
+    list<ExceptionCase>("ExceptionCase", CASE_FIELDS, {
+      filter: { caseType: "cancelled_delivery" },
+      sort: JSON.stringify({ openedAt: -1 }),
+      pageSize: 200
+    }),
+
   parcelByTracking: async (trackingNumber: string): Promise<Parcel | null> => {
     const page = await list<Parcel>("Parcel", PARCEL_FIELDS, { filter: { trackingNumber }, pageSize: 1 });
     return page.items[0] ?? null;

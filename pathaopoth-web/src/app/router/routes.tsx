@@ -13,6 +13,9 @@ import { MovementsPage } from "../../features/movements/MovementsPage";
 import { CareQueuePage } from "../../features/care/CareQueuePage";
 import { ReportsPage } from "../../features/reports/ReportsPage";
 import { SenderTrackPage } from "../../features/sender/SenderTrackPage";
+import { ParcelsPage } from "../../features/parcels/ParcelsPage";
+import { CancelledParcelsPage } from "../../features/parcels/CancelledParcelsPage";
+import { HubsPage } from "../../features/hubs/HubsPage";
 
 type Navigate = (path: string) => void;
 
@@ -24,6 +27,9 @@ const staticRoutes: Record<string, (nav: Navigate) => JSX.Element> = {
   "/movements": () => <MovementsPage />,
   "/care": (nav) => <CareQueuePage onNavigate={nav} />,
   "/reports": () => <ReportsPage />,
+  "/parcels": () => <ParcelsPage />,
+  "/parcels/cancelled": (nav) => <CancelledParcelsPage onNavigate={nav} />,
+  "/hubs": () => <HubsPage />,
   "/profile": () => <ProfilePage />,
   "/error": () => <ErrorPage />
 };

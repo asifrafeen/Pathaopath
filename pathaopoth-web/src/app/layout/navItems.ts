@@ -1,5 +1,5 @@
 import {
-  BarChart3, ClipboardList, Inbox, LifeBuoy, PackageSearch, Truck, UserRound
+  BarChart3, Building2, ClipboardList, Inbox, LifeBuoy, Package, PackageSearch, PackageX, Truck
 } from "lucide-react";
 import type { BlocksUser } from "@seliseblocks/client";
 import { hasRole, type Role } from "../../lib/pathaopoth/roles";
@@ -23,7 +23,12 @@ export const navItems: NavItem[] = [
   { href: "/movements", labelKey: "nav.movements", fallback: "My runs", icon: Truck, roles: ["rider"] },
   { href: "/care", labelKey: "nav.care", fallback: "Care queue", icon: LifeBuoy, roles: ["care", "ops_manager"] },
   { href: "/reports", labelKey: "nav.reports", fallback: "Reports", icon: BarChart3, roles: ["ops_manager", "care"] },
-  { href: "/profile", labelKey: "nav.profile", fallback: "Profile", icon: UserRound }
+
+  // Parcel administration. Creating a parcel is restricted to parcel_admin and the
+  // Data Gateway enforces it, so these entries are hidden rather than load-bearing.
+  { href: "/parcels", labelKey: "nav.parcels", fallback: "Parcels", icon: Package, roles: ["parcel_admin"] },
+  { href: "/parcels/cancelled", labelKey: "nav.cancelled", fallback: "Cancelled parcels", icon: PackageX, roles: ["parcel_admin"] },
+  { href: "/hubs", labelKey: "nav.hubs", fallback: "Hubs", icon: Building2, roles: ["parcel_admin"] }
 ];
 
 export function navItemsFor(profile?: BlocksUser | null): NavItem[] {
@@ -34,5 +39,6 @@ export function navItemsFor(profile?: BlocksUser | null): NavItem[] {
 export function homeRouteFor(profile?: BlocksUser | null): string {
   if (hasRole(profile, "hub_staff", "care", "ops_manager")) return "/";
   if (hasRole(profile, "rider")) return "/movements";
+  if (hasRole(profile, "parcel_admin")) return "/parcels";
   return "/profile";
 }
