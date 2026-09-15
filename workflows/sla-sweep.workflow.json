@@ -1,0 +1,1050 @@
+{
+  "name": "SLA Sweep",
+  "tenantId": "Df6362bb5e9c04915a0994c87e0751bd5",
+  "description": "Flags open cases past their SLA deadline and records a breach event. The breach is already computable at read time and the UI shows it; this turns a passive flag into something that can be notified on and reported against.",
+  "nodes": [
+    {
+      "id": "02cf53b2c7f243d98c070ddb9d24b56f",
+      "name": "Schedule",
+      "category": "trigger",
+      "type": "schedule",
+      "version": "v1",
+      "position": {
+        "x": 250,
+        "y": 100
+      },
+      "handle": null,
+      "parameters": {
+        "triggerInterval": "minutes",
+        "cronExpression": "*/15 * * * *"
+      },
+      "settings": {},
+      "pinData": null
+    },
+    {
+      "id": "98d2951ce2af422098cc9dadc0cc457c",
+      "name": "Find open unflagged cases",
+      "category": "action",
+      "type": "dataAction",
+      "version": "v1",
+      "position": {
+        "x": 520,
+        "y": 100
+      },
+      "handle": null,
+      "parameters": {
+        "rawQueryMode": true,
+        "rawQuery": "{ getExceptionCases(input: {filter: \"{\\\"status\\\":{\\\"$ne\\\":\\\"closed\\\"},\\\"slaBreached\\\":false}\", pageNo: 1, pageSize: 200}) { totalCount items { ItemId parcelId ownerHubOrgId slaDueAt status ownerHub { code } parcel { trackingNumber } } } }",
+        "actionType": "getData",
+        "collectionName_composite": "ExceptionCase:::ExceptionCase:::fabfde28-f4e9-4389-9d7e-e50d1912d2bd",
+        "collectionName": "ExceptionCase",
+        "schemaName": "ExceptionCase",
+        "projectKey": "Df6362bb5e9c04915a0994c87e0751bd5",
+        "projectShortKey": "dbuajn",
+        "authenticationType": "clientCredential",
+        "clientCredential_composite": "150709b2-789e-4ba8-bc25-d3e39418908a:::__SELECT_CREDENTIAL_IN_UI__",
+        "clientId": "150709b2-789e-4ba8-bc25-d3e39418908a",
+        "clientSecret": "__SELECT_CREDENTIAL_IN_UI__",
+        "filter": {},
+        "fieldMapping": {
+          "parcelId": "",
+          "parcel.trackingNumber": "",
+          "parcel.codAmount": "",
+          "parcel.currency": "",
+          "parcel.receiverName": "",
+          "parcel.currentDeliveryAddress": "",
+          "caseType": "",
+          "status": "",
+          "ownerHubId": "",
+          "ownerHubOrgId": "",
+          "ownerHub.hubId": "",
+          "ownerHub.code": "",
+          "ownerHub.name": "",
+          "accountableStaffId": "",
+          "accountableStaff.userId": "",
+          "accountableStaff.name": "",
+          "custodyType": "",
+          "custodyHubId": "",
+          "custodyRiderId": "",
+          "custodyHolder.name": "",
+          "custodyHolder.code": "",
+          "latestDecision.decisionId": "",
+          "latestDecision.action": "",
+          "latestDecision.targetHubId": "",
+          "latestDecision.targetHubCode": "",
+          "latestDecision.redeliveryDateLocal": "",
+          "latestDecision.windowStart": "",
+          "latestDecision.windowEnd": "",
+          "latestDecision.timezone": "",
+          "latestDecision.confirmedAt": "",
+          "originHubCode": "",
+          "destinationHubCode": "",
+          "routeKey": "",
+          "attemptCount": "",
+          "receiptCount": "",
+          "openedAt": "",
+          "slaDueAt": "",
+          "slaBreached": "",
+          "closedAt": "",
+          "resolution": "",
+          "ItemId": "",
+          "CreatedDate": "",
+          "LastUpdatedDate": "",
+          "CreatedBy": "",
+          "Language": "",
+          "LastUpdatedBy": "",
+          "OrganizationId": "",
+          "Tags": ""
+        },
+        "getFields": [],
+        "schemaFields": [
+          {
+            "name": "parcelId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "parcel",
+            "type": "ParcelSnapshot",
+            "isArray": false,
+            "description": "Denormalised for queue rendering. Deliberately excludes receiverPhone",
+            "fields": [
+              {
+                "name": "trackingNumber",
+                "type": "String",
+                "isArray": false,
+                "description": ""
+              },
+              {
+                "name": "codAmount",
+                "type": "Float",
+                "isArray": false,
+                "description": "Expected collection. Float per accepted P1 tradeoff"
+              },
+              {
+                "name": "currency",
+                "type": "String",
+                "isArray": false,
+                "description": "Default BDT"
+              },
+              {
+                "name": "receiverName",
+                "type": "String",
+                "isArray": false,
+                "description": ""
+              },
+              {
+                "name": "currentDeliveryAddress",
+                "type": "String",
+                "isArray": false,
+                "description": ""
+              }
+            ]
+          },
+          {
+            "name": "caseType",
+            "type": "String",
+            "isArray": false,
+            "description": "refused_delivery|cancelled_delivery"
+          },
+          {
+            "name": "status",
+            "type": "String",
+            "isArray": false,
+            "description": "awaiting_review|awaiting_care|on_hold|redelivery_scheduled|ready_for_dispatch|in_transit|loss_review|closed"
+          },
+          {
+            "name": "ownerHubId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "ownerHubOrgId",
+            "type": "String",
+            "isArray": false,
+            "description": "MUTABLE access key. Organization id of the current owner hub. Platform OrganizationId records the creating hub and cannot be used, since ownership transfers"
+          },
+          {
+            "name": "ownerHub",
+            "type": "HubRef",
+            "isArray": false,
+            "description": "",
+            "fields": [
+              {
+                "name": "hubId",
+                "type": "String",
+                "isArray": false,
+                "description": "ItemId of the Hub record"
+              },
+              {
+                "name": "code",
+                "type": "String",
+                "isArray": false,
+                "description": "Hub short code, e.g. MIRPUR10"
+              },
+              {
+                "name": "name",
+                "type": "String",
+                "isArray": false,
+                "description": "Hub display name at time of write"
+              }
+            ]
+          },
+          {
+            "name": "accountableStaffId",
+            "type": "String",
+            "isArray": false,
+            "description": "Blocks IAM user id. Must belong to the owner hub (write-path check)"
+          },
+          {
+            "name": "accountableStaff",
+            "type": "UserRef",
+            "isArray": false,
+            "description": "",
+            "fields": [
+              {
+                "name": "userId",
+                "type": "String",
+                "isArray": false,
+                "description": "Blocks IAM user id"
+              },
+              {
+                "name": "name",
+                "type": "String",
+                "isArray": false,
+                "description": "Display name snapshot"
+              }
+            ]
+          },
+          {
+            "name": "custodyType",
+            "type": "String",
+            "isArray": false,
+            "description": "hub|rider|sender|receiver|unknown"
+          },
+          {
+            "name": "custodyHubId",
+            "type": "String",
+            "isArray": false,
+            "description": "Set only when custodyType=hub"
+          },
+          {
+            "name": "custodyRiderId",
+            "type": "String",
+            "isArray": false,
+            "description": "Set only when custodyType=rider"
+          },
+          {
+            "name": "custodyHolder",
+            "type": "CustodyHolder",
+            "isArray": false,
+            "description": "",
+            "fields": [
+              {
+                "name": "name",
+                "type": "String",
+                "isArray": false,
+                "description": "Display name of whoever physically holds the parcel"
+              },
+              {
+                "name": "code",
+                "type": "String",
+                "isArray": false,
+                "description": "Hub code when custody is a hub"
+              }
+            ]
+          },
+          {
+            "name": "latestDecision",
+            "type": "DecisionSnapshot",
+            "isArray": false,
+            "description": "Mirror of the current confirmed decision",
+            "fields": [
+              {
+                "name": "decisionId",
+                "type": "String",
+                "isArray": false,
+                "description": "ItemId of the CaseDecision this mirrors"
+              },
+              {
+                "name": "action",
+                "type": "String",
+                "isArray": false,
+                "description": "redeliver|transfer_hub|return_to_origin|return_to_sender|care_review|loss_review|hold"
+              },
+              {
+                "name": "targetHubId",
+                "type": "String",
+                "isArray": false,
+                "description": ""
+              },
+              {
+                "name": "targetHubCode",
+                "type": "String",
+                "isArray": false,
+                "description": ""
+              },
+              {
+                "name": "redeliveryDateLocal",
+                "type": "String",
+                "isArray": false,
+                "description": "YYYY-MM-DD local calendar date (no date-only scalar exists)"
+              },
+              {
+                "name": "windowStart",
+                "type": "String",
+                "isArray": false,
+                "description": "HH:mm local time of day"
+              },
+              {
+                "name": "windowEnd",
+                "type": "String",
+                "isArray": false,
+                "description": "HH:mm local time of day"
+              },
+              {
+                "name": "timezone",
+                "type": "String",
+                "isArray": false,
+                "description": "Default Asia/Dhaka"
+              },
+              {
+                "name": "confirmedAt",
+                "type": "DateTime",
+                "isArray": false,
+                "description": ""
+              }
+            ]
+          },
+          {
+            "name": "originHubCode",
+            "type": "String",
+            "isArray": false,
+            "description": "Denormalised for reporting"
+          },
+          {
+            "name": "destinationHubCode",
+            "type": "String",
+            "isArray": false,
+            "description": "Denormalised for reporting"
+          },
+          {
+            "name": "routeKey",
+            "type": "String",
+            "isArray": false,
+            "description": "Precomputed e.g. MIRPUR10>CTG_GEC so route aggregation needs no joins"
+          },
+          {
+            "name": "attemptCount",
+            "type": "Int",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "receiptCount",
+            "type": "Int",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "openedAt",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "slaDueAt",
+            "type": "DateTime",
+            "isArray": false,
+            "description": "Policy-derived deadline"
+          },
+          {
+            "name": "slaBreached",
+            "type": "Boolean",
+            "isArray": false,
+            "description": "Maintained by the SLA workflow; also derivable from slaDueAt at read time"
+          },
+          {
+            "name": "closedAt",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "resolution",
+            "type": "String",
+            "isArray": false,
+            "description": "delivered|returned_to_sender|loss_writeoff"
+          },
+          {
+            "name": "ItemId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "CreatedDate",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "LastUpdatedDate",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "CreatedBy",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "Language",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "LastUpdatedBy",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "OrganizationId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "Tags",
+            "type": "String",
+            "isArray": true,
+            "description": ""
+          }
+        ],
+        "apiBaseUrl": "https://data.seliseblocks.com"
+      },
+      "settings": {},
+      "pinData": null
+    },
+    {
+      "id": "b04e9fb06c104fc2ba6d9aa2cc0b58ae",
+      "name": "Keep only the ones past due",
+      "category": "transform",
+      "type": "code",
+      "version": "v1",
+      "position": {
+        "x": 790,
+        "y": 100
+      },
+      "handle": null,
+      "parameters": {
+        "mode": "all",
+        "language": "js",
+        "script": "const res = $json.output || {};\nconst items = ((res.getExceptionCases || {}).items) || [];\nconst now = Date.now();\nreturn items\n  .filter(c => c.slaDueAt && new Date(c.slaDueAt).getTime() < now)\n  .map(c => ({\n    caseId: c.ItemId,\n    parcelId: c.parcelId,\n    ownerHubOrgId: c.ownerHubOrgId || \"\",\n    hubCode: (c.ownerHub && c.ownerHub.code) || \"\",\n    trackingNumber: (c.parcel && c.parcel.trackingNumber) || \"\",\n    hoursOver: Math.round((now - new Date(c.slaDueAt).getTime()) / 3600000)\n  }));",
+        "continueOnError": false
+      },
+      "settings": {},
+      "pinData": null
+    },
+    {
+      "id": "ad40400a92424b06a4c768d0dbaa4ecb",
+      "name": "Flag the breach",
+      "category": "action",
+      "type": "dataAction",
+      "version": "v1",
+      "position": {
+        "x": 1060,
+        "y": 100
+      },
+      "handle": null,
+      "parameters": {
+        "rawQueryMode": false,
+        "rawQuery": null,
+        "actionType": "updateData",
+        "collectionName_composite": "ExceptionCase:::ExceptionCase:::fabfde28-f4e9-4389-9d7e-e50d1912d2bd",
+        "collectionName": "ExceptionCase",
+        "schemaName": "ExceptionCase",
+        "projectKey": "Df6362bb5e9c04915a0994c87e0751bd5",
+        "projectShortKey": "dbuajn",
+        "authenticationType": "clientCredential",
+        "clientCredential_composite": "150709b2-789e-4ba8-bc25-d3e39418908a:::__SELECT_CREDENTIAL_IN_UI__",
+        "clientId": "150709b2-789e-4ba8-bc25-d3e39418908a",
+        "clientSecret": "__SELECT_CREDENTIAL_IN_UI__",
+        "filter": {
+          "ItemId": "{{$json.output.caseId}}"
+        },
+        "fieldMapping": {
+          "parcelId": "",
+          "parcel.trackingNumber": "",
+          "parcel.codAmount": "",
+          "parcel.currency": "",
+          "parcel.receiverName": "",
+          "parcel.currentDeliveryAddress": "",
+          "caseType": "",
+          "status": "",
+          "ownerHubId": "",
+          "ownerHubOrgId": "",
+          "ownerHub.hubId": "",
+          "ownerHub.code": "",
+          "ownerHub.name": "",
+          "accountableStaffId": "",
+          "accountableStaff.userId": "",
+          "accountableStaff.name": "",
+          "custodyType": "",
+          "custodyHubId": "",
+          "custodyRiderId": "",
+          "custodyHolder.name": "",
+          "custodyHolder.code": "",
+          "latestDecision.decisionId": "",
+          "latestDecision.action": "",
+          "latestDecision.targetHubId": "",
+          "latestDecision.targetHubCode": "",
+          "latestDecision.redeliveryDateLocal": "",
+          "latestDecision.windowStart": "",
+          "latestDecision.windowEnd": "",
+          "latestDecision.timezone": "",
+          "latestDecision.confirmedAt": "",
+          "originHubCode": "",
+          "destinationHubCode": "",
+          "routeKey": "",
+          "attemptCount": "",
+          "receiptCount": "",
+          "openedAt": "",
+          "slaDueAt": "",
+          "slaBreached": "true",
+          "closedAt": "",
+          "resolution": "",
+          "ItemId": "",
+          "CreatedDate": "",
+          "LastUpdatedDate": "",
+          "CreatedBy": "",
+          "Language": "",
+          "LastUpdatedBy": "",
+          "OrganizationId": "",
+          "Tags": ""
+        },
+        "getFields": [],
+        "schemaFields": [
+          {
+            "name": "parcelId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "parcel",
+            "type": "ParcelSnapshot",
+            "isArray": false,
+            "description": "Denormalised for queue rendering. Deliberately excludes receiverPhone",
+            "fields": [
+              {
+                "name": "trackingNumber",
+                "type": "String",
+                "isArray": false,
+                "description": ""
+              },
+              {
+                "name": "codAmount",
+                "type": "Float",
+                "isArray": false,
+                "description": "Expected collection. Float per accepted P1 tradeoff"
+              },
+              {
+                "name": "currency",
+                "type": "String",
+                "isArray": false,
+                "description": "Default BDT"
+              },
+              {
+                "name": "receiverName",
+                "type": "String",
+                "isArray": false,
+                "description": ""
+              },
+              {
+                "name": "currentDeliveryAddress",
+                "type": "String",
+                "isArray": false,
+                "description": ""
+              }
+            ]
+          },
+          {
+            "name": "caseType",
+            "type": "String",
+            "isArray": false,
+            "description": "refused_delivery|cancelled_delivery"
+          },
+          {
+            "name": "status",
+            "type": "String",
+            "isArray": false,
+            "description": "awaiting_review|awaiting_care|on_hold|redelivery_scheduled|ready_for_dispatch|in_transit|loss_review|closed"
+          },
+          {
+            "name": "ownerHubId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "ownerHubOrgId",
+            "type": "String",
+            "isArray": false,
+            "description": "MUTABLE access key. Organization id of the current owner hub. Platform OrganizationId records the creating hub and cannot be used, since ownership transfers"
+          },
+          {
+            "name": "ownerHub",
+            "type": "HubRef",
+            "isArray": false,
+            "description": "",
+            "fields": [
+              {
+                "name": "hubId",
+                "type": "String",
+                "isArray": false,
+                "description": "ItemId of the Hub record"
+              },
+              {
+                "name": "code",
+                "type": "String",
+                "isArray": false,
+                "description": "Hub short code, e.g. MIRPUR10"
+              },
+              {
+                "name": "name",
+                "type": "String",
+                "isArray": false,
+                "description": "Hub display name at time of write"
+              }
+            ]
+          },
+          {
+            "name": "accountableStaffId",
+            "type": "String",
+            "isArray": false,
+            "description": "Blocks IAM user id. Must belong to the owner hub (write-path check)"
+          },
+          {
+            "name": "accountableStaff",
+            "type": "UserRef",
+            "isArray": false,
+            "description": "",
+            "fields": [
+              {
+                "name": "userId",
+                "type": "String",
+                "isArray": false,
+                "description": "Blocks IAM user id"
+              },
+              {
+                "name": "name",
+                "type": "String",
+                "isArray": false,
+                "description": "Display name snapshot"
+              }
+            ]
+          },
+          {
+            "name": "custodyType",
+            "type": "String",
+            "isArray": false,
+            "description": "hub|rider|sender|receiver|unknown"
+          },
+          {
+            "name": "custodyHubId",
+            "type": "String",
+            "isArray": false,
+            "description": "Set only when custodyType=hub"
+          },
+          {
+            "name": "custodyRiderId",
+            "type": "String",
+            "isArray": false,
+            "description": "Set only when custodyType=rider"
+          },
+          {
+            "name": "custodyHolder",
+            "type": "CustodyHolder",
+            "isArray": false,
+            "description": "",
+            "fields": [
+              {
+                "name": "name",
+                "type": "String",
+                "isArray": false,
+                "description": "Display name of whoever physically holds the parcel"
+              },
+              {
+                "name": "code",
+                "type": "String",
+                "isArray": false,
+                "description": "Hub code when custody is a hub"
+              }
+            ]
+          },
+          {
+            "name": "latestDecision",
+            "type": "DecisionSnapshot",
+            "isArray": false,
+            "description": "Mirror of the current confirmed decision",
+            "fields": [
+              {
+                "name": "decisionId",
+                "type": "String",
+                "isArray": false,
+                "description": "ItemId of the CaseDecision this mirrors"
+              },
+              {
+                "name": "action",
+                "type": "String",
+                "isArray": false,
+                "description": "redeliver|transfer_hub|return_to_origin|return_to_sender|care_review|loss_review|hold"
+              },
+              {
+                "name": "targetHubId",
+                "type": "String",
+                "isArray": false,
+                "description": ""
+              },
+              {
+                "name": "targetHubCode",
+                "type": "String",
+                "isArray": false,
+                "description": ""
+              },
+              {
+                "name": "redeliveryDateLocal",
+                "type": "String",
+                "isArray": false,
+                "description": "YYYY-MM-DD local calendar date (no date-only scalar exists)"
+              },
+              {
+                "name": "windowStart",
+                "type": "String",
+                "isArray": false,
+                "description": "HH:mm local time of day"
+              },
+              {
+                "name": "windowEnd",
+                "type": "String",
+                "isArray": false,
+                "description": "HH:mm local time of day"
+              },
+              {
+                "name": "timezone",
+                "type": "String",
+                "isArray": false,
+                "description": "Default Asia/Dhaka"
+              },
+              {
+                "name": "confirmedAt",
+                "type": "DateTime",
+                "isArray": false,
+                "description": ""
+              }
+            ]
+          },
+          {
+            "name": "originHubCode",
+            "type": "String",
+            "isArray": false,
+            "description": "Denormalised for reporting"
+          },
+          {
+            "name": "destinationHubCode",
+            "type": "String",
+            "isArray": false,
+            "description": "Denormalised for reporting"
+          },
+          {
+            "name": "routeKey",
+            "type": "String",
+            "isArray": false,
+            "description": "Precomputed e.g. MIRPUR10>CTG_GEC so route aggregation needs no joins"
+          },
+          {
+            "name": "attemptCount",
+            "type": "Int",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "receiptCount",
+            "type": "Int",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "openedAt",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "slaDueAt",
+            "type": "DateTime",
+            "isArray": false,
+            "description": "Policy-derived deadline"
+          },
+          {
+            "name": "slaBreached",
+            "type": "Boolean",
+            "isArray": false,
+            "description": "Maintained by the SLA workflow; also derivable from slaDueAt at read time"
+          },
+          {
+            "name": "closedAt",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "resolution",
+            "type": "String",
+            "isArray": false,
+            "description": "delivered|returned_to_sender|loss_writeoff"
+          },
+          {
+            "name": "ItemId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "CreatedDate",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "LastUpdatedDate",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "CreatedBy",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "Language",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "LastUpdatedBy",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "OrganizationId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "Tags",
+            "type": "String",
+            "isArray": true,
+            "description": ""
+          }
+        ],
+        "apiBaseUrl": "https://data.seliseblocks.com"
+      },
+      "settings": {},
+      "pinData": null
+    },
+    {
+      "id": "031010ba74304f8497d149cd78b49a39",
+      "name": "Record a breach event",
+      "category": "action",
+      "type": "dataAction",
+      "version": "v1",
+      "position": {
+        "x": 1330,
+        "y": 100
+      },
+      "handle": null,
+      "parameters": {
+        "rawQueryMode": false,
+        "rawQuery": null,
+        "actionType": "insertData",
+        "collectionName_composite": "CaseEvent:::CaseEvent:::d6491f03-c71b-4444-aa01-760e4c5aa976",
+        "collectionName": "CaseEvent",
+        "schemaName": "CaseEvent",
+        "projectKey": "Df6362bb5e9c04915a0994c87e0751bd5",
+        "projectShortKey": "dbuajn",
+        "authenticationType": "clientCredential",
+        "clientCredential_composite": "150709b2-789e-4ba8-bc25-d3e39418908a:::__SELECT_CREDENTIAL_IN_UI__",
+        "clientId": "150709b2-789e-4ba8-bc25-d3e39418908a",
+        "clientSecret": "__SELECT_CREDENTIAL_IN_UI__",
+        "filter": {},
+        "fieldMapping": {
+          "caseId": "{{$json.output.caseId}}",
+          "parcelId": "{{$json.output.parcelId}}",
+          "ownerHubOrgId": "{{$json.output.ownerHubOrgId}}",
+          "eventType": "sla.breached",
+          "actorUserId": "",
+          "actorName": "SLA sweep",
+          "occurredAt": "",
+          "details": "Parcel {{$json.output.trackingNumber}} is {{$json.output.hoursOver}}h past its SLA at hub {{$json.output.hubCode}}.",
+          "ItemId": "",
+          "CreatedDate": "",
+          "LastUpdatedDate": "",
+          "CreatedBy": "",
+          "Language": "",
+          "LastUpdatedBy": "",
+          "OrganizationId": "",
+          "Tags": ""
+        },
+        "getFields": [],
+        "schemaFields": [
+          {
+            "name": "caseId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "parcelId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "ownerHubOrgId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "eventType",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "actorUserId",
+            "type": "String",
+            "isArray": false,
+            "description": "Null for automated events"
+          },
+          {
+            "name": "actorName",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "occurredAt",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "details",
+            "type": "String",
+            "isArray": false,
+            "description": "Serialised JSON. Append-only timeline"
+          },
+          {
+            "name": "ItemId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "CreatedDate",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "LastUpdatedDate",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "CreatedBy",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "Language",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "LastUpdatedBy",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "OrganizationId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "Tags",
+            "type": "String",
+            "isArray": true,
+            "description": ""
+          }
+        ],
+        "apiBaseUrl": "https://data.seliseblocks.com"
+      },
+      "settings": {},
+      "pinData": null
+    }
+  ],
+  "edges": [
+    {
+      "id": "xy-edge__02cf53b2c7f243d98c070ddb9d24b56f-98d2951ce2af422098cc9dadc0cc457c",
+      "source": "02cf53b2c7f243d98c070ddb9d24b56f",
+      "target": "98d2951ce2af422098cc9dadc0cc457c",
+      "sourceHandle": "source",
+      "targetHandle": "target"
+    },
+    {
+      "id": "xy-edge__98d2951ce2af422098cc9dadc0cc457c-b04e9fb06c104fc2ba6d9aa2cc0b58ae",
+      "source": "98d2951ce2af422098cc9dadc0cc457c",
+      "target": "b04e9fb06c104fc2ba6d9aa2cc0b58ae",
+      "sourceHandle": "source",
+      "targetHandle": "target"
+    },
+    {
+      "id": "xy-edge__b04e9fb06c104fc2ba6d9aa2cc0b58ae-ad40400a92424b06a4c768d0dbaa4ecb",
+      "source": "b04e9fb06c104fc2ba6d9aa2cc0b58ae",
+      "target": "ad40400a92424b06a4c768d0dbaa4ecb",
+      "sourceHandle": "source",
+      "targetHandle": "target"
+    },
+    {
+      "id": "xy-edge__ad40400a92424b06a4c768d0dbaa4ecb-031010ba74304f8497d149cd78b49a39",
+      "source": "ad40400a92424b06a4c768d0dbaa4ecb",
+      "target": "031010ba74304f8497d149cd78b49a39",
+      "sourceHandle": "source",
+      "targetHandle": "target"
+    }
+  ],
+  "settings": {},
+  "isPublished": false,
+  "publishedVersion": null,
+  "isDirty": true
+}

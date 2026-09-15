@@ -1,0 +1,493 @@
+{
+  "name": "Handoff Escalation",
+  "tenantId": "Df6362bb5e9c04915a0994c87e0751bd5",
+  "description": "Escalates transport legs nobody acknowledged: dispatched but never picked up, or picked up and never delivered. Escalation only tells a human — it never changes ownership, custody or the movement status, because the sending hub is still accountable either way.",
+  "nodes": [
+    {
+      "id": "48e4e938ef094802b76093d1b414f110",
+      "name": "Schedule",
+      "category": "trigger",
+      "type": "schedule",
+      "version": "v1",
+      "position": {
+        "x": 250,
+        "y": 100
+      },
+      "handle": null,
+      "parameters": {
+        "triggerInterval": "hours",
+        "cronExpression": "0 * * * *"
+      },
+      "settings": {},
+      "pinData": null
+    },
+    {
+      "id": "d00f0dcca64e4f63a8118112cb2d0dd9",
+      "name": "Find legs in flight",
+      "category": "action",
+      "type": "dataAction",
+      "version": "v1",
+      "position": {
+        "x": 520,
+        "y": 100
+      },
+      "handle": null,
+      "parameters": {
+        "rawQueryMode": true,
+        "rawQuery": "{ getParcelMovements(input: {filter: \"{\\\"status\\\":{\\\"$in\\\":[\\\"planned\\\",\\\"picked_up\\\"]}}\", pageNo: 1, pageSize: 200}) { totalCount items { ItemId caseId parcelId status trackingNumber fromHubCode fromHubOrgId toHubCode pickupAcknowledgedAt CreatedDate assignedRider { name } } } }",
+        "actionType": "getData",
+        "collectionName_composite": "ParcelMovement:::ParcelMovement:::8212ab9b-a717-438a-aec8-f65fccdb8dd8",
+        "collectionName": "ParcelMovement",
+        "schemaName": "ParcelMovement",
+        "projectKey": "Df6362bb5e9c04915a0994c87e0751bd5",
+        "projectShortKey": "dbuajn",
+        "authenticationType": "clientCredential",
+        "clientCredential_composite": "150709b2-789e-4ba8-bc25-d3e39418908a:::__SELECT_CREDENTIAL_IN_UI__",
+        "clientId": "150709b2-789e-4ba8-bc25-d3e39418908a",
+        "clientSecret": "__SELECT_CREDENTIAL_IN_UI__",
+        "filter": {},
+        "fieldMapping": {
+          "caseId": "",
+          "parcelId": "",
+          "trackingNumber": "",
+          "decisionId": "",
+          "purpose": "",
+          "fromHubId": "",
+          "fromHubCode": "",
+          "fromHubOrgId": "",
+          "destinationType": "",
+          "toHubId": "",
+          "toHubCode": "",
+          "toHubOrgId": "",
+          "destinationAddressSnapshot": "",
+          "assignedRiderId": "",
+          "assignedRider.userId": "",
+          "assignedRider.name": "",
+          "assignedRider.phone": "",
+          "status": "",
+          "createdByStaffId": "",
+          "pickupAcknowledgedAt": "",
+          "expectedArrivalAt": "",
+          "completedAt": "",
+          "recipientName": "",
+          "deliveryProofReference": "",
+          "failureReason": "",
+          "ItemId": "",
+          "CreatedDate": "",
+          "LastUpdatedDate": "",
+          "CreatedBy": "",
+          "Language": "",
+          "LastUpdatedBy": "",
+          "OrganizationId": "",
+          "Tags": ""
+        },
+        "getFields": [],
+        "schemaFields": [
+          {
+            "name": "caseId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "parcelId",
+            "type": "String",
+            "isArray": false,
+            "description": "Carried so a parcel's full transport history is one query"
+          },
+          {
+            "name": "trackingNumber",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "decisionId",
+            "type": "String",
+            "isArray": false,
+            "description": "Authorising CaseDecision"
+          },
+          {
+            "name": "purpose",
+            "type": "String",
+            "isArray": false,
+            "description": "hub_transfer|redelivery|sender_return"
+          },
+          {
+            "name": "fromHubId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "fromHubCode",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "fromHubOrgId",
+            "type": "String",
+            "isArray": false,
+            "description": "Access key so the sending hub can see movements it dispatched"
+          },
+          {
+            "name": "destinationType",
+            "type": "String",
+            "isArray": false,
+            "description": "hub|receiver|sender"
+          },
+          {
+            "name": "toHubId",
+            "type": "String",
+            "isArray": false,
+            "description": "Required when destinationType=hub"
+          },
+          {
+            "name": "toHubCode",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "toHubOrgId",
+            "type": "String",
+            "isArray": false,
+            "description": "Access key letting the receiving hub see expected incoming work"
+          },
+          {
+            "name": "destinationAddressSnapshot",
+            "type": "String",
+            "isArray": false,
+            "description": "Required for receiver/sender destinations"
+          },
+          {
+            "name": "assignedRiderId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "assignedRider",
+            "type": "RiderRef",
+            "isArray": false,
+            "description": "",
+            "fields": [
+              {
+                "name": "userId",
+                "type": "String",
+                "isArray": false,
+                "description": "Blocks IAM user id of the rider"
+              },
+              {
+                "name": "name",
+                "type": "String",
+                "isArray": false,
+                "description": "Display name snapshot"
+              },
+              {
+                "name": "phone",
+                "type": "String",
+                "isArray": false,
+                "description": "Contact number snapshot"
+              }
+            ]
+          },
+          {
+            "name": "status",
+            "type": "String",
+            "isArray": false,
+            "description": "planned|picked_up|received|failed|cancelled"
+          },
+          {
+            "name": "createdByStaffId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "pickupAcknowledgedAt",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "expectedArrivalAt",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "completedAt",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "recipientName",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "deliveryProofReference",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "failureReason",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "ItemId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "CreatedDate",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "LastUpdatedDate",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "CreatedBy",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "Language",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "LastUpdatedBy",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "OrganizationId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "Tags",
+            "type": "String",
+            "isArray": true,
+            "description": ""
+          }
+        ],
+        "apiBaseUrl": "https://data.seliseblocks.com"
+      },
+      "settings": {},
+      "pinData": null
+    },
+    {
+      "id": "548cef2c87024c4e83d4c9fae71c66a2",
+      "name": "Keep only the stale ones",
+      "category": "transform",
+      "type": "code",
+      "version": "v1",
+      "position": {
+        "x": 790,
+        "y": 100
+      },
+      "handle": null,
+      "parameters": {
+        "mode": "all",
+        "language": "js",
+        "script": "const res = $json.output || {};\nconst items = ((res.getParcelMovements || {}).items) || [];\nconst now = Date.now();\nconst HOUR = 3600000;\nconst out = [];\nfor (const m of items) {\n  // Planned but never collected.\n  if (m.status === \"planned\" && m.CreatedDate && now - new Date(m.CreatedDate).getTime() > 4 * HOUR) {\n    out.push({ movementId: m.ItemId, caseId: m.caseId, parcelId: m.parcelId,\n      ownerHubOrgId: m.fromHubOrgId || \"\", trackingNumber: m.trackingNumber || \"\",\n      rider: (m.assignedRider && m.assignedRider.name) || \"unassigned\",\n      kind: \"never picked up\",\n      hours: Math.round((now - new Date(m.CreatedDate).getTime()) / HOUR) });\n  }\n  // Collected but never delivered anywhere.\n  if (m.status === \"picked_up\" && m.pickupAcknowledgedAt &&\n      now - new Date(m.pickupAcknowledgedAt).getTime() > 12 * HOUR) {\n    out.push({ movementId: m.ItemId, caseId: m.caseId, parcelId: m.parcelId,\n      ownerHubOrgId: m.fromHubOrgId || \"\", trackingNumber: m.trackingNumber || \"\",\n      rider: (m.assignedRider && m.assignedRider.name) || \"unassigned\",\n      kind: \"in transit with no arrival\",\n      hours: Math.round((now - new Date(m.pickupAcknowledgedAt).getTime()) / HOUR) });\n  }\n}\nreturn out;",
+        "continueOnError": false
+      },
+      "settings": {},
+      "pinData": null
+    },
+    {
+      "id": "a3b3d48322d54646a4119a0180bce6dc",
+      "name": "Escalate to the sending hub",
+      "category": "action",
+      "type": "dataAction",
+      "version": "v1",
+      "position": {
+        "x": 1060,
+        "y": 100
+      },
+      "handle": null,
+      "parameters": {
+        "rawQueryMode": false,
+        "rawQuery": null,
+        "actionType": "insertData",
+        "collectionName_composite": "CaseEvent:::CaseEvent:::d6491f03-c71b-4444-aa01-760e4c5aa976",
+        "collectionName": "CaseEvent",
+        "schemaName": "CaseEvent",
+        "projectKey": "Df6362bb5e9c04915a0994c87e0751bd5",
+        "projectShortKey": "dbuajn",
+        "authenticationType": "clientCredential",
+        "clientCredential_composite": "150709b2-789e-4ba8-bc25-d3e39418908a:::__SELECT_CREDENTIAL_IN_UI__",
+        "clientId": "150709b2-789e-4ba8-bc25-d3e39418908a",
+        "clientSecret": "__SELECT_CREDENTIAL_IN_UI__",
+        "filter": {},
+        "fieldMapping": {
+          "caseId": "{{$json.output.caseId}}",
+          "parcelId": "{{$json.output.parcelId}}",
+          "ownerHubOrgId": "{{$json.output.ownerHubOrgId}}",
+          "eventType": "movement.escalated",
+          "actorUserId": "",
+          "actorName": "Handoff escalation",
+          "occurredAt": "",
+          "details": "Parcel {{$json.output.trackingNumber}} has been {{$json.output.kind}} for {{$json.output.hours}}h with {{$json.output.rider}}.",
+          "ItemId": "",
+          "CreatedDate": "",
+          "LastUpdatedDate": "",
+          "CreatedBy": "",
+          "Language": "",
+          "LastUpdatedBy": "",
+          "OrganizationId": "",
+          "Tags": ""
+        },
+        "getFields": [],
+        "schemaFields": [
+          {
+            "name": "caseId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "parcelId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "ownerHubOrgId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "eventType",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "actorUserId",
+            "type": "String",
+            "isArray": false,
+            "description": "Null for automated events"
+          },
+          {
+            "name": "actorName",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "occurredAt",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "details",
+            "type": "String",
+            "isArray": false,
+            "description": "Serialised JSON. Append-only timeline"
+          },
+          {
+            "name": "ItemId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "CreatedDate",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "LastUpdatedDate",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "CreatedBy",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "Language",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "LastUpdatedBy",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "OrganizationId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "Tags",
+            "type": "String",
+            "isArray": true,
+            "description": ""
+          }
+        ],
+        "apiBaseUrl": "https://data.seliseblocks.com"
+      },
+      "settings": {},
+      "pinData": null
+    }
+  ],
+  "edges": [
+    {
+      "id": "xy-edge__48e4e938ef094802b76093d1b414f110-d00f0dcca64e4f63a8118112cb2d0dd9",
+      "source": "48e4e938ef094802b76093d1b414f110",
+      "target": "d00f0dcca64e4f63a8118112cb2d0dd9",
+      "sourceHandle": "source",
+      "targetHandle": "target"
+    },
+    {
+      "id": "xy-edge__d00f0dcca64e4f63a8118112cb2d0dd9-548cef2c87024c4e83d4c9fae71c66a2",
+      "source": "d00f0dcca64e4f63a8118112cb2d0dd9",
+      "target": "548cef2c87024c4e83d4c9fae71c66a2",
+      "sourceHandle": "source",
+      "targetHandle": "target"
+    },
+    {
+      "id": "xy-edge__548cef2c87024c4e83d4c9fae71c66a2-a3b3d48322d54646a4119a0180bce6dc",
+      "source": "548cef2c87024c4e83d4c9fae71c66a2",
+      "target": "a3b3d48322d54646a4119a0180bce6dc",
+      "sourceHandle": "source",
+      "targetHandle": "target"
+    }
+  ],
+  "settings": {},
+  "isPublished": false,
+  "publishedVersion": null,
+  "isDirty": true
+}
