@@ -968,7 +968,7 @@ Not an inversion. A parallel palette under `dark:` with:
   foreground becomes the light end of each hue.
 
 Implementation note: the app stores tokens as HSL channels on `:root` in
-[styles.css](pathaopoth-web/src/app/styles.css) and switches with `prefers-color-scheme`. Keep that
+[styles.css](src/app/styles.css) and switches with `prefers-color-scheme`. Keep that
 mechanism, and add an explicit user override (`data-theme`) so a hub screen can be pinned to dark for
 a night shift regardless of the OS.
 
@@ -1174,7 +1174,7 @@ states use a single Lucide glyph at 32px in `{colors.ink-muted}`.
 ## Components
 
 Entries in the YAML block are marked `status: built` (exists today in
-[pathaopoth-web/src/shared/ui/](pathaopoth-web/src/shared/ui/) or the shell) or `status: proposed`
+[src/shared/ui/](src/shared/ui/) or the shell) or `status: proposed`
 (specified here, not yet implemented). Build against the built ones; do not re-implement them.
 
 ### Shell and navigation
@@ -1328,7 +1328,7 @@ A distinct rendering for riders, selected by role and viewport together.
 5. Colour changes go through the channel question first: *which channel does this belong to?* If the
    answer is "none", it is neutral.
 6. New components declare `status: proposed` until they exist in
-   [pathaopoth-web/src/shared/ui/](pathaopoth-web/src/shared/ui/), then flip to `built`.
+   [src/shared/ui/](src/shared/ui/), then flip to `built`.
 7. When emphasis is needed: weight before size, size before colour, colour last and only from a
    channel that already means what you need.
 8. Anything added to `dark:` must be added to `colors:` in the same edit. A token that exists in only
@@ -1337,7 +1337,7 @@ A distinct rendering for riders, selected by role and viewport together.
 ## Known Gaps
 
 - **Charts are specified but unproven.** No charting library is in
-  [package.json](pathaopoth-web/package.json) yet; the ramps here have not been tested against a real
+  [package.json](package.json) yet; the ramps here have not been tested against a real
   dashboard. Verify the categorical set for deuteranopia before shipping the first chart.
 - **The Bengali face is unloaded.** Noto Sans Bengali is named in the stack but not yet imported or
   self-hosted, so bn currently renders in a system fallback. Subset and self-host before the locale

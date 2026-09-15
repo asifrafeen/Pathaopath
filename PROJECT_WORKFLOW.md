@@ -34,13 +34,12 @@ Pathaopoth/                       <- repository root
 ├── PROJECT_WORKFLOW.md           TRACKED  (this document)
 ├── PATHAOPOTH_BLOCKS_DESIGN.md   TRACKED
 ├── IMPLEMENTATION_LOG.md         TRACKED
-└── pathaopoth-web/               TRACKED  (the application)
-    ├── blocks/data/schemas/      TRACKED  (the data model is source)
-    ├── blocks/data/rules.json    TRACKED  (access policies are source)
-    ├── blocks.json               TRACKED
-    ├── src/
-    ├── .env                      ignored (already, by the app's own .gitignore)
-    └── .cert/                    ignored
+├── blocks/data/schemas/          TRACKED  (the data model is source)
+├── blocks/data/rules.json        TRACKED  (access policies are source)
+├── blocks.json                   TRACKED
+├── src/                          TRACKED  (the application)
+├── .env                          ignored
+└── .cert/                        ignored
 ```
 
 ### 1.3 `.gitignore`

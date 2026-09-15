@@ -75,7 +75,7 @@ None — repository setup only.
 None changed. The core data model authored earlier is committed as source: 8 entities (`Hub`,
 `Sender`, `Parcel`, `ExceptionCase`, `HubReceipt`, `CaseNote`, `OwnershipHistory`, `ParcelMovement`)
 and 9 embedded Dto types, 136 fields total. The data model and access rules are tracked as code
-under `pathaopoth-web/blocks/data/`, not as portal configuration.
+under `blocks/data/`, not as portal configuration.
 
 **Access policies touched**
 None. `rules.json` is empty, so every collection will be readable by any authenticated user until
@@ -90,7 +90,7 @@ Epic 3 closes. This is a known open gap, not an oversight.
 **Verification**
 ```
 git ls-files | wc -l           -> 78
-git ls-files | grep -x 'pathaopoth-web/.env'   -> no match (ignored)
+git ls-files | grep -x '.env'   -> no match (ignored)
 git ls-files | grep '\.cert/'                  -> no match (ignored)
 git diff --cached | grep -iE 'blxsk_|client_?secret|PRIVATE KEY'  -> no match
 ```
