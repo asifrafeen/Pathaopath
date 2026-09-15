@@ -400,21 +400,21 @@
       "schemaId": "ee5988dd-f215-40b3-a600-55db19bd4226"
     },
     {
-      "accessLevel": 1,
+      "accessLevel": 3,
       "fieldNames": [],
       "operation": 1,
       "policyType": 0,
       "schemaId": "ee5988dd-f215-40b3-a600-55db19bd4226"
     },
     {
-      "accessLevel": 1,
+      "accessLevel": 3,
       "fieldNames": [],
       "operation": 2,
       "policyType": 0,
       "schemaId": "ee5988dd-f215-40b3-a600-55db19bd4226"
     },
     {
-      "accessLevel": 1,
+      "accessLevel": 3,
       "fieldNames": [],
       "operation": 3,
       "policyType": 0,
@@ -1695,6 +1695,108 @@
             "nestedGroups": []
           }
         ]
+      },
+      "priority": 0,
+      "isAllowPolicy": true
+    },
+    {
+      "schemaName": "Parcel",
+      "policyName": "Parcel_write_parcel_admin",
+      "policyDescription": "Only parcel_admin may write a parcel. Parcels originate in the delivery system; creating one here is deliberate administration, not something a hub or rider does in passing. service_automation is included so scheduled imports can maintain them.",
+      "policyType": 0,
+      "operation": 1,
+      "fieldNames": [],
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "parcel_admin",
+            "description": "Caller holds the parcel_admin role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "service_automation",
+            "description": "Caller holds the service_automation role"
+          }
+        ],
+        "nestedGroups": []
+      },
+      "priority": 0,
+      "isAllowPolicy": true
+    },
+    {
+      "schemaName": "Parcel",
+      "policyName": "Parcel_edit_parcel_admin",
+      "policyDescription": "Only parcel_admin may edit a parcel. Parcels originate in the delivery system; creating one here is deliberate administration, not something a hub or rider does in passing. service_automation is included so scheduled imports can maintain them.",
+      "policyType": 0,
+      "operation": 2,
+      "fieldNames": [],
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "parcel_admin",
+            "description": "Caller holds the parcel_admin role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "service_automation",
+            "description": "Caller holds the service_automation role"
+          }
+        ],
+        "nestedGroups": []
+      },
+      "priority": 0,
+      "isAllowPolicy": true
+    },
+    {
+      "schemaName": "Parcel",
+      "policyName": "Parcel_delete_parcel_admin",
+      "policyDescription": "Only parcel_admin may delete a parcel. Parcels originate in the delivery system; creating one here is deliberate administration, not something a hub or rider does in passing. service_automation is included so scheduled imports can maintain them.",
+      "policyType": 0,
+      "operation": 3,
+      "fieldNames": [],
+      "ruleGroup": {
+        "logicalOperator": 1,
+        "rules": [
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "parcel_admin",
+            "description": "Caller holds the parcel_admin role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "service_automation",
+            "description": "Caller holds the service_automation role"
+          }
+        ],
+        "nestedGroups": []
       },
       "priority": 0,
       "isAllowPolicy": true

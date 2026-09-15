@@ -15,7 +15,7 @@ export function ProfilePage() {
   const me = useCurrentUser();
   const { claims } = useAuth();
   const { t } = useT();
-  const profile = me.data?.data;
+  const profile = me.data;
   const name = userDisplayName(profile);
   const issuedAt = typeof claims?.iat === "number" ? new Date((claims.iat as number) * 1000) : undefined;
   const expiresAt = typeof claims?.exp === "number" ? new Date((claims.exp as number) * 1000) : undefined;

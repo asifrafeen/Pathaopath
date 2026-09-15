@@ -7,7 +7,10 @@ export function useCurrentUser() {
   const { status } = useAuth();
   return useQuery({
     enabled: status === "authenticated",
-    queryFn: () => blocksClient.iam.me(),
+    // iam.me() answers { data, errors }; hand callers the user itself so nobody has
+    // to remember to unwrap. Reading roles off the envelope yields undefined, which
+    // silently turns every role check false.
+    queryFn: async (): Promise<BlocksUser | undefined> => (await blocksClient.iam.me()).data,
     queryKey: ["iam", "me"]
   });
 }

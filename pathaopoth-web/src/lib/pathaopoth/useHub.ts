@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useCurrentUser } from "../../features/profile/useCurrentUser";
 import { data, type Hub } from "./data";
-import { orgIdsOf } from "./roles";
+import { orgIdOf } from "./roles";
 
 /**
  * Resolves the signed-in operator's hub.
@@ -23,7 +23,7 @@ export function useCurrentHub(): { hub: Hub | null; hubs: Hub[]; isLoading: bool
   const { data: profile } = useCurrentUser();
   const { data: hubPage, isLoading } = useHubs();
   const hubs = hubPage?.items ?? [];
-  const orgIds = orgIdsOf(profile);
-  const hub = hubs.find((h) => h.organizationId && orgIds.includes(h.organizationId)) ?? null;
+  const orgId = orgIdOf(profile);
+  const hub = orgId ? hubs.find((h) => h.organizationId === orgId) ?? null : null;
   return { hub, hubs, isLoading };
 }
