@@ -1,0 +1,1834 @@
+{
+  "name": "Arrival Reconciliation",
+  "tenantId": "Df6362bb5e9c04915a0994c87e0751bd5",
+  "description": "Repairs hub arrivals interrupted midway. The app writes an arrival as ordered steps with the HubReceipt as commit point; if the operator's browser dies the receipt stays appliedState=pending and the case snapshot is stale. Every step here is set-to-target, so replaying is safe.",
+  "nodes": [
+    {
+      "id": "3bd4c5bbbf244c1ab7acc9a203bef41a",
+      "name": "Schedule",
+      "category": "trigger",
+      "type": "schedule",
+      "version": "v1",
+      "position": {
+        "x": 250,
+        "y": 100
+      },
+      "handle": null,
+      "parameters": {
+        "triggerInterval": "minutes",
+        "cronExpression": "*/5 * * * *"
+      },
+      "settings": {},
+      "pinData": null
+    },
+    {
+      "id": "974bf1fb1fee4ae09f06623bdb0517a9",
+      "name": "Find pending receipts",
+      "category": "action",
+      "type": "dataAction",
+      "version": "v1",
+      "position": {
+        "x": 510,
+        "y": 100
+      },
+      "handle": null,
+      "parameters": {
+        "rawQueryMode": false,
+        "rawQuery": null,
+        "actionType": "getData",
+        "collectionName_composite": "HubReceipt:::HubReceipt:::07d0f546-1125-4a53-a609-4f785513e8a1",
+        "collectionName": "HubReceipt",
+        "schemaName": "HubReceipt",
+        "projectKey": "Df6362bb5e9c04915a0994c87e0751bd5",
+        "projectShortKey": "dbuajn",
+        "authenticationType": "clientCredential",
+        "clientCredential_composite": "150709b2-789e-4ba8-bc25-d3e39418908a:::__SELECT_CREDENTIAL_IN_UI__",
+        "clientId": "150709b2-789e-4ba8-bc25-d3e39418908a",
+        "clientSecret": "__SELECT_CREDENTIAL_IN_UI__",
+        "filter": {
+          "appliedState": "pending"
+        },
+        "fieldMapping": {
+          "caseId": "",
+          "parcelId": "",
+          "ownerHubOrgId": "",
+          "trackingNumber": "",
+          "hubId": "",
+          "hubOrgId": "",
+          "hubCode": "",
+          "receivedByStaffId": "",
+          "receivedByStaff.userId": "",
+          "receivedByStaff.name": "",
+          "receivedFromRiderId": "",
+          "receivedFromRider.userId": "",
+          "receivedFromRider.name": "",
+          "incomingMovementId": "",
+          "receivedAt": "",
+          "deliveryAttemptAt": "",
+          "reportedReason": "",
+          "parcelCondition": "",
+          "appliedState": "",
+          "ItemId": "",
+          "CreatedDate": "",
+          "LastUpdatedDate": "",
+          "CreatedBy": "",
+          "Language": "",
+          "LastUpdatedBy": "",
+          "OrganizationId": "",
+          "Tags": ""
+        },
+        "getFields": [
+          "caseId",
+          "parcelId",
+          "ownerHubOrgId",
+          "trackingNumber",
+          "hubId",
+          "hubOrgId",
+          "hubCode",
+          "receivedByStaffId",
+          "receivedByStaff",
+          "receivedByStaff.userId",
+          "receivedByStaff.name",
+          "receivedFromRiderId",
+          "receivedFromRider",
+          "receivedFromRider.userId",
+          "receivedFromRider.name",
+          "incomingMovementId",
+          "receivedAt",
+          "deliveryAttemptAt",
+          "reportedReason",
+          "parcelCondition",
+          "appliedState",
+          "ItemId",
+          "CreatedDate",
+          "LastUpdatedDate",
+          "CreatedBy",
+          "Language",
+          "LastUpdatedBy",
+          "OrganizationId",
+          "Tags"
+        ],
+        "schemaFields": [
+          {
+            "name": "caseId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "parcelId",
+            "type": "String",
+            "isArray": false,
+            "description": "Denormalised so a parcel's arrival history needs no case join"
+          },
+          {
+            "name": "ownerHubOrgId",
+            "type": "String",
+            "isArray": false,
+            "description": "Access key mirroring the owning case hub (hubOrgId is the receiving hub, which can differ)"
+          },
+          {
+            "name": "trackingNumber",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "hubId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "hubOrgId",
+            "type": "String",
+            "isArray": false,
+            "description": "Access key for the receiving hub"
+          },
+          {
+            "name": "hubCode",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "receivedByStaffId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "receivedByStaff",
+            "type": "UserRef",
+            "isArray": false,
+            "description": "",
+            "fields": [
+              {
+                "name": "userId",
+                "type": "String",
+                "isArray": false,
+                "description": "Blocks IAM user id"
+              },
+              {
+                "name": "name",
+                "type": "String",
+                "isArray": false,
+                "description": "Display name snapshot"
+              }
+            ]
+          },
+          {
+            "name": "receivedFromRiderId",
+            "type": "String",
+            "isArray": false,
+            "description": "Absent on first intake"
+          },
+          {
+            "name": "receivedFromRider",
+            "type": "UserRef",
+            "isArray": false,
+            "description": "",
+            "fields": [
+              {
+                "name": "userId",
+                "type": "String",
+                "isArray": false,
+                "description": "Blocks IAM user id"
+              },
+              {
+                "name": "name",
+                "type": "String",
+                "isArray": false,
+                "description": "Display name snapshot"
+              }
+            ]
+          },
+          {
+            "name": "incomingMovementId",
+            "type": "String",
+            "isArray": false,
+            "description": "IDEMPOTENCY KEY. The movement this arrival completes"
+          },
+          {
+            "name": "receivedAt",
+            "type": "DateTime",
+            "isArray": false,
+            "description": "Actual handover time"
+          },
+          {
+            "name": "deliveryAttemptAt",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "reportedReason",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "parcelCondition",
+            "type": "String",
+            "isArray": false,
+            "description": "intact|opened|damaged"
+          },
+          {
+            "name": "appliedState",
+            "type": "String",
+            "isArray": false,
+            "description": "pending|applied. Drives the reconciliation sweep; this record is the commit point for an arrival"
+          },
+          {
+            "name": "ItemId",
+            "type": "String",
+            "isArray": false,
+            "description": "Unique identifier for the record."
+          },
+          {
+            "name": "CreatedDate",
+            "type": "DateTime",
+            "isArray": false,
+            "description": "UTC timestamp when the record was created."
+          },
+          {
+            "name": "LastUpdatedDate",
+            "type": "DateTime",
+            "isArray": false,
+            "description": "UTC timestamp of the most recent update."
+          },
+          {
+            "name": "CreatedBy",
+            "type": "String",
+            "isArray": false,
+            "description": "User ID of the creator."
+          },
+          {
+            "name": "Language",
+            "type": "String",
+            "isArray": false,
+            "description": "Locale of the record."
+          },
+          {
+            "name": "LastUpdatedBy",
+            "type": "String",
+            "isArray": false,
+            "description": "User ID of the last modifier."
+          },
+          {
+            "name": "OrganizationId",
+            "type": "String",
+            "isArray": false,
+            "description": "Organization scoping."
+          },
+          {
+            "name": "Tags",
+            "type": "String",
+            "isArray": true,
+            "description": "Tags, array."
+          }
+        ],
+        "apiBaseUrl": "https://data.seliseblocks.com"
+      },
+      "settings": {},
+      "pinData": null
+    },
+    {
+      "id": "db15e01abd2547cb853e8a0e9f5eb723",
+      "name": "Any pending?",
+      "category": "logic",
+      "type": "if",
+      "version": "v1",
+      "position": {
+        "x": 770,
+        "y": 100
+      },
+      "handle": null,
+      "parameters": {
+        "conditionType": "all",
+        "conditions": [
+          {
+            "left": "{{$json.output.appliedState}}",
+            "operator": "equals",
+            "right": "pending",
+            "type": "string"
+          }
+        ]
+      },
+      "settings": {},
+      "pinData": null
+    },
+    {
+      "id": "0effb4082cf64be6be22693efdcc3850",
+      "name": "Complete the leg",
+      "category": "action",
+      "type": "dataAction",
+      "version": "v1",
+      "position": {
+        "x": 1030,
+        "y": 100
+      },
+      "handle": null,
+      "parameters": {
+        "rawQueryMode": false,
+        "rawQuery": null,
+        "actionType": "updateData",
+        "collectionName_composite": "ParcelMovement:::ParcelMovement:::8212ab9b-a717-438a-aec8-f65fccdb8dd8",
+        "collectionName": "ParcelMovement",
+        "schemaName": "ParcelMovement",
+        "projectKey": "Df6362bb5e9c04915a0994c87e0751bd5",
+        "projectShortKey": "dbuajn",
+        "authenticationType": "clientCredential",
+        "clientCredential_composite": "150709b2-789e-4ba8-bc25-d3e39418908a:::__SELECT_CREDENTIAL_IN_UI__",
+        "clientId": "150709b2-789e-4ba8-bc25-d3e39418908a",
+        "clientSecret": "__SELECT_CREDENTIAL_IN_UI__",
+        "filter": {
+          "ItemId": "{{$json.output.incomingMovementId}}"
+        },
+        "fieldMapping": {
+          "caseId": "",
+          "parcelId": "",
+          "trackingNumber": "",
+          "decisionId": "",
+          "purpose": "",
+          "fromHubId": "",
+          "fromHubCode": "",
+          "fromHubOrgId": "",
+          "destinationType": "",
+          "toHubId": "",
+          "toHubCode": "",
+          "toHubOrgId": "",
+          "destinationAddressSnapshot": "",
+          "assignedRiderId": "",
+          "assignedRider.userId": "",
+          "assignedRider.name": "",
+          "assignedRider.phone": "",
+          "status": "received",
+          "createdByStaffId": "",
+          "pickupAcknowledgedAt": "",
+          "expectedArrivalAt": "",
+          "completedAt": "{{$json.output.receivedAt}}",
+          "recipientName": "",
+          "deliveryProofReference": "",
+          "failureReason": "",
+          "ItemId": "",
+          "CreatedDate": "",
+          "LastUpdatedDate": "",
+          "CreatedBy": "",
+          "Language": "",
+          "LastUpdatedBy": "",
+          "OrganizationId": "",
+          "Tags": ""
+        },
+        "getFields": [],
+        "schemaFields": [
+          {
+            "name": "caseId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "parcelId",
+            "type": "String",
+            "isArray": false,
+            "description": "Carried so a parcel's full transport history is one query"
+          },
+          {
+            "name": "trackingNumber",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "decisionId",
+            "type": "String",
+            "isArray": false,
+            "description": "Authorising CaseDecision"
+          },
+          {
+            "name": "purpose",
+            "type": "String",
+            "isArray": false,
+            "description": "hub_transfer|redelivery|sender_return"
+          },
+          {
+            "name": "fromHubId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "fromHubCode",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "fromHubOrgId",
+            "type": "String",
+            "isArray": false,
+            "description": "Access key so the sending hub can see movements it dispatched"
+          },
+          {
+            "name": "destinationType",
+            "type": "String",
+            "isArray": false,
+            "description": "hub|receiver|sender"
+          },
+          {
+            "name": "toHubId",
+            "type": "String",
+            "isArray": false,
+            "description": "Required when destinationType=hub"
+          },
+          {
+            "name": "toHubCode",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "toHubOrgId",
+            "type": "String",
+            "isArray": false,
+            "description": "Access key letting the receiving hub see expected incoming work"
+          },
+          {
+            "name": "destinationAddressSnapshot",
+            "type": "String",
+            "isArray": false,
+            "description": "Required for receiver/sender destinations"
+          },
+          {
+            "name": "assignedRiderId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "assignedRider",
+            "type": "RiderRef",
+            "isArray": false,
+            "description": "",
+            "fields": [
+              {
+                "name": "userId",
+                "type": "String",
+                "isArray": false,
+                "description": "Blocks IAM user id of the rider"
+              },
+              {
+                "name": "name",
+                "type": "String",
+                "isArray": false,
+                "description": "Display name snapshot"
+              },
+              {
+                "name": "phone",
+                "type": "String",
+                "isArray": false,
+                "description": "Contact number snapshot"
+              }
+            ]
+          },
+          {
+            "name": "status",
+            "type": "String",
+            "isArray": false,
+            "description": "planned|picked_up|received|failed|cancelled"
+          },
+          {
+            "name": "createdByStaffId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "pickupAcknowledgedAt",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "expectedArrivalAt",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "completedAt",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "recipientName",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "deliveryProofReference",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "failureReason",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "ItemId",
+            "type": "String",
+            "isArray": false,
+            "description": "Unique identifier for the record."
+          },
+          {
+            "name": "CreatedDate",
+            "type": "DateTime",
+            "isArray": false,
+            "description": "UTC timestamp when the record was created."
+          },
+          {
+            "name": "LastUpdatedDate",
+            "type": "DateTime",
+            "isArray": false,
+            "description": "UTC timestamp of the most recent update."
+          },
+          {
+            "name": "CreatedBy",
+            "type": "String",
+            "isArray": false,
+            "description": "User ID of the creator."
+          },
+          {
+            "name": "Language",
+            "type": "String",
+            "isArray": false,
+            "description": "Locale of the record."
+          },
+          {
+            "name": "LastUpdatedBy",
+            "type": "String",
+            "isArray": false,
+            "description": "User ID of the last modifier."
+          },
+          {
+            "name": "OrganizationId",
+            "type": "String",
+            "isArray": false,
+            "description": "Organization scoping."
+          },
+          {
+            "name": "Tags",
+            "type": "String",
+            "isArray": true,
+            "description": "Tags, array."
+          }
+        ],
+        "apiBaseUrl": "https://data.seliseblocks.com"
+      },
+      "settings": {},
+      "pinData": null
+    },
+    {
+      "id": "a87e5a4e8d51438baedd417a37789e12",
+      "name": "Close open ownership",
+      "category": "action",
+      "type": "dataAction",
+      "version": "v1",
+      "position": {
+        "x": 1290,
+        "y": 100
+      },
+      "handle": null,
+      "parameters": {
+        "rawQueryMode": false,
+        "rawQuery": null,
+        "actionType": "updateData",
+        "collectionName_composite": "OwnershipHistory:::OwnershipHistory:::5db155f2-9cfd-4eb6-9e75-2b02cdd809ed",
+        "collectionName": "OwnershipHistory",
+        "schemaName": "OwnershipHistory",
+        "projectKey": "Df6362bb5e9c04915a0994c87e0751bd5",
+        "projectShortKey": "dbuajn",
+        "authenticationType": "clientCredential",
+        "clientCredential_composite": "150709b2-789e-4ba8-bc25-d3e39418908a:::__SELECT_CREDENTIAL_IN_UI__",
+        "clientId": "150709b2-789e-4ba8-bc25-d3e39418908a",
+        "clientSecret": "__SELECT_CREDENTIAL_IN_UI__",
+        "filter": {
+          "caseId": "{{$node[\"Find pending receipts\"].json.output.caseId}}",
+          "isCurrent": "true"
+        },
+        "fieldMapping": {
+          "caseId": "",
+          "parcelId": "",
+          "ownerHubOrgId": "",
+          "hubId": "",
+          "hubCode": "",
+          "accountableStaffId": "",
+          "accountableStaff.userId": "",
+          "accountableStaff.name": "",
+          "startedAt": "",
+          "endedAt": "{{$node[\"Find pending receipts\"].json.output.receivedAt}}",
+          "receiptId": "",
+          "isCurrent": "false",
+          "ItemId": "",
+          "CreatedDate": "",
+          "LastUpdatedDate": "",
+          "CreatedBy": "",
+          "Language": "",
+          "LastUpdatedBy": "",
+          "OrganizationId": "",
+          "Tags": ""
+        },
+        "getFields": [],
+        "schemaFields": [
+          {
+            "name": "caseId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "parcelId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "ownerHubOrgId",
+            "type": "String",
+            "isArray": false,
+            "description": "Access key mirroring the owning case hub"
+          },
+          {
+            "name": "hubId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "hubCode",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "accountableStaffId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "accountableStaff",
+            "type": "UserRef",
+            "isArray": false,
+            "description": "",
+            "fields": [
+              {
+                "name": "userId",
+                "type": "String",
+                "isArray": false,
+                "description": "Blocks IAM user id"
+              },
+              {
+                "name": "name",
+                "type": "String",
+                "isArray": false,
+                "description": "Display name snapshot"
+              }
+            ]
+          },
+          {
+            "name": "startedAt",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "endedAt",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "receiptId",
+            "type": "String",
+            "isArray": false,
+            "description": "The receipt that opened this period"
+          },
+          {
+            "name": "isCurrent",
+            "type": "Boolean",
+            "isArray": false,
+            "description": "Maintained on close so the open period is a single-field filter"
+          },
+          {
+            "name": "ItemId",
+            "type": "String",
+            "isArray": false,
+            "description": "Unique identifier for the record."
+          },
+          {
+            "name": "CreatedDate",
+            "type": "DateTime",
+            "isArray": false,
+            "description": "UTC timestamp when the record was created."
+          },
+          {
+            "name": "LastUpdatedDate",
+            "type": "DateTime",
+            "isArray": false,
+            "description": "UTC timestamp of the most recent update."
+          },
+          {
+            "name": "CreatedBy",
+            "type": "String",
+            "isArray": false,
+            "description": "User ID of the creator."
+          },
+          {
+            "name": "Language",
+            "type": "String",
+            "isArray": false,
+            "description": "Locale of the record."
+          },
+          {
+            "name": "LastUpdatedBy",
+            "type": "String",
+            "isArray": false,
+            "description": "User ID of the last modifier."
+          },
+          {
+            "name": "OrganizationId",
+            "type": "String",
+            "isArray": false,
+            "description": "Organization scoping."
+          },
+          {
+            "name": "Tags",
+            "type": "String",
+            "isArray": true,
+            "description": "Tags, array."
+          }
+        ],
+        "apiBaseUrl": "https://data.seliseblocks.com"
+      },
+      "settings": {},
+      "pinData": null
+    },
+    {
+      "id": "0489457d2b9f48aba4103efb66a56bbb",
+      "name": "Reopen this receipt's period",
+      "category": "action",
+      "type": "dataAction",
+      "version": "v1",
+      "position": {
+        "x": 1550,
+        "y": 100
+      },
+      "handle": null,
+      "parameters": {
+        "rawQueryMode": false,
+        "rawQuery": null,
+        "actionType": "updateData",
+        "collectionName_composite": "OwnershipHistory:::OwnershipHistory:::5db155f2-9cfd-4eb6-9e75-2b02cdd809ed",
+        "collectionName": "OwnershipHistory",
+        "schemaName": "OwnershipHistory",
+        "projectKey": "Df6362bb5e9c04915a0994c87e0751bd5",
+        "projectShortKey": "dbuajn",
+        "authenticationType": "clientCredential",
+        "clientCredential_composite": "150709b2-789e-4ba8-bc25-d3e39418908a:::__SELECT_CREDENTIAL_IN_UI__",
+        "clientId": "150709b2-789e-4ba8-bc25-d3e39418908a",
+        "clientSecret": "__SELECT_CREDENTIAL_IN_UI__",
+        "filter": {
+          "caseId": "{{$node[\"Find pending receipts\"].json.output.caseId}}",
+          "receiptId": "{{$node[\"Find pending receipts\"].json.output.ItemId}}"
+        },
+        "fieldMapping": {
+          "caseId": "",
+          "parcelId": "",
+          "ownerHubOrgId": "",
+          "hubId": "",
+          "hubCode": "",
+          "accountableStaffId": "",
+          "accountableStaff.userId": "",
+          "accountableStaff.name": "",
+          "startedAt": "",
+          "endedAt": "",
+          "receiptId": "",
+          "isCurrent": "true",
+          "ItemId": "",
+          "CreatedDate": "",
+          "LastUpdatedDate": "",
+          "CreatedBy": "",
+          "Language": "",
+          "LastUpdatedBy": "",
+          "OrganizationId": "",
+          "Tags": ""
+        },
+        "getFields": [],
+        "schemaFields": [
+          {
+            "name": "caseId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "parcelId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "ownerHubOrgId",
+            "type": "String",
+            "isArray": false,
+            "description": "Access key mirroring the owning case hub"
+          },
+          {
+            "name": "hubId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "hubCode",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "accountableStaffId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "accountableStaff",
+            "type": "UserRef",
+            "isArray": false,
+            "description": "",
+            "fields": [
+              {
+                "name": "userId",
+                "type": "String",
+                "isArray": false,
+                "description": "Blocks IAM user id"
+              },
+              {
+                "name": "name",
+                "type": "String",
+                "isArray": false,
+                "description": "Display name snapshot"
+              }
+            ]
+          },
+          {
+            "name": "startedAt",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "endedAt",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "receiptId",
+            "type": "String",
+            "isArray": false,
+            "description": "The receipt that opened this period"
+          },
+          {
+            "name": "isCurrent",
+            "type": "Boolean",
+            "isArray": false,
+            "description": "Maintained on close so the open period is a single-field filter"
+          },
+          {
+            "name": "ItemId",
+            "type": "String",
+            "isArray": false,
+            "description": "Unique identifier for the record."
+          },
+          {
+            "name": "CreatedDate",
+            "type": "DateTime",
+            "isArray": false,
+            "description": "UTC timestamp when the record was created."
+          },
+          {
+            "name": "LastUpdatedDate",
+            "type": "DateTime",
+            "isArray": false,
+            "description": "UTC timestamp of the most recent update."
+          },
+          {
+            "name": "CreatedBy",
+            "type": "String",
+            "isArray": false,
+            "description": "User ID of the creator."
+          },
+          {
+            "name": "Language",
+            "type": "String",
+            "isArray": false,
+            "description": "Locale of the record."
+          },
+          {
+            "name": "LastUpdatedBy",
+            "type": "String",
+            "isArray": false,
+            "description": "User ID of the last modifier."
+          },
+          {
+            "name": "OrganizationId",
+            "type": "String",
+            "isArray": false,
+            "description": "Organization scoping."
+          },
+          {
+            "name": "Tags",
+            "type": "String",
+            "isArray": true,
+            "description": "Tags, array."
+          }
+        ],
+        "apiBaseUrl": "https://data.seliseblocks.com"
+      },
+      "settings": {},
+      "pinData": null
+    },
+    {
+      "id": "fa31902ff40d4bb9bc89d09fe57864fd",
+      "name": "Refresh case snapshot",
+      "category": "action",
+      "type": "dataAction",
+      "version": "v1",
+      "position": {
+        "x": 1810,
+        "y": 100
+      },
+      "handle": null,
+      "parameters": {
+        "rawQueryMode": false,
+        "rawQuery": null,
+        "actionType": "updateData",
+        "collectionName_composite": "ExceptionCase:::ExceptionCase:::fabfde28-f4e9-4389-9d7e-e50d1912d2bd",
+        "collectionName": "ExceptionCase",
+        "schemaName": "ExceptionCase",
+        "projectKey": "Df6362bb5e9c04915a0994c87e0751bd5",
+        "projectShortKey": "dbuajn",
+        "authenticationType": "clientCredential",
+        "clientCredential_composite": "150709b2-789e-4ba8-bc25-d3e39418908a:::__SELECT_CREDENTIAL_IN_UI__",
+        "clientId": "150709b2-789e-4ba8-bc25-d3e39418908a",
+        "clientSecret": "__SELECT_CREDENTIAL_IN_UI__",
+        "filter": {
+          "ItemId": "{{$node[\"Find pending receipts\"].json.output.caseId}}"
+        },
+        "fieldMapping": {
+          "parcelId": "",
+          "parcel.trackingNumber": "",
+          "parcel.codAmount": "",
+          "parcel.currency": "",
+          "parcel.receiverName": "",
+          "parcel.currentDeliveryAddress": "",
+          "caseType": "",
+          "status": "awaiting_review",
+          "ownerHubId": "{{$node[\"Find pending receipts\"].json.output.hubId}}",
+          "ownerHubOrgId": "{{$node[\"Find pending receipts\"].json.output.hubOrgId}}",
+          "ownerHub.hubId": "{{$node[\"Find pending receipts\"].json.output.hubId}}",
+          "ownerHub.code": "{{$node[\"Find pending receipts\"].json.output.hubCode}}",
+          "ownerHub.name": "",
+          "accountableStaffId": "",
+          "accountableStaff.userId": "",
+          "accountableStaff.name": "",
+          "custodyType": "hub",
+          "custodyHubId": "{{$node[\"Find pending receipts\"].json.output.hubId}}",
+          "custodyRiderId": "",
+          "custodyHolder.name": "",
+          "custodyHolder.code": "{{$node[\"Find pending receipts\"].json.output.hubCode}}",
+          "latestDecision.decisionId": "",
+          "latestDecision.action": "",
+          "latestDecision.targetHubId": "",
+          "latestDecision.targetHubCode": "",
+          "latestDecision.redeliveryDateLocal": "",
+          "latestDecision.windowStart": "",
+          "latestDecision.windowEnd": "",
+          "latestDecision.timezone": "",
+          "latestDecision.confirmedAt": "",
+          "originHubCode": "",
+          "destinationHubCode": "",
+          "routeKey": "",
+          "attemptCount": "",
+          "receiptCount": "",
+          "openedAt": "",
+          "slaDueAt": "",
+          "slaBreached": "",
+          "closedAt": "",
+          "resolution": "",
+          "ItemId": "",
+          "CreatedDate": "",
+          "LastUpdatedDate": "",
+          "CreatedBy": "",
+          "Language": "",
+          "LastUpdatedBy": "",
+          "OrganizationId": "",
+          "Tags": ""
+        },
+        "getFields": [],
+        "schemaFields": [
+          {
+            "name": "parcelId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "parcel",
+            "type": "ParcelSnapshot",
+            "isArray": false,
+            "description": "Denormalised for queue rendering. Deliberately excludes receiverPhone",
+            "fields": [
+              {
+                "name": "trackingNumber",
+                "type": "String",
+                "isArray": false,
+                "description": ""
+              },
+              {
+                "name": "codAmount",
+                "type": "Float",
+                "isArray": false,
+                "description": "Expected collection. Float per accepted P1 tradeoff"
+              },
+              {
+                "name": "currency",
+                "type": "String",
+                "isArray": false,
+                "description": "Default BDT"
+              },
+              {
+                "name": "receiverName",
+                "type": "String",
+                "isArray": false,
+                "description": ""
+              },
+              {
+                "name": "currentDeliveryAddress",
+                "type": "String",
+                "isArray": false,
+                "description": ""
+              }
+            ]
+          },
+          {
+            "name": "caseType",
+            "type": "String",
+            "isArray": false,
+            "description": "refused_delivery|cancelled_delivery"
+          },
+          {
+            "name": "status",
+            "type": "String",
+            "isArray": false,
+            "description": "awaiting_review|awaiting_care|on_hold|redelivery_scheduled|ready_for_dispatch|in_transit|loss_review|closed"
+          },
+          {
+            "name": "ownerHubId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "ownerHubOrgId",
+            "type": "String",
+            "isArray": false,
+            "description": "MUTABLE access key. Organization id of the current owner hub. Platform OrganizationId records the creating hub and cannot be used, since ownership transfers"
+          },
+          {
+            "name": "ownerHub",
+            "type": "HubRef",
+            "isArray": false,
+            "description": "",
+            "fields": [
+              {
+                "name": "hubId",
+                "type": "String",
+                "isArray": false,
+                "description": "ItemId of the Hub record"
+              },
+              {
+                "name": "code",
+                "type": "String",
+                "isArray": false,
+                "description": "Hub short code, e.g. MIRPUR10"
+              },
+              {
+                "name": "name",
+                "type": "String",
+                "isArray": false,
+                "description": "Hub display name at time of write"
+              }
+            ]
+          },
+          {
+            "name": "accountableStaffId",
+            "type": "String",
+            "isArray": false,
+            "description": "Blocks IAM user id. Must belong to the owner hub (write-path check)"
+          },
+          {
+            "name": "accountableStaff",
+            "type": "UserRef",
+            "isArray": false,
+            "description": "",
+            "fields": [
+              {
+                "name": "userId",
+                "type": "String",
+                "isArray": false,
+                "description": "Blocks IAM user id"
+              },
+              {
+                "name": "name",
+                "type": "String",
+                "isArray": false,
+                "description": "Display name snapshot"
+              }
+            ]
+          },
+          {
+            "name": "custodyType",
+            "type": "String",
+            "isArray": false,
+            "description": "hub|rider|sender|receiver|unknown"
+          },
+          {
+            "name": "custodyHubId",
+            "type": "String",
+            "isArray": false,
+            "description": "Set only when custodyType=hub"
+          },
+          {
+            "name": "custodyRiderId",
+            "type": "String",
+            "isArray": false,
+            "description": "Set only when custodyType=rider"
+          },
+          {
+            "name": "custodyHolder",
+            "type": "CustodyHolder",
+            "isArray": false,
+            "description": "",
+            "fields": [
+              {
+                "name": "name",
+                "type": "String",
+                "isArray": false,
+                "description": "Display name of whoever physically holds the parcel"
+              },
+              {
+                "name": "code",
+                "type": "String",
+                "isArray": false,
+                "description": "Hub code when custody is a hub"
+              }
+            ]
+          },
+          {
+            "name": "latestDecision",
+            "type": "DecisionSnapshot",
+            "isArray": false,
+            "description": "Mirror of the current confirmed decision",
+            "fields": [
+              {
+                "name": "decisionId",
+                "type": "String",
+                "isArray": false,
+                "description": "ItemId of the CaseDecision this mirrors"
+              },
+              {
+                "name": "action",
+                "type": "String",
+                "isArray": false,
+                "description": "redeliver|transfer_hub|return_to_origin|return_to_sender|care_review|loss_review|hold"
+              },
+              {
+                "name": "targetHubId",
+                "type": "String",
+                "isArray": false,
+                "description": ""
+              },
+              {
+                "name": "targetHubCode",
+                "type": "String",
+                "isArray": false,
+                "description": ""
+              },
+              {
+                "name": "redeliveryDateLocal",
+                "type": "String",
+                "isArray": false,
+                "description": "YYYY-MM-DD local calendar date (no date-only scalar exists)"
+              },
+              {
+                "name": "windowStart",
+                "type": "String",
+                "isArray": false,
+                "description": "HH:mm local time of day"
+              },
+              {
+                "name": "windowEnd",
+                "type": "String",
+                "isArray": false,
+                "description": "HH:mm local time of day"
+              },
+              {
+                "name": "timezone",
+                "type": "String",
+                "isArray": false,
+                "description": "Default Asia/Dhaka"
+              },
+              {
+                "name": "confirmedAt",
+                "type": "DateTime",
+                "isArray": false,
+                "description": ""
+              }
+            ]
+          },
+          {
+            "name": "originHubCode",
+            "type": "String",
+            "isArray": false,
+            "description": "Denormalised for reporting"
+          },
+          {
+            "name": "destinationHubCode",
+            "type": "String",
+            "isArray": false,
+            "description": "Denormalised for reporting"
+          },
+          {
+            "name": "routeKey",
+            "type": "String",
+            "isArray": false,
+            "description": "Precomputed e.g. MIRPUR10>CTG_GEC so route aggregation needs no joins"
+          },
+          {
+            "name": "attemptCount",
+            "type": "Int",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "receiptCount",
+            "type": "Int",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "openedAt",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "slaDueAt",
+            "type": "DateTime",
+            "isArray": false,
+            "description": "Policy-derived deadline"
+          },
+          {
+            "name": "slaBreached",
+            "type": "Boolean",
+            "isArray": false,
+            "description": "Maintained by the SLA workflow; also derivable from slaDueAt at read time"
+          },
+          {
+            "name": "closedAt",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "resolution",
+            "type": "String",
+            "isArray": false,
+            "description": "delivered|returned_to_sender|loss_writeoff"
+          },
+          {
+            "name": "ItemId",
+            "type": "String",
+            "isArray": false,
+            "description": "Unique identifier for the record."
+          },
+          {
+            "name": "CreatedDate",
+            "type": "DateTime",
+            "isArray": false,
+            "description": "UTC timestamp when the record was created."
+          },
+          {
+            "name": "LastUpdatedDate",
+            "type": "DateTime",
+            "isArray": false,
+            "description": "UTC timestamp of the most recent update."
+          },
+          {
+            "name": "CreatedBy",
+            "type": "String",
+            "isArray": false,
+            "description": "User ID of the creator."
+          },
+          {
+            "name": "Language",
+            "type": "String",
+            "isArray": false,
+            "description": "Locale of the record."
+          },
+          {
+            "name": "LastUpdatedBy",
+            "type": "String",
+            "isArray": false,
+            "description": "User ID of the last modifier."
+          },
+          {
+            "name": "OrganizationId",
+            "type": "String",
+            "isArray": false,
+            "description": "Organization scoping."
+          },
+          {
+            "name": "Tags",
+            "type": "String",
+            "isArray": true,
+            "description": "Tags, array."
+          }
+        ],
+        "apiBaseUrl": "https://data.seliseblocks.com"
+      },
+      "settings": {},
+      "pinData": null
+    },
+    {
+      "id": "db84078a43a148f19c1a61790a778fff",
+      "name": "Log reconciliation",
+      "category": "action",
+      "type": "dataAction",
+      "version": "v1",
+      "position": {
+        "x": 2070,
+        "y": 100
+      },
+      "handle": null,
+      "parameters": {
+        "rawQueryMode": false,
+        "rawQuery": null,
+        "actionType": "insertData",
+        "collectionName_composite": "CaseEvent:::CaseEvent:::d6491f03-c71b-4444-aa01-760e4c5aa976",
+        "collectionName": "CaseEvent",
+        "schemaName": "CaseEvent",
+        "projectKey": "Df6362bb5e9c04915a0994c87e0751bd5",
+        "projectShortKey": "dbuajn",
+        "authenticationType": "clientCredential",
+        "clientCredential_composite": "150709b2-789e-4ba8-bc25-d3e39418908a:::__SELECT_CREDENTIAL_IN_UI__",
+        "clientId": "150709b2-789e-4ba8-bc25-d3e39418908a",
+        "clientSecret": "__SELECT_CREDENTIAL_IN_UI__",
+        "filter": {},
+        "fieldMapping": {
+          "caseId": "{{$node[\"Find pending receipts\"].json.output.caseId}}",
+          "parcelId": "{{$node[\"Find pending receipts\"].json.output.parcelId}}",
+          "ownerHubOrgId": "{{$node[\"Find pending receipts\"].json.output.hubOrgId}}",
+          "eventType": "movement.received.reconciled",
+          "actorUserId": "",
+          "actorName": "Arrival reconciliation",
+          "occurredAt": "{{$node[\"Find pending receipts\"].json.output.receivedAt}}",
+          "details": "Applied by the scheduled reconciliation sweep, not by an operator.",
+          "ItemId": "",
+          "CreatedDate": "",
+          "LastUpdatedDate": "",
+          "CreatedBy": "",
+          "Language": "",
+          "LastUpdatedBy": "",
+          "OrganizationId": "",
+          "Tags": ""
+        },
+        "getFields": [],
+        "schemaFields": [
+          {
+            "name": "caseId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "parcelId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "ownerHubOrgId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "eventType",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "actorUserId",
+            "type": "String",
+            "isArray": false,
+            "description": "Null for automated events"
+          },
+          {
+            "name": "actorName",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "occurredAt",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "details",
+            "type": "String",
+            "isArray": false,
+            "description": "Serialised JSON. Append-only timeline"
+          },
+          {
+            "name": "ItemId",
+            "type": "String",
+            "isArray": false,
+            "description": "Unique identifier for the record."
+          },
+          {
+            "name": "CreatedDate",
+            "type": "DateTime",
+            "isArray": false,
+            "description": "UTC timestamp when the record was created."
+          },
+          {
+            "name": "LastUpdatedDate",
+            "type": "DateTime",
+            "isArray": false,
+            "description": "UTC timestamp of the most recent update."
+          },
+          {
+            "name": "CreatedBy",
+            "type": "String",
+            "isArray": false,
+            "description": "User ID of the creator."
+          },
+          {
+            "name": "Language",
+            "type": "String",
+            "isArray": false,
+            "description": "Locale of the record."
+          },
+          {
+            "name": "LastUpdatedBy",
+            "type": "String",
+            "isArray": false,
+            "description": "User ID of the last modifier."
+          },
+          {
+            "name": "OrganizationId",
+            "type": "String",
+            "isArray": false,
+            "description": "Organization scoping."
+          },
+          {
+            "name": "Tags",
+            "type": "String",
+            "isArray": true,
+            "description": "Tags, array."
+          }
+        ],
+        "apiBaseUrl": "https://data.seliseblocks.com"
+      },
+      "settings": {},
+      "pinData": null
+    },
+    {
+      "id": "fb75805d01ca4083b0108f4e83513873",
+      "name": "Mark receipt applied",
+      "category": "action",
+      "type": "dataAction",
+      "version": "v1",
+      "position": {
+        "x": 2330,
+        "y": 100
+      },
+      "handle": null,
+      "parameters": {
+        "rawQueryMode": false,
+        "rawQuery": null,
+        "actionType": "updateData",
+        "collectionName_composite": "HubReceipt:::HubReceipt:::07d0f546-1125-4a53-a609-4f785513e8a1",
+        "collectionName": "HubReceipt",
+        "schemaName": "HubReceipt",
+        "projectKey": "Df6362bb5e9c04915a0994c87e0751bd5",
+        "projectShortKey": "dbuajn",
+        "authenticationType": "clientCredential",
+        "clientCredential_composite": "150709b2-789e-4ba8-bc25-d3e39418908a:::__SELECT_CREDENTIAL_IN_UI__",
+        "clientId": "150709b2-789e-4ba8-bc25-d3e39418908a",
+        "clientSecret": "__SELECT_CREDENTIAL_IN_UI__",
+        "filter": {
+          "ItemId": "{{$node[\"Find pending receipts\"].json.output.ItemId}}"
+        },
+        "fieldMapping": {
+          "caseId": "",
+          "parcelId": "",
+          "ownerHubOrgId": "",
+          "trackingNumber": "",
+          "hubId": "",
+          "hubOrgId": "",
+          "hubCode": "",
+          "receivedByStaffId": "",
+          "receivedByStaff.userId": "",
+          "receivedByStaff.name": "",
+          "receivedFromRiderId": "",
+          "receivedFromRider.userId": "",
+          "receivedFromRider.name": "",
+          "incomingMovementId": "",
+          "receivedAt": "",
+          "deliveryAttemptAt": "",
+          "reportedReason": "",
+          "parcelCondition": "",
+          "appliedState": "applied",
+          "ItemId": "",
+          "CreatedDate": "",
+          "LastUpdatedDate": "",
+          "CreatedBy": "",
+          "Language": "",
+          "LastUpdatedBy": "",
+          "OrganizationId": "",
+          "Tags": ""
+        },
+        "getFields": [],
+        "schemaFields": [
+          {
+            "name": "caseId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "parcelId",
+            "type": "String",
+            "isArray": false,
+            "description": "Denormalised so a parcel's arrival history needs no case join"
+          },
+          {
+            "name": "ownerHubOrgId",
+            "type": "String",
+            "isArray": false,
+            "description": "Access key mirroring the owning case hub (hubOrgId is the receiving hub, which can differ)"
+          },
+          {
+            "name": "trackingNumber",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "hubId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "hubOrgId",
+            "type": "String",
+            "isArray": false,
+            "description": "Access key for the receiving hub"
+          },
+          {
+            "name": "hubCode",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "receivedByStaffId",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "receivedByStaff",
+            "type": "UserRef",
+            "isArray": false,
+            "description": "",
+            "fields": [
+              {
+                "name": "userId",
+                "type": "String",
+                "isArray": false,
+                "description": "Blocks IAM user id"
+              },
+              {
+                "name": "name",
+                "type": "String",
+                "isArray": false,
+                "description": "Display name snapshot"
+              }
+            ]
+          },
+          {
+            "name": "receivedFromRiderId",
+            "type": "String",
+            "isArray": false,
+            "description": "Absent on first intake"
+          },
+          {
+            "name": "receivedFromRider",
+            "type": "UserRef",
+            "isArray": false,
+            "description": "",
+            "fields": [
+              {
+                "name": "userId",
+                "type": "String",
+                "isArray": false,
+                "description": "Blocks IAM user id"
+              },
+              {
+                "name": "name",
+                "type": "String",
+                "isArray": false,
+                "description": "Display name snapshot"
+              }
+            ]
+          },
+          {
+            "name": "incomingMovementId",
+            "type": "String",
+            "isArray": false,
+            "description": "IDEMPOTENCY KEY. The movement this arrival completes"
+          },
+          {
+            "name": "receivedAt",
+            "type": "DateTime",
+            "isArray": false,
+            "description": "Actual handover time"
+          },
+          {
+            "name": "deliveryAttemptAt",
+            "type": "DateTime",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "reportedReason",
+            "type": "String",
+            "isArray": false,
+            "description": ""
+          },
+          {
+            "name": "parcelCondition",
+            "type": "String",
+            "isArray": false,
+            "description": "intact|opened|damaged"
+          },
+          {
+            "name": "appliedState",
+            "type": "String",
+            "isArray": false,
+            "description": "pending|applied. Drives the reconciliation sweep; this record is the commit point for an arrival"
+          },
+          {
+            "name": "ItemId",
+            "type": "String",
+            "isArray": false,
+            "description": "Unique identifier for the record."
+          },
+          {
+            "name": "CreatedDate",
+            "type": "DateTime",
+            "isArray": false,
+            "description": "UTC timestamp when the record was created."
+          },
+          {
+            "name": "LastUpdatedDate",
+            "type": "DateTime",
+            "isArray": false,
+            "description": "UTC timestamp of the most recent update."
+          },
+          {
+            "name": "CreatedBy",
+            "type": "String",
+            "isArray": false,
+            "description": "User ID of the creator."
+          },
+          {
+            "name": "Language",
+            "type": "String",
+            "isArray": false,
+            "description": "Locale of the record."
+          },
+          {
+            "name": "LastUpdatedBy",
+            "type": "String",
+            "isArray": false,
+            "description": "User ID of the last modifier."
+          },
+          {
+            "name": "OrganizationId",
+            "type": "String",
+            "isArray": false,
+            "description": "Organization scoping."
+          },
+          {
+            "name": "Tags",
+            "type": "String",
+            "isArray": true,
+            "description": "Tags, array."
+          }
+        ],
+        "apiBaseUrl": "https://data.seliseblocks.com"
+      },
+      "settings": {},
+      "pinData": null
+    }
+  ],
+  "edges": [
+    {
+      "id": "xy-edge__3bd4c5bbbf244c1ab7acc9a203bef41a-974bf1fb1fee4ae09f06623bdb0517a9",
+      "source": "3bd4c5bbbf244c1ab7acc9a203bef41a",
+      "target": "974bf1fb1fee4ae09f06623bdb0517a9",
+      "sourceHandle": "source",
+      "targetHandle": "target"
+    },
+    {
+      "id": "xy-edge__974bf1fb1fee4ae09f06623bdb0517a9-db15e01abd2547cb853e8a0e9f5eb723",
+      "source": "974bf1fb1fee4ae09f06623bdb0517a9",
+      "target": "db15e01abd2547cb853e8a0e9f5eb723",
+      "sourceHandle": "source",
+      "targetHandle": "target"
+    },
+    {
+      "id": "xy-edge__db15e01abd2547cb853e8a0e9f5eb723-0effb4082cf64be6be22693efdcc3850",
+      "source": "db15e01abd2547cb853e8a0e9f5eb723",
+      "target": "0effb4082cf64be6be22693efdcc3850",
+      "sourceHandle": "source",
+      "targetHandle": "target"
+    },
+    {
+      "id": "xy-edge__0effb4082cf64be6be22693efdcc3850-a87e5a4e8d51438baedd417a37789e12",
+      "source": "0effb4082cf64be6be22693efdcc3850",
+      "target": "a87e5a4e8d51438baedd417a37789e12",
+      "sourceHandle": "source",
+      "targetHandle": "target"
+    },
+    {
+      "id": "xy-edge__a87e5a4e8d51438baedd417a37789e12-0489457d2b9f48aba4103efb66a56bbb",
+      "source": "a87e5a4e8d51438baedd417a37789e12",
+      "target": "0489457d2b9f48aba4103efb66a56bbb",
+      "sourceHandle": "source",
+      "targetHandle": "target"
+    },
+    {
+      "id": "xy-edge__0489457d2b9f48aba4103efb66a56bbb-fa31902ff40d4bb9bc89d09fe57864fd",
+      "source": "0489457d2b9f48aba4103efb66a56bbb",
+      "target": "fa31902ff40d4bb9bc89d09fe57864fd",
+      "sourceHandle": "source",
+      "targetHandle": "target"
+    },
+    {
+      "id": "xy-edge__fa31902ff40d4bb9bc89d09fe57864fd-db84078a43a148f19c1a61790a778fff",
+      "source": "fa31902ff40d4bb9bc89d09fe57864fd",
+      "target": "db84078a43a148f19c1a61790a778fff",
+      "sourceHandle": "source",
+      "targetHandle": "target"
+    },
+    {
+      "id": "xy-edge__db84078a43a148f19c1a61790a778fff-fb75805d01ca4083b0108f4e83513873",
+      "source": "db84078a43a148f19c1a61790a778fff",
+      "target": "fb75805d01ca4083b0108f4e83513873",
+      "sourceHandle": "source",
+      "targetHandle": "target"
+    }
+  ],
+  "settings": {},
+  "isPublished": false,
+  "publishedVersion": null,
+  "isDirty": true
+}

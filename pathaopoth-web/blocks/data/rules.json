@@ -761,7 +761,7 @@
     {
       "schemaName": "Parcel",
       "policyName": "Parcel_read_internal",
-      "policyDescription": "Any internal role may read parcel records.",
+      "policyDescription": "Any internal role may read parcel records. Scheduled automation reads cross-hub as service_automation.",
       "policyType": 0,
       "operation": 0,
       "fieldNames": [],
@@ -803,6 +803,15 @@
             "rightOperand": "",
             "staticValue": "ops_manager",
             "description": "Signed-in user holds the ops_manager role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "service_automation",
+            "description": "Caller holds the service_automation role"
           }
         ],
         "nestedGroups": []
@@ -858,7 +867,7 @@
     {
       "schemaName": "ExceptionCase",
       "policyName": "ExceptionCase_read_scope",
-      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue.",
+      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue. Scheduled automation reads cross-hub as service_automation.",
       "policyType": 0,
       "operation": 0,
       "fieldNames": [],
@@ -882,6 +891,15 @@
             "rightOperand": "",
             "staticValue": "ops_manager",
             "description": "Signed-in user holds the ops_manager role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "service_automation",
+            "description": "Caller holds the service_automation role"
           }
         ],
         "nestedGroups": [
@@ -916,7 +934,7 @@
     {
       "schemaName": "HubReceipt",
       "policyName": "HubReceipt_read_scope",
-      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue.",
+      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue. Scheduled automation reads cross-hub as service_automation.",
       "policyType": 0,
       "operation": 0,
       "fieldNames": [],
@@ -940,6 +958,15 @@
             "rightOperand": "",
             "staticValue": "ops_manager",
             "description": "Signed-in user holds the ops_manager role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "service_automation",
+            "description": "Caller holds the service_automation role"
           }
         ],
         "nestedGroups": [
@@ -974,7 +1001,7 @@
     {
       "schemaName": "CaseNote",
       "policyName": "CaseNote_read_scope",
-      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue.",
+      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue. Scheduled automation reads cross-hub as service_automation.",
       "policyType": 0,
       "operation": 0,
       "fieldNames": [],
@@ -998,6 +1025,15 @@
             "rightOperand": "",
             "staticValue": "ops_manager",
             "description": "Signed-in user holds the ops_manager role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "service_automation",
+            "description": "Caller holds the service_automation role"
           }
         ],
         "nestedGroups": [
@@ -1032,7 +1068,7 @@
     {
       "schemaName": "OwnershipHistory",
       "policyName": "OwnershipHistory_read_scope",
-      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue.",
+      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue. Scheduled automation reads cross-hub as service_automation.",
       "policyType": 0,
       "operation": 0,
       "fieldNames": [],
@@ -1056,6 +1092,15 @@
             "rightOperand": "",
             "staticValue": "ops_manager",
             "description": "Signed-in user holds the ops_manager role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "service_automation",
+            "description": "Caller holds the service_automation role"
           }
         ],
         "nestedGroups": [
@@ -1090,7 +1135,7 @@
     {
       "schemaName": "CaseDecision",
       "policyName": "CaseDecision_read_scope",
-      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue.",
+      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue. Scheduled automation reads cross-hub as service_automation.",
       "policyType": 0,
       "operation": 0,
       "fieldNames": [],
@@ -1114,6 +1159,15 @@
             "rightOperand": "",
             "staticValue": "ops_manager",
             "description": "Signed-in user holds the ops_manager role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "service_automation",
+            "description": "Caller holds the service_automation role"
           }
         ],
         "nestedGroups": [
@@ -1148,7 +1202,7 @@
     {
       "schemaName": "AiAnalysis",
       "policyName": "AiAnalysis_read_scope",
-      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue.",
+      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue. Scheduled automation reads cross-hub as service_automation.",
       "policyType": 0,
       "operation": 0,
       "fieldNames": [],
@@ -1172,6 +1226,15 @@
             "rightOperand": "",
             "staticValue": "ops_manager",
             "description": "Signed-in user holds the ops_manager role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "service_automation",
+            "description": "Caller holds the service_automation role"
           }
         ],
         "nestedGroups": [
@@ -1206,7 +1269,7 @@
     {
       "schemaName": "CareTask",
       "policyName": "CareTask_read_scope",
-      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue.",
+      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue. Scheduled automation reads cross-hub as service_automation.",
       "policyType": 0,
       "operation": 0,
       "fieldNames": [],
@@ -1230,6 +1293,15 @@
             "rightOperand": "",
             "staticValue": "ops_manager",
             "description": "Signed-in user holds the ops_manager role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "service_automation",
+            "description": "Caller holds the service_automation role"
           }
         ],
         "nestedGroups": [
@@ -1264,7 +1336,7 @@
     {
       "schemaName": "CaseEvent",
       "policyName": "CaseEvent_read_scope",
-      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue.",
+      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue. Scheduled automation reads cross-hub as service_automation.",
       "policyType": 0,
       "operation": 0,
       "fieldNames": [],
@@ -1288,6 +1360,15 @@
             "rightOperand": "",
             "staticValue": "ops_manager",
             "description": "Signed-in user holds the ops_manager role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "service_automation",
+            "description": "Caller holds the service_automation role"
           }
         ],
         "nestedGroups": [
@@ -1322,7 +1403,7 @@
     {
       "schemaName": "MoneyTransaction",
       "policyName": "MoneyTransaction_read_scope",
-      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue.",
+      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue. Scheduled automation reads cross-hub as service_automation.",
       "policyType": 0,
       "operation": 0,
       "fieldNames": [],
@@ -1346,6 +1427,15 @@
             "rightOperand": "",
             "staticValue": "ops_manager",
             "description": "Signed-in user holds the ops_manager role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "service_automation",
+            "description": "Caller holds the service_automation role"
           }
         ],
         "nestedGroups": [
@@ -1380,7 +1470,7 @@
     {
       "schemaName": "LossReview",
       "policyName": "LossReview_read_scope",
-      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue.",
+      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue. Scheduled automation reads cross-hub as service_automation.",
       "policyType": 0,
       "operation": 0,
       "fieldNames": [],
@@ -1404,6 +1494,15 @@
             "rightOperand": "",
             "staticValue": "ops_manager",
             "description": "Signed-in user holds the ops_manager role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "service_automation",
+            "description": "Caller holds the service_automation role"
           }
         ],
         "nestedGroups": [
@@ -1438,7 +1537,7 @@
     {
       "schemaName": "Attachment",
       "policyName": "Attachment_read_scope",
-      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue.",
+      "policyDescription": "Hub STAFF see records their own hub owns. Care and ops are cross-hub. Riders are excluded: being a member of a hub organization is not the same as working its case queue. Scheduled automation reads cross-hub as service_automation.",
       "policyType": 0,
       "operation": 0,
       "fieldNames": [],
@@ -1462,6 +1561,15 @@
             "rightOperand": "",
             "staticValue": "ops_manager",
             "description": "Signed-in user holds the ops_manager role"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "service_automation",
+            "description": "Caller holds the service_automation role"
           }
         ],
         "nestedGroups": [
@@ -1496,7 +1604,7 @@
     {
       "schemaName": "ParcelMovement",
       "policyName": "ParcelMovement_read_scope",
-      "policyDescription": "Riders see only legs assigned to them. Hub staff see legs their hub sends or receives. Care and ops are cross-hub.",
+      "policyDescription": "Riders see only legs assigned to them. Hub staff see legs their hub sends or receives. Care and ops are cross-hub. Scheduled automation reads cross-hub as service_automation.",
       "policyType": 0,
       "operation": 0,
       "fieldNames": [],
@@ -1528,6 +1636,15 @@
             "rightSource": 0,
             "rightOperand": "userId",
             "description": "Leg is assigned to the caller"
+          },
+          {
+            "leftSource": 0,
+            "leftOperand": "Roles",
+            "operator": 6,
+            "rightSource": 2,
+            "rightOperand": "",
+            "staticValue": "service_automation",
+            "description": "Caller holds the service_automation role"
           }
         ],
         "nestedGroups": [
